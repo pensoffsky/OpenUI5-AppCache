@@ -1,0 +1,22 @@
+# Ignore Eclipse project and settings files
+.classpath
+.settings
+.project
+.externalToolBuilders
+
+# Ignore Mac files
+.DS_Store
+
+# Ignore local ui5 resources folder
+/resources
+
+# Ignore node modules installed by npm install
+/node_modules
+
+
+# Ignore build folders
+cache
+build
+buildGw
+bower_components
+release

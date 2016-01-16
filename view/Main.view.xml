@@ -1,0 +1,14 @@
+<core:View xmlns:core="sap.ui.core" 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns="sap.m"
+	controllerName="view.Main" 
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:l="sap.ui.layout"
+	xmlns:custom="view"
+	>
+	<Page title="UI5 AppCache v02">
+		<content>
+			<Button text="do something" press="onDoSomething" />
+		</content>
+	</Page>
+</core:View>

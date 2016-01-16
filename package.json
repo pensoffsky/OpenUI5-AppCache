@@ -1,0 +1,15 @@
+{
+  "name": "ui5-custom-bundle-example",
+  "private": true,
+  "scripts": {
+    "build": "bower install && grunt build"
+  },
+  "devDependencies": {
+    "bower": "^1.5.1",
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-connect": "^0.11.2",
+    "grunt-contrib-copy": "^0.8.0"
+  }
+}
