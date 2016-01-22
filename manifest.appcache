@@ -8,12 +8,18 @@ resources/sap/ui/core/themes/sap_bluecrystal/library.css
 resources/sap/m/themes/sap_bluecrystal/library.css
 resources/sap/ui/core/messagebundle_en.properties
 resources/sap/m/messagebundle_en.properties
+resources/jQuery.sap.storage.js
+resources/sap/ui/core/themes/base/fonts/SAP-icons.ttf 
+resources/sap/ui/core/themes/sap_bluecrystal/library-parameters.json
+resources/sap/m/themes/sap_bluecrystal/library-parameters.json
 style.css
 view/Main.view.xml
 view/Main.controller.js
+yahooFinanceAPI/Component.js
+yahooFinanceAPI/js/stockQuotesAPI.js
 
 NETWORK:
 *
 
 FALLBACK:
-indexOffline.html
+*.html /indexOffline.html

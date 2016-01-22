@@ -7,8 +7,33 @@
 	xmlns:custom="view"
 	>
 	<Page title="UI5 AppCache v02">
+		<headerContent>
+			<Button text="Refresh" tooltip="Refresh" press="onTriggerRefresh"/>
+		</headerContent>
 		<content>
-			<Button text="do something" press="onDoSomething" />
+			<List items="{localUIModel>/symbols}"
+					mode="Delete"
+					delete="onDeleteSymbol">
+				<ObjectListItem title="{localUIModel>symbol}" 
+								number="{localUIModel>price}"
+								numberUnit="{localUIModel>currency}"
+								>
+					<firstStatus>
+						<ObjectStatus
+							text="{localUIModel>lastTradeDateTime}"/>
+					</firstStatus>
+					<attributes>
+						<ObjectAttribute text="{localUIModel>name}" />
+					</attributes>
+				</ObjectListItem>
+			</List>
+			<CustomListItem>
+				<HBox>
+					<Input value="{localUIModel>/newSymbol}"
+							placeholder="Symbol"/>
+					<Button text="Add Symbol" press="onAddSymbol"/>
+				</HBox>
+			</CustomListItem>
 		</content>
 	</Page>
 </core:View>
