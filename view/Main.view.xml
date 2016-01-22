@@ -8,7 +8,9 @@
 	>
 	<Page title="UI5 AppCache v02">
 		<headerContent>
-			<Button text="Refresh" tooltip="Refresh" press="onTriggerRefresh"/>
+			<Button text="Refresh" 
+					tooltip="Refresh" 
+					press="onTriggerRefresh"/>
 		</headerContent>
 		<content>
 			<List items="{localUIModel>/symbols}"
@@ -31,7 +33,8 @@
 				<HBox>
 					<Input value="{localUIModel>/newSymbol}"
 							placeholder="Symbol"/>
-					<Button text="Add Symbol" press="onAddSymbol"/>
+					<Button text="Add Symbol" 
+							press="onAddSymbol"/>
 				</HBox>
 			</CustomListItem>
 		</content>

@@ -47,21 +47,11 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				console.log(oQueryRes);
 				
 				//TODO handle single result
-				for (var i = 0; i < oQueryRes.query.results.quote.length; i++) {
-					var sPrice = oQueryRes.query.results.quote[i].LastTradePriceOnly;
-					var sCurrency = oQueryRes.query.results.quote[i].Currency;
-					var sSymbol = oQueryRes.query.results.quote[i].Symbol;
-					var sLastTradeDate = oQueryRes.query.results.quote[i].LastTradeDate;
-					var sLastTradeTime = oQueryRes.query.results.quote[i].LastTradeTime;
-					var sName = oQueryRes.query.results.quote[i].Name;
-					
-					for (var j = 0; j < aSymbolObjects.length; j++) {
-						if(aSymbolObjects[j].symbol === sSymbol){
-							aSymbolObjects[j].price = sPrice;
-							aSymbolObjects[j].currency = sCurrency;
-							aSymbolObjects[j].name = sName;
-							aSymbolObjects[j].lastTradeDateTime = sLastTradeDate + " " + sLastTradeTime;
-						}
+				if(oQueryRes.query.count === 1) {
+					that._fillQuote(oQueryRes.query.results.quote, aSymbolObjects);
+				} else {
+					for (var i = 0; i < oQueryRes.query.results.quote.length; i++) {
+						that._fillQuote(oQueryRes.query.results.quote[i], aSymbolObjects);
 					}
 				}
 				
@@ -69,6 +59,24 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				that._saveSymbols(that._getStorage(), 
 					that._localUIModel.getProperty("/symbols"));
 			});
+		},
+
+		_fillQuote : function(oQuote, aSymbols) {
+			var sPrice = oQuote.LastTradePriceOnly;
+			var sCurrency = oQuote.Currency;
+			var sSymbol = oQuote.Symbol;
+			var sLastTradeDate = oQuote.LastTradeDate;
+			var sLastTradeTime = oQuote.LastTradeTime;
+			var sName = oQuote.Name;
+			
+			for (var j = 0; j < aSymbols.length; j++) {
+				if(aSymbols[j].symbol === sSymbol){
+					aSymbols[j].price = sPrice;
+					aSymbols[j].currency = sCurrency;
+					aSymbols[j].name = sName;
+					aSymbols[j].lastTradeDateTime = sLastTradeDate + " " + sLastTradeTime;
+				}
+			}
 		},
 
 		onTriggerRefresh : function(oEvent) {
