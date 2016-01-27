@@ -1,6 +1,6 @@
 sap.ui.define(["sap/ui/core/mvc/Controller",
 				"jquery.sap.global", 
-				"jQuery.sap.storage"],
+				"jquery.sap.storage"],
 	function(Controller, jQuery, jQueryStorage) {
 	"use strict";
 	
