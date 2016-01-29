@@ -1,5 +1,4 @@
 CACHE MANIFEST
-indexOffline.html
 resources/sap-ui-core.js
 resources/sap/m/library-preload.json
 resources/sap/ui/core/library-preload.json
@@ -12,14 +11,14 @@ resources/jQuery.sap.storage.js
 resources/sap/ui/core/themes/base/fonts/SAP-icons.ttf 
 resources/sap/ui/core/themes/sap_bluecrystal/library-parameters.json
 resources/sap/m/themes/sap_bluecrystal/library-parameters.json
-style.css
-view/Main.view.xml
-view/Main.controller.js
-yahooFinanceAPI/Component.js
-yahooFinanceAPI/js/stockQuotesAPI.js
+
+de.pensware.ui5StocksApp/Component.js
+de.pensware.ui5StocksApp/manifest.json
+de.pensware.ui5StocksApp/view/Main.view.xml
+de.pensware.ui5StocksApp/view/Main.controller.js
+
+de.pensware.yahooFinanceAPI/Component.js
+de.pensware.yahooFinanceAPI/js/stockQuotesAPI.js
 
 NETWORK:
 *
-
-FALLBACK:
-*.html /indexOffline.html
