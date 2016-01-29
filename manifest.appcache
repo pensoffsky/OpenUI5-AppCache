@@ -17,8 +17,8 @@ de.pensware.ui5StocksApp/manifest.json
 de.pensware.ui5StocksApp/view/Main.view.xml
 de.pensware.ui5StocksApp/view/Main.controller.js
 
-de.pensware.yahooFinanceAPI/Component.js
-de.pensware.yahooFinanceAPI/js/stockQuotesAPI.js
+de.pensware.financeAPI/Component.js
+de.pensware.financeAPI/js/stockQuotesAPI.js
 
 NETWORK:
 *

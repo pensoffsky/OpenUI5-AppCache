@@ -1,6 +1,6 @@
 sap.ui.require(
 	[
-		"yahooFinanceAPI/js/stockQuotesAPI",
+		"js/stockQuotesAPI",
 		"sap/ui/thirdparty/sinon",
 		"sap/ui/thirdparty/sinon-qunit"
 	],

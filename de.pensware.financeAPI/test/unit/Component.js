@@ -20,11 +20,11 @@ sap.ui.require(
 		});
 		
 		QUnit.test("Instantiation", function (assert) {
-			var oYahooFinanceAPI = sap.ui.component( {name: "yahooFinanceAPI" } )
+			var ofinanceAPI = sap.ui.component( {name: "de.pensware.financeAPI" } )
 			
 			// Assert
-			assert.ok(oYahooFinanceAPI, "component initialized");
-			assert.ok(oYahooFinanceAPI.getStockQuotesAPI(), "stockQuotesAPI initialized");
+			assert.ok(ofinanceAPI, "component initialized");
+			assert.ok(ofinanceAPI.getStockQuotesAPI(), "stockQuotesAPI initialized");
 		});
 	}
 );

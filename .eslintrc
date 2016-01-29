@@ -5,7 +5,7 @@
 	"globals": {
 		"sap": true,
 		"jQuery": true,
-		"yahooFinanceAPI": true,		
+		"financeAPI": true,		
 		"QUnit": true
 	},
 	"rules": {

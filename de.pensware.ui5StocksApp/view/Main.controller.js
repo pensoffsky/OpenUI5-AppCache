@@ -15,9 +15,9 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			
 			this.getView().setModel(this._localUIModel, "localUIModel");
 			
-			//initialize the yahooFinanceAPI component
-			var oYahooFinanceAPI = sap.ui.component( {name: "de.pensware.yahooFinanceAPI" } )
-			this._oStockQuotesAPI = oYahooFinanceAPI.getStockQuotesAPI();
+			//initialize the financeAPI component
+			var ofinanceAPI = sap.ui.component( {name: "de.pensware.financeAPI" } )
+			this._oStockQuotesAPI = ofinanceAPI.getStockQuotesAPI();
 		},
 		
 		_getStorage : function () {
