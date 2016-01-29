@@ -9,7 +9,7 @@ sap.ui.define(["sap/ui/base/Object"], function(BaseObject) {
 			// var aSymbols = ["YHOO","AAPL","GOOG","MSFT"];
 			var sSymbols = '"' + aSymbols.join('","') + '"';
 			var data = encodeURIComponent('select * from yahoo.finance.quotes where symbol in (' + sSymbols + ')');
-			jQuery.getJSON(this._sQueryBaseUrl, 'q=' + data + "&env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", fSuccess);
+			return jQuery.getJSON(this._sQueryBaseUrl, 'q=' + data + "&env=http%3A%2F%2Fdatatables.org%2Falltables.env&format=json", fSuccess);
 		},
 		
 		queryResToArray : function (oQueryRes) {

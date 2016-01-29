@@ -9,11 +9,22 @@
 	>
 	<Page title="UI5 AppCache v02">
 		<headerContent>
-			<Button text="Refresh" 
+			<!-- <Button text="Refresh" 
 					tooltip="Refresh" 
-					press="onTriggerRefresh"/>
+					press="onTriggerRefresh"/> -->
 		</headerContent>
 		<content>
+			<PullToRefresh id="idPullToRefresh"
+				refresh="onTriggerRefresh"/>
+			<VBox items="{localUIModel>/aMessages}">
+				<MessageStrip
+					text="{localUIModel>text}"
+					type="Error"
+					showIcon="true"
+					showCloseButton="true"
+					class="sapUiMediumMargin">
+				</MessageStrip>
+			</VBox>
 			<List items="{localUIModel>/symbols}"
 					mode="Delete"
 					delete="onDeleteSymbol">

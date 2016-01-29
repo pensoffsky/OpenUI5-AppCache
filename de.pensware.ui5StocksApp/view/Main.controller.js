@@ -9,7 +9,8 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			this._localUIModel = new sap.ui.model.json.JSONModel();
 			this._localUIModel.setData({
 				symbols: [{symbol: "test", price: "489"}, {symbol: "MSFT", price: ""}],
-				newSymbol: ""
+				newSymbol: "",
+				aMessages: []
 			});
 			this._restoreSymbols(this._getStorage(), this._localUIModel);
 			
@@ -43,8 +44,10 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			for (var i = 0; i < aSymbolObjects.length; i++) {
 				aSymbols.push(aSymbolObjects[i].symbol);
 			}
-			this._oStockQuotesAPI.fetchData(aSymbols, function onSuccess(oQueryRes) {
+			var jqxhr = this._oStockQuotesAPI.fetchData(aSymbols, function onSuccess(oQueryRes) {
 				console.log(oQueryRes);
+				that.getView().byId("idPullToRefresh").hide();
+				that._clearMessage();
 				
 				var aQueryRes = that._oStockQuotesAPI.queryResToArray(oQueryRes);
 				for (var i = 0; i < aQueryRes.length; i++) {
@@ -55,6 +58,23 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				that._saveSymbols(that._getStorage(), 
 					that._localUIModel.getProperty("/symbols"));
 			});
+			
+			jqxhr.fail(function() {
+				that.getView().byId("idPullToRefresh").hide();
+				that._addMessage("Error: Stock data could not be fetched. Are you offline?");
+			});
+		},
+		
+		_addMessage : function(sText){
+			var aMessages = [];
+			this._localUIModel.setProperty("/aMessages", aMessages);
+			aMessages.push({text: sText});
+			this._localUIModel.setProperty("/aMessages", aMessages);
+		},
+		
+		_clearMessage : function(){
+			var aMessages = [];
+			this._localUIModel.setProperty("/aMessages", aMessages);
 		},
 
 		_fillQuote : function(oQuote, aSymbols) {
@@ -73,6 +93,10 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 					aSymbols[j].lastTradeDateTime = sLastTradeDate + " " + sLastTradeTime;
 				}
 			}
+		},
+
+		onMessageStripClosed : function() {
+			
 		},
 
 		onTriggerRefresh : function(oEvent) {
