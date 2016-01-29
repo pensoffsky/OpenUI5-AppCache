@@ -16,13 +16,14 @@ sap.ui.define(['./Model'],
 	 * @extends sap.ui.model.Model
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
 	 * @alias sap.ui.model.MetaModel
 	 */
-	var MetaModel = Model.extend("sap.ui.model.MetaModel", {
+	var MetaModel = Model.extend("sap.ui.model.MetaModel",
+		/** @lends sap.ui.model.MetaModel.prototype */ {
 			constructor : function() {
 				Model.apply(this, arguments);
 			}

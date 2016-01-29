@@ -24,7 +24,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -210,10 +210,6 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 		}
 	}});
 
-	var bUseAnimations = sap.ui.getCore().getConfiguration().getAnimation(),
-		fnGetDelay = function (iDelay) {
-			return bUseAnimations ? iDelay : 0;
-		};
 
 	NavContainer.prototype.init = function() {
 		this._pageStack = [];
@@ -436,10 +432,10 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	 *
 	 * @param {string} sPageId
 	 *         The ID of the control/page/screen which is inserted into the history stack. The respective control must be aggregated by the NavContainer, otherwise this will cause an error.
-	 * @param {string} [sTransitionName]
+	 * @param {string} sTransitionName
 	 *         The type of the transition/animation which would have been used to navigate from the (inserted) previous page to the current page. When navigating back, the inverse animation will be applied.
 	 *         This parameter can be omitted; then the default is "slide" (horizontal movement from the right).
-	 * @param {object} [oData]
+	 * @param {object} oData
 	 *         This optional object can carry any payload data which would have been given to the inserted previous page if the user would have done a normal forward navigation to it.
 	 * @type sap.m.NavContainer
 	 * @public
@@ -536,18 +532,18 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	 *
 	 * @param {string} sPageId
 	 *         The screen to which drilldown should happen. The ID or the control itself can be given.
-	 * @param {string} [sTransitionName]
+	 * @param {string} sTransitionName
 	 *         The type of the transition/animation to apply. This parameter can be omitted; then the default is "slide" (horizontal movement from the right).
 	 *         Other options are: "fade", "flip", and "show" and the names of any registered custom transitions.
 	 *
 	 *         None of the standard transitions is currently making use of any given transition parameters.
-	 * @param {object} [oData]
+	 * @param {object} oData
 	 *         Since version 1.7.1. This optional object can carry any payload data which should be made available to the target page. The "beforeShow" event on the target page will contain this data object as "data" property.
 	 *
 	 *         Use case: in scenarios where the entity triggering the navigation can or should not directly initialize the target page, it can fill this object and the target page itself (or a listener on it) can take over the initialization, using the given data.
 	 *
 	 *         When the "transitionParameters" object is used, this "data" object must also be given (either as object or as null) in order to have a proper parameter order.
-	 * @param {object} [oTransitionParameters]
+	 * @param {object} oTransitionParameters
 	 *         Since version 1.7.1. This optional object can contain additional information for the transition function, like the DOM element which triggered the transition or the desired transition duration.
 	 *
 	 *         For a proper parameter order, the "data" parameter must be given when the "transitionParameters" parameter is used. (it can be given as "null")
@@ -600,7 +596,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 
 		var oToPage = this.getPage(pageId);
 
-		if (oToPage && oFromPage) {
+		if (oToPage) {
 
 			// remember the focused object in "from page"
 			this._mFocusObject[oFromPage.getId()] = document.activeElement;
@@ -673,7 +669,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 					if (that && (that._iTransitionsCompleted < iCompleted + 1)) {
 						jQuery.sap.log.warning("Transition '" + transitionName + "' 'to' was triggered five seconds ago, but has not yet invoked the end-of-transition callback.");
 					}
-				}, fnGetDelay(5000));
+				}, 5000);
 
 				this._bNavigating = true;
 				oTransition.to.call(this, oFromPage, oToPage, jQuery.proxy(function(){this._afterTransitionCallback(oNavInfo, data);}, this), oTransitionParameters); // trigger the transition
@@ -695,14 +691,14 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	 *
 	 * Calling this navigation method triggers first the (cancelable) "navigate" event on the NavContainer, then the "beforeHide" pseudo event on the source page and "beforeFirstShow" (if applicable) and"beforeShow" on the target page. Later - after the transition has completed - the "afterShow" pseudo event is triggered on the target page and "afterHide" on the page which has been left. The given backData object is available in the "beforeFirstShow", "beforeShow" and "afterShow" event object as "data" property. The original "data" object from the "to" navigation is also available in these event objects.
 	 *
-	 * @param {object} [oBackData]
+	 * @param {object} oBackData
 	 *         Since version 1.7.1. This optional object can carry any payload data which should be made available to the target page of the back navigation. The event on the target page will contain this data object as "backData" property. (The original data from the "to()" navigation will still be available as "data" property.)
 	 *
 	 *         In scenarios where the entity triggering the navigation can or should not directly initialize the target page, it can fill this object and the target page itself (or a listener on it) can take over the initialization, using the given data.
 	 *         For back navigation this can be used e.g. when returning from a detail page to transfer any settings done there.
 	 *
 	 *         When the "transitionParameters" object is used, this "data" object must also be given (either as object or as null) in order to have a proper parameter order.
-	 * @param {object} [oTransitionParameters]
+	 * @param {object} oTransitionParameters
 	 *         Since version 1.7.1. This optional object can give additional information to the transition function, like the DOM element which triggered the transition or the desired transition duration.
 	 *         The animation type can NOT be selected here - it is always the inverse of the "to" navigation.
 	 *
@@ -727,11 +723,11 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	 *
 	 * @param {string} sPageId
 	 *         The ID of the screen to which back navigation should happen. The ID or the control itself can be given. The nearest such page among the previous pages in the history stack will be used.
-	 * @param {object} [oBackData]
+	 * @param {object} oBackData
 	 *         This optional object can carry any payload data which should be made available to the target page of the "backToPage" navigation. The event on the target page will contain this data object as "backData" property.
 	 *
 	 *         When the "transitionParameters" object is used, this "data" object must also be given (either as object or as null) in order to have a proper parameter order.
-	 * @param {object} [oTransitionParameters]
+	 * @param {object} oTransitionParameters
 	 *         This optional object can give additional information to the transition function, like the DOM element which triggered the transition or the desired transition duration.
 	 *         The animation type can NOT be selected here - it is always the inverse of the "to" navigation.
 	 *
@@ -755,11 +751,11 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	 *
 	 * Calling this navigation method triggers first the (cancelable) "navigate" event on the NavContainer, then the "beforeHide" pseudo event on the source page and "beforeFirstShow" (if applicable) and"beforeShow" on the target page. Later - after the transition has completed - the "afterShow" pseudo event is triggered on the target page and "afterHide" on the page which has been left. The given backData object is available in the "beforeFirstShow", "beforeShow" and "afterShow" event object as "data" property.
 	 *
-	 * @param {object} [oBackData]
+	 * @param {object} oBackData
 	 *         This optional object can carry any payload data which should be made available to the target page of the "backToTop" navigation. The event on the target page will contain this data object as "backData" property.
 	 *
 	 *         When the "transitionParameters" object is used, this "data" object must also be given (either as object or as null) in order to have a proper parameter order.
-	 * @param {object} [oTransitionParameters]
+	 * @param {object} oTransitionParameters
 	 *         This optional object can give additional information to the transition function, like the DOM element which triggered the transition or the desired transition duration.
 	 *         The animation type can NOT be selected here - it is always the inverse of the "to" navigation.
 	 *
@@ -910,7 +906,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 					if (that && (that._iTransitionsCompleted < iCompleted + 1)) {
 						jQuery.sap.log.warning("Transition '" + mode + "' 'back' was triggered five seconds ago, but has not yet invoked the end-of-transition callback.");
 					}
-				}, fnGetDelay(5000));
+				}, 5000);
 
 				this._bNavigating = true;
 
@@ -1020,11 +1016,11 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 								bOneTransitionFinished = true;
 								fAfterTransition.apply(oFromPage.$().add(oToPage.$()));
 							}
-						}, fnGetDelay(400));
+						}, 400);
 
-					}, fnGetDelay(60)); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few
+					}, 60); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few
 
-				}, 0); // iPhone seems to need a zero timeout here, otherwise the to page is black (and may suddenly become visible when the DOM is touched)
+				},0); // iPhone seems to need a zero timeout here, otherwise the to page is black (and may suddenly become visible when the DOM is touched)
 			},
 
 			back: function(oFromPage, oToPage, fCallback /*, oTransitionParameters is unused */) {
@@ -1065,7 +1061,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 							oToPage.$().css("box-shadow", "0em 1px 0em rgba(128, 128, 1280, 0.1)"); // add box-shadow
 							window.setTimeout(function(){
 								oToPage.$().css("box-shadow", ""); // remove it again
-							}, fnGetDelay(50));
+							},50);
 						},0);
 					}
 
@@ -1078,9 +1074,9 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 							bOneTransitionFinished = true;
 							fAfterTransition.apply(oFromPage.$().add(oToPage.$()));
 						}
-					}, fnGetDelay(400));
+					}, 400);
 
-				}, fnGetDelay(100)); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few
+				}, 100); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few
 			}
 		};
 
@@ -1091,9 +1087,9 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 				$ToPage.css("left", "100%");
 				oToPage.removeStyleClass("sapMNavItemHidden"); // remove the "hidden" class which has been added by the NavContainer before the transition was called
 
-				$ToPage.animate({left: "0%"}, fnGetDelay(300));
+				$ToPage.animate({left: "0%"}, 300);
 				var $FromPage = oFromPage.$();
-				$FromPage.animate({left: "-100%"}, fnGetDelay(300), function(){
+				$FromPage.animate({left: "-100%"}, 300, function(){
 					oFromPage.addStyleClass("sapMNavItemHidden");
 					$FromPage.css("left", "0");
 					fCallback();
@@ -1105,9 +1101,9 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 				$ToPage.css("left", "-100%");
 				oToPage.removeStyleClass("sapMNavItemHidden");
 
-				$ToPage.animate({left: "0%"}, fnGetDelay(300));
+				$ToPage.animate({left: "0%"}, 300);
 				var $FromPage = oFromPage.$();
-				$FromPage.animate({left: "100%"}, fnGetDelay(300), function(){
+				$FromPage.animate({left: "100%"}, 300, function(){
 					oFromPage.addStyleClass("sapMNavItemHidden");
 					$FromPage.css("left", "0");
 					fCallback();
@@ -1153,9 +1149,9 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 							if (bTransitionEndPending) {
 								fAfterTransition.apply(oToPage.$());
 							}
-						}, fnGetDelay(600));
+						}, 600);
 
-					}, fnGetDelay(10));
+					}, 10);
 				},
 
 				back: function(oFromPage, oToPage, fCallback /*, oTransitionParameters is unused */) {
@@ -1190,9 +1186,9 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 							if (bTransitionEndPending) {
 								fAfterTransition.apply(oToPage.$());
 							}
-						}, fnGetDelay(600));
+						}, 600);
 
-					}, fnGetDelay(10));
+					}, 10);
 				}
 		};
 
@@ -1203,7 +1199,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 				$ToPage.css("opacity", "0");
 				oToPage.removeStyleClass("sapMNavItemHidden"); // remove the "hidden" class which has been added by the NavContainer before the transition was called
 
-				$ToPage.animate({opacity: "1"}, fnGetDelay(500), function(){
+				$ToPage.animate({opacity: "1"}, 500, function(){
 					oFromPage.addStyleClass("sapMNavItemHidden");
 					fCallback();
 				});
@@ -1213,7 +1209,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 				var $FromPage = oFromPage.$();
 				oToPage.removeStyleClass("sapMNavItemHidden"); // remove the "hidden" class which has been added by the NavContainer before the transition was called
 
-				$FromPage.animate({opacity: "0"}, fnGetDelay(500), function(){
+				$FromPage.animate({opacity: "0"}, 500, function(){
 					oFromPage.addStyleClass("sapMNavItemHidden");
 					$FromPage.css("opacity", "1");
 					fCallback();
@@ -1273,9 +1269,9 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 								bOneTransitionFinished = true;
 								fAfterTransition.apply(oFromPage.$().add(oToPage.$()));
 							}
-						}, fnGetDelay(600));
+						}, 600);
 
-					}, fnGetDelay(60)); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few#
+					}, 60); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few#
 				}, 0);
 			},
 
@@ -1323,9 +1319,9 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 							bOneTransitionFinished = true;
 							fAfterTransition.apply(oFromPage.$().add(oToPage.$()));
 						}
-					}, fnGetDelay(600));
+					}, 600);
 
-				}, fnGetDelay(60)); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few
+				}, 60); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few
 			}
 		};
 
@@ -1384,9 +1380,9 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 								bOneTransitionFinished = true;
 								fAfterTransition.apply(oFromPage.$().add(oToPage.$()));
 							}
-						}, fnGetDelay(1000));
+						}, 1000);
 
-					}, fnGetDelay(60)); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few#
+					}, 60); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few#
 				}, 0);
 			},
 
@@ -1434,9 +1430,9 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 							bOneTransitionFinished = true;
 							fAfterTransition.apply(oFromPage.$().add(oToPage.$()));
 						}
-					}, fnGetDelay(1000));
+					}, 1000);
 
-				}, fnGetDelay(60)); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few
+				}, 60); // this value has been found by testing on actual devices; with "10" there are frequent "no-animation" issues, with "100" there are none, with "50" there are very few
 			}
 		};
 
@@ -1543,8 +1539,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	};
 
 	NavContainer.prototype.removePage = function(oPage) {
-		// when removing a page that's not the currently displayed page, there's no need to invalidate the NavContainer
-		oPage = this.removeAggregation("pages", oPage, oPage !== this.getCurrentPage());
+		oPage = this.removeAggregation("pages", oPage);
 
 		this._onPageRemoved(oPage);
 

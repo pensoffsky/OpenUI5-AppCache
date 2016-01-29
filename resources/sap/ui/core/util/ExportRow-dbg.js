@@ -11,8 +11,8 @@ sap.ui.define(['sap/ui/base/ManagedObject', './ExportCell'],
 
 	/**
 	 * Constructor for a new ExportRow.
-	 *
-	 * @param {string} [sId] id for the new control, generated automatically if no id is given
+	 * 
+	 * @param {string} [sId] id for the new control, generated automatically if no id is given 
 	 * @param {object} [mSettings] initial settings for the new control
 	 *
 	 * @class
@@ -20,7 +20,7 @@ sap.ui.define(['sap/ui/base/ManagedObject', './ExportCell'],
 	 * @extends sap.ui.base.ManagedObject
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 * @since 1.22.0
 	 *
 	 * @constructor

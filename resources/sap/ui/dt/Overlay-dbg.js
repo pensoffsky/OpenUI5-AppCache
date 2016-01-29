@@ -10,8 +10,7 @@ sap.ui.define([
 	'sap/ui/core/Control',
 	'sap/ui/dt/ElementUtil',
 	'sap/ui/dt/OverlayUtil',
-	'sap/ui/dt/DOMUtil',
-	'jquery.sap.dom'
+	'sap/ui/dt/DOMUtil'
 ],
 function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 	"use strict";
@@ -22,7 +21,7 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 	/**
 	 * Constructor for an Overlay.
 	 *
-	 * @param {string} [sId] id for the new object, generated automatically if no id is given
+	 * @param {string} [sId] id for the new object, generated automatically if no id is given 
 	 * @param {object} [mSettings] initial settings for the new object
 	 *
 	 * @class
@@ -30,7 +29,7 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @private
@@ -48,7 +47,7 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 			properties : {
 			},
 			associations : {
-				/**
+				/** 
 				 * Element associated with an overlay
 				 */
 				element : {
@@ -68,28 +67,28 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 		}
 	});
 
-	/**
+	/** 
 	 * Returns children of this overlay
 	 * @return {sap.ui.dt.Overlay[]} overlays that are logical children of this overlay
 	 * @protected
 	 */
 	//Overlay.prototype.getChildren = function() {};
 
-	/**
+	/** 
 	 * Returns if the overlay should be visible
 	 * @return {boolean} if should be visible
 	 * @public
 	 */
 	//Overlay.prototype.isVisible = function() {};
 
-	/**
+	/** 
 	 * Creates and/or returns an overlay container element, where all ElementOverlays should be rendered (initially)
 	 * @return {Element} overlay container
 	 * @static
 	 */
 	Overlay.getOverlayContainer = function() {
 		if (!oOverlayContainer) {
-			oOverlayContainer = jQuery.sap.byId(sOverlayContainerId);
+			oOverlayContainer = jQuery("#" + sOverlayContainerId);
 			if (!oOverlayContainer.length) {
 				oOverlayContainer = jQuery("<div id='" + sOverlayContainerId + "'></div>").appendTo("body");
 			}
@@ -98,7 +97,7 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 		return oOverlayContainer.get(0);
 	};
 
-	/**
+	/** 
 	 * Removes an overlay container element from DOM
 	 * @static
 	 */
@@ -110,25 +109,16 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 		oOverlayContainer = null;
 	};
 
-	/**
-	 * Called when the Overlay is initialized
+	/** 
+	 * Called when the Overlay is initialized	
 	 * @protected
 	 */
 	Overlay.prototype.init = function() {
 		this.attachBrowserEvent("scroll", this._onScroll, this);
 	};
 
-	/**
-	 * this is needed to prevent UI5 renderManager from removing overlay's node from DOM in a rendering phase
-	 * see RenderManager.js "this._fPutIntoDom" function
-	 * @private
-	 */
-	Overlay.prototype._onChildRerenderedEmpty = function() {
-		return true;
-	};
-
-	/**
-	 * Called when the Overlay is destroyed
+	/** 
+	 * Called when the Overlay is destroyed	
 	 * @protected
 	 */
 	Overlay.prototype.exit = function() {
@@ -148,7 +138,7 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 		}
 	};
 
-	/**
+	/** 
 	 * Called after Overlay rendering phase
 	 * @protected
 	 */
@@ -167,13 +157,13 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 
 	};
 
-	/**
-	 * @return {Element} The Element's DOM Element sub DOM Element or null
+	/** 
+	 * @return {Element} The Element's DOM Element sub DOM Element or null	
 	 * @override
 	 */
 	Overlay.prototype.getDomRef = function() {
 		return this._oDomRef || Control.prototype.getDomRef.apply(this, arguments);
-	};
+	};	
 
 	/**
 	 * Returns an instance of the Element, which is associated with this Overlay
@@ -184,8 +174,8 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 		return sap.ui.getCore().byId(this.getElement());
 	};
 
-	/**
-	 * @return {boolean} if the Overlay has focus
+	/** 
+	 * @return {boolean} if the Overlay has focus	
 	 * @private
 	 */
 	Overlay.prototype.hasFocus = function() {
@@ -225,10 +215,11 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 			}
 			var oOverflows = DOMUtil.getOverflows(oGeometry.domRef);
 			if (oOverflows) {
-				if (oOverflows.overflowX) {
+				// TODO : why overflow hidden shouldn't be copied?
+				if (oOverflows.overflowX /*&& oOverflows.overflowX !== "hidden"*/) {
 					$overlay.css("overflow-x", oOverflows.overflowX);
 				}
-				if (oOverflows.overflowY) {
+				if (oOverflows.overflowY /*&& oOverflows.overflowY !== "hidden"*/) {
 					$overlay.css("overflow-y", oOverflows.overflowY);
 				}
 				var iScrollHeight = oGeometry.domRef.scrollHeight;
@@ -239,6 +230,7 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 				}
 				DOMUtil.syncScroll(oGeometry.domRef, this.getDomRef());
 			}
+	
 
 			this.getChildren().forEach(function(oChild) {
 				oChild.applyStyles();
@@ -251,12 +243,12 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 		}
 	};
 
-	/**
+	/** 
 	 * Returns an object, which describes the DOM geometry of the element associated with this overlay or null if it can't be found
 	 * The geometry is calculated based on the associated element's DOM reference, if it exists or based on it's public children
 	 * Object may contain following fields: position - absolute position of Element in DOM; size - absolute size of Element in DOM
 	 * Object may contain domRef field, when the associated Element's DOM can be found
-	 * @return {object} geometry object describing the DOM of the Element associated with this Overlay
+	 * @return {object} geometry object describing the DOM of the Element associated with this Overlay 
 	 * @public
 	 */
 	Overlay.prototype.getGeometry = function() {
@@ -273,9 +265,9 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 		}
 
 		return mGeometry;
-	};
+	};	
 
-	/**
+	/** 
 	 * @private
 	 */
 	Overlay.prototype._updateDom = function() {
@@ -291,9 +283,7 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 			} else {
 				// instead of adding the created DOM into the UIArea's DOM, we are adding it to overlay-container to avoid clearing of the DOM
 				var oOverlayContainer = Overlay.getOverlayContainer();
-				var $parent = this.$().parent();
-				var oParentElement = $parent.length ? $parent.get(0) : null;
-				if (oOverlayContainer !== oParentElement) {
+				if (oOverlayContainer !== this.$().parent().get(0)) {
 					this.$().appendTo(oOverlayContainer);
 				}
 				this.applyStyles();
@@ -307,7 +297,7 @@ function(jQuery, Control, ElementUtil, OverlayUtil, DOMUtil) {
 		}
 	};
 
-	/**
+	/** 
 	 * @private
 	 */
 	Overlay.prototype._onScroll = function() {

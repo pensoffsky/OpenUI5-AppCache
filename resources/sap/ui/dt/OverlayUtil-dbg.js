@@ -15,12 +15,12 @@ function(jQuery, OverlayRegistry, ElementUtil) {
 
 	/**
 	 * Class for Overlay Util.
-	 *
+	 * 
 	 * @class
 	 * Utility functionality to work with overlays
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @private
 	 * @static
@@ -32,7 +32,7 @@ function(jQuery, OverlayRegistry, ElementUtil) {
 	var OverlayUtil = {};
 
 	/**
-	 *
+	 * 
 	 */
 	OverlayUtil.getClosestOverlayFor = function(oElement) {
 		if (!oElement || !oElement.getParent) {
@@ -49,7 +49,7 @@ function(jQuery, OverlayRegistry, ElementUtil) {
 	};
 
 	/**
-	 *
+	 * 
 	 */
 	OverlayUtil.getGeometry = function(aGeometry) {
 		var minLeft, maxRight, minTop, maxBottom;
@@ -84,11 +84,11 @@ function(jQuery, OverlayRegistry, ElementUtil) {
 					top : minTop
 				}
 			};
-		}
+		}		
 	};
 
 	/**
-	 *
+	 * 
 	 */
 	OverlayUtil.getClosestOverlayForType = function(sType, oOverlay) {
 		while (oOverlay && !ElementUtil.isInstanceOf(oOverlay.getElementInstance(), sType)) {
@@ -99,13 +99,13 @@ function(jQuery, OverlayRegistry, ElementUtil) {
 	};
 
 	/**
-	 *
+	 * 
 	 */
 	OverlayUtil.getClosestScrollable = function(oOverlay) {
 		if (!oOverlay) {
 			return;
 		}
-
+		
 		oOverlay = oOverlay.getParent();
 		while (oOverlay && oOverlay.isScrollable && !oOverlay.isScrollable()) {
 			oOverlay = oOverlay.getParent();
@@ -115,13 +115,13 @@ function(jQuery, OverlayRegistry, ElementUtil) {
 	};
 
 	/**
-	 *
+	 * 
 	 */
 	OverlayUtil.getFirstChildOverlay = function(oOverlay) {
 		if (!oOverlay) {
 			return;
 		}
-
+		
 		var aAggregationOverlays = oOverlay.getAggregationOverlays();
 		if (aAggregationOverlays.length > 0) {
 			for (var i = 0; i < aAggregationOverlays.length; i++) {
@@ -135,13 +135,13 @@ function(jQuery, OverlayRegistry, ElementUtil) {
 	};
 
 	/**
-	 *
+	 * 
 	 */
 	OverlayUtil.getLastChildOverlay = function(oOverlay) {
 		if (!oOverlay) {
 			return;
 		}
-
+		
 		var aAggregationOverlays = oOverlay.getAggregationOverlays();
 		if (aAggregationOverlays.length > 0) {
 			for (var i = aAggregationOverlays.length - 1; i >= 0 ; i--) {
@@ -155,7 +155,7 @@ function(jQuery, OverlayRegistry, ElementUtil) {
 	};
 
 	/**
-	 *
+	 * 
 	 */
 	OverlayUtil.getNextSiblingOverlay = function(oOverlay) {
 		if (!oOverlay) {
@@ -186,13 +186,13 @@ function(jQuery, OverlayRegistry, ElementUtil) {
 	};
 
 	/**
-	 *
+	 * 
 	 */
 	OverlayUtil.getPreviousSiblingOverlay = function(oOverlay) {
 		if (!oOverlay) {
 			return;
 		}
-
+		
 		var oParentAggregationOverlay = oOverlay.getParentAggregationOverlay();
 		if (oParentAggregationOverlay) {
 			var aAggregationOverlays = oParentAggregationOverlay.getChildren();
@@ -217,7 +217,7 @@ function(jQuery, OverlayRegistry, ElementUtil) {
 	};
 
 	/**
-	 *
+	 * 
 	 */
 	OverlayUtil.getNextOverlay = function(oOverlay) {
 		if (!oOverlay) {
@@ -243,7 +243,7 @@ function(jQuery, OverlayRegistry, ElementUtil) {
 	};
 
 	/**
-	 *
+	 * 
 	 */
 	OverlayUtil.getPreviousOverlay = function(oOverlay) {
 		if (!oOverlay) {
@@ -270,7 +270,7 @@ function(jQuery, OverlayRegistry, ElementUtil) {
 	};
 
 	/**
-	 *
+	 * 
 	 */
 	OverlayUtil.getRootOverlay = function(oOverlay) {
 		var oParentOverlay = oOverlay;

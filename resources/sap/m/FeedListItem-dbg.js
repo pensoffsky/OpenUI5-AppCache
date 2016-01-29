@@ -14,7 +14,7 @@ sap.ui.define(['jquery.sap.global', './ListItemBase', './library'],
 	/**
 	 * Constructor for a new FeedListItem.
 	 *
-	 * @param {string} [sId] id for the new control, generated automatically if no id is given
+	 * @param {string} [sId] id for the new control, generated automatically if no id is given 
 	 * @param {object} [mSettings] initial settings for the new control
 	 *
 	 * @class
@@ -23,7 +23,7 @@ sap.ui.define(['jquery.sap.global', './ListItemBase', './library'],
 	 * @extends sap.m.ListItemBase
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -79,7 +79,7 @@ sap.ui.define(['jquery.sap.global', './ListItemBase', './library'],
 
 			/**
 			 * By default, this is set to true but then one or more requests are sent trying to get the density perfect version of image if this version of image doesn't exist on the server.
-			 *
+			 * 
 			 * If bandwidth is the key for the application, set this value to false.
 			 */
 			iconDensityAware : {type : "boolean", defaultValue : true},
@@ -107,7 +107,7 @@ sap.ui.define(['jquery.sap.global', './ListItemBase', './library'],
 					 */
 					domRef : {type : "string"}
 				}
-			},
+			}, 
 
 			/**
 			 * Event is fired when the icon is pressed.
@@ -167,14 +167,12 @@ sap.ui.define(['jquery.sap.global', './ListItemBase', './library'],
 	 * @private
 	 */
 	FeedListItem.prototype.ontap = function(oEvent) {
-		if (oEvent.srcControl) {
-			if ((!this.getIconActive() && this._oImageControl && oEvent.srcControl.getId() === this._oImageControl.getId()) || // click on inactive image
-					(!this.getSenderActive() && this._oLinkControl && oEvent.srcControl.getId() === this._oLinkControl.getId()) || // click on inactive sender link
-					(!this._oImageControl || (oEvent.srcControl.getId() !== this._oImageControl.getId()) &&                        // not image clicked
-					(!this._oLinkControl || (oEvent.srcControl.getId() !== this._oLinkControl.getId())) &&                         // not sender link clicked
-					(!this._oLinkExpandCollapse || (oEvent.srcControl.getId() !== this._oLinkExpandCollapse.getId())))) {          // not expand/collapse link clicked
-				ListItemBase.prototype.ontap.apply(this, [oEvent]);
-			}
+		if (((	 (!this.getIconActive() && oEvent.srcControl.getId() == this._oImageControl.getId())) // click on inactive image
+					|| (!this.getSenderActive() && oEvent.srcControl.getId() == this._oLinkControl.getId())) // click on inactive sender link
+					|| ((!this._oImageControl || (oEvent.srcControl.getId() !== this._oImageControl.getId())) // not image clicked
+								&& (!this._oLinkControl || (oEvent.srcControl.getId() !== this._oLinkControl.getId())) // not sender link clicked
+								&& (!this._oLinkExpandCollapse || (oEvent.srcControl.getId() !== this._oLinkExpandCollapse.getId())))) { // not expand/collapse link clicked
+			ListItemBase.prototype.ontap.apply(this, [oEvent]);
 		}
 	};
 
@@ -191,8 +189,7 @@ sap.ui.define(['jquery.sap.global', './ListItemBase', './library'],
 			src : sIconSrc,
 			alt : this.getSender(),
 			densityAware : this.getIconDensityAware(),
-			decorative : false,
-			useIconTooltip : false
+			decorative : false
 		}, aCssClasses = ['sapMFeedListItemImage'];
 
 		var that = this;
@@ -292,8 +289,8 @@ sap.ui.define(['jquery.sap.global', './ListItemBase', './library'],
 	 * @private
 	 */
 	FeedListItem.prototype._toggleTextExpanded = function() {
-		var $text = this.$("realtext");
-		var $threeDots = this.$("threeDots");
+		var $text = jQuery.sap.byId(this.getId() + "-realtext");
+		var $threeDots = jQuery.sap.byId(this.getId() + "-threeDots");
 		if (this._bTextExpanded) {
 			$text.html(jQuery.sap.encodeHTML(this._sShortText).replace(/&#xa;/g, "<br>"));
 			$threeDots.text(" ... ");
@@ -364,16 +361,6 @@ sap.ui.define(['jquery.sap.global', './ListItemBase', './library'],
 		} else {
 			this.setProperty("type", type);
 		}
-		return this;
-	};
-
-	/**
-	 * Redefinition of sap.m.ListItemBase.setUnread: Unread is not supported for FeedListItem
-	 * @public
-	 * @param {boolean} new value for property unread is ignored
-	 */
-	FeedListItem.prototype.setUnread = function(bValue) {
-		this.setProperty("unread", false);
 		return this;
 	};
 

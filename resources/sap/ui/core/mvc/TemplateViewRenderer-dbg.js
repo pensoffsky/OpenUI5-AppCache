@@ -17,8 +17,8 @@ sap.ui.define(['./ViewRenderer'],
 	 */
 	var TemplateViewRenderer = {
 	};
-
-
+	
+	
 	/**
 	 * Renders the Template, using the provided {@link sap.ui.core.RenderManager}.
 	 *
@@ -28,7 +28,7 @@ sap.ui.define(['./ViewRenderer'],
 	TemplateViewRenderer.render = function(oRenderManager, oControl){
 		// convenience variable
 		var rm = oRenderManager;
-
+	
 		// write the HTML into the render manager
 		rm.write("<div");
 		rm.writeControlData(oControl);
@@ -40,9 +40,9 @@ sap.ui.define(['./ViewRenderer'],
 		rm.writeStyles();
 		rm.writeClasses();
 		rm.write(">");
-
+		
 		rm.renderControl(oControl._oTemplate);
-
+	
 		rm.write("</div>");
 	};
 

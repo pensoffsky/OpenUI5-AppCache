@@ -18,7 +18,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/XMLTemplateProcessor', 'sap/ui/
 	 * @class
 	 * A View defined using (P)XML and HTML markup.
 	 * @extends sap.ui.core.mvc.View
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -84,7 +84,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/XMLTemplateProcessor', 'sap/ui/
 		XMLView._sType = sap.ui.core.mvc.ViewType.XML;
 
 		/**
-		 * Flag for feature detection of asynchronous loading/rendering
+		 * Some applications need to know whether the XMLViews can be loaded asynchronously
 		 * @public
 		 * @since 1.30
 		 */

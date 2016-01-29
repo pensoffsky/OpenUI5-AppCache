@@ -10,7 +10,7 @@
  * http://unify-project.org
  * Copyright 2011, Deutsche Telekom AG
  * License: MIT + Apache (V2)
- *
+ * 
  * Inspired by: https://github.com/inexorabletash/raf-shim/blob/master/raf.js
  */
 (function(g){if(g.requestAnimationFrame){return;}var n=Date.now||function(){return+new Date;};var a=Object.keys||function(o){var k={};for(var e in o){k[e]=true;}return k;};var b=Object.empty||function(o){for(var k in o){return false;}return true;};var p="RequestAnimationFrame";var c=(function(){var e="webkit,moz,o,ms".split(",");for(var i=0;i<4;i++){if(g[e[i]+p]!=null){return e[i];}}})();if(c){g.requestAnimationFrame=g[c+p];g.cancelRequestAnimationFrame=g[c+"Cancel"+p];return;}var T=60;var r={};var d=1;var t=null;g.requestAnimationFrame=function(e,f){var h=d++;r[h]=e;if(t===null){t=setTimeout(function(){var j=n();var k=r;var m=a(k);r={};t=null;for(var i=0,l=m.length;i<l;i++){k[m[i]](j);}},1000/T);}return h;};g.cancelRequestAnimationFrame=function(h){delete r[h];if(b(r)){clearTimeout(t);t=null;}};})(this);

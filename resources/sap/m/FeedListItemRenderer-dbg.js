@@ -15,7 +15,7 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 	 * @namespace
 	 */
 	var FeedListItemRenderer = Renderer.extend(ListItemBaseRenderer);
-
+	
 	/**
 	 * Make sure that parent li is displayed as a horizontal webkit-box.
 	 *
@@ -31,9 +31,9 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 		} else {
 			rm.addClass("sapMFeedListShowSeparatorsAll");
 		}
-
+	
 	};
-
+	
 	/**
 	 * Renders the HTML for the given control, using the provided {@link sap.ui.core.RenderManager}.
 	 *
@@ -45,20 +45,21 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 	FeedListItemRenderer.renderLIContent = function(rm, oFeedListItem) {
 		// convenience variable
 		var sMyId = oFeedListItem.getId(), bIsPhone = sap.ui.Device.system.phone;
-
+	
 		rm.write('<div');
+		rm.writeControlData(oFeedListItem);
 		rm.addClass('sapMFeedListItem');
-
+	
 		rm.writeClasses();
 		rm.write('>');
-
+	
 		// icon
 		if (!!oFeedListItem.getShowIcon()) {
 			this._writeImageControl(rm, oFeedListItem, sMyId);
 		}
-
+	
 		// text (starting with sender)
-
+	
 		if (bIsPhone) {
 			rm.write('<div class= "sapMFeedListItemHeader ');
 			if (!!oFeedListItem.getShowIcon()) {
@@ -79,7 +80,7 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 				rm.writeEscaped(oFeedListItem.getTimestamp());
 				rm.write('</p>');
 			}
-
+	
 			rm.write('</div>');
 			rm.write('<p class="sapMFeedListItemText">');
 			rm.write('<span id="' + sMyId + '-realtext" class="sapMFeedListItemText">');
@@ -146,7 +147,7 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 						}
 						this._writeInfo(rm, oFeedListItem, sMyId);
 					}
-
+	
 				}
 				rm.write('</p>');
 			}
@@ -154,7 +155,7 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 		}
 		rm.write('</div>');
 	};
-
+	
 	FeedListItemRenderer._writeImageControl = function(rm, oFeedListItem, sMyId) {
 		rm.write('<figure id="' + sMyId + '-figure"');
 		rm.addClass('sapMFeedListItemFigure');
@@ -166,7 +167,7 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 		rm.renderControl(oFeedListItem._getImageControl());
 		rm.write('</figure>');
 	};
-
+	
 	FeedListItemRenderer._writeCollapsedText = function(rm, oFeedListItem, sMyId) {
 		// 'oFeedListItem._bTextExpanded' is true if the text had been expanded and rendering needs to be done again.
 		if (oFeedListItem._bTextExpanded) {
@@ -186,19 +187,19 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 		oLinkExpandCollapse.addStyleClass("sapMFeedListItemLinkExpandCollapse");
 		rm.renderControl(oLinkExpandCollapse);
 	};
-
+	
 	FeedListItemRenderer._writeTimestamp = function(rm, oFeedListItem, sMyId) {
 		rm.write('<span id="' + sMyId + '-timestamp">');
 		rm.writeEscaped(oFeedListItem.getTimestamp());
 		rm.write('</span>');
 	};
-
+	
 	FeedListItemRenderer._writeInfo = function(rm, oFeedListItem, sMyId) {
 		rm.write('<span id="' + sMyId + '-info">');
 		rm.writeEscaped(oFeedListItem.getInfo());
 		rm.write('</span>');
 	};
-
+	
 
 	return FeedListItemRenderer;
 

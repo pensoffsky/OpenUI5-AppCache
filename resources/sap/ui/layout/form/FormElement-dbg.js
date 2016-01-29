@@ -12,7 +12,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Element', 'sap/ui/core/EnabledP
 	/**
 	 * Constructor for a new sap.ui.layout.form.FormElement.
 	 *
-	 * @param {string} [sId] Id for the new control, generated automatically if no id is given
+	 * @param {string} [sId] Id for the new control, generated automatically if no id is given 
 	 * @param {object} [mSettings] initial settings for the new control
 	 *
 	 * @class
@@ -21,7 +21,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Element', 'sap/ui/core/EnabledP
 	 * @extends sap.ui.core.Element
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -48,7 +48,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Element', 'sap/ui/core/EnabledP
 			 * If no assignment between <code>Label</code> and the fields is set, it will be done automatically by the
 			 * <code>FormElement</code>. In this case the <code>Label</code> is assigned to the fields of the <code>FormElement</code>.
 			 */
-			label : {type : "sap.ui.core.Label", altTypes : ["string"], multiple : false},
+			label : {type : "sap.ui.core.Label", altTypes : ["string"], multiple : false}, 
 
 			/**
 			 * Formular controls that belong together to be displayed in one row of a <code>Form</code>.
@@ -119,7 +119,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Element', 'sap/ui/core/EnabledP
 				}
 			}
 
-			_updateLabelFor(this);
+			_updateLabelFor(this); 
 
 			return this;
 

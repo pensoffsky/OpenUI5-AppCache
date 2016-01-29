@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<control xmlns="http://www.sap.com/sap.ui.library.xsd">
+    <name>WizardProgressNavigator</name>
+    <derived/>
+    <author>SAP SE</author>
+    <documentation>The WizardProgressNavigator is a control mainly displaying
+the number of steps in the Wizard.</documentation>
+    <since>1.30</since>
+    <baseType>sap.ui.core/Control</baseType>
+    <properties>
+        <property group="Data" defaultValue="3" type="sap.ui.core/int" name="stepCount">
+            <documentation>Sets the total number of steps.
+Minimum number of steps is 3.
+Maximum number of steps is 8.</documentation>
+        </property>
+        <property group="Appearance" defaultValue="false" type="sap.ui.core/boolean" name="varyingStepCount">
+            <documentation>If set to true, this indicates that number of steps can vary.
+A dashed line is displayed after the last concrete step (set by the stepCount property).</documentation>
+        </property>
+    </properties>
+    <events>
+        <event allowPreventDefault="false" name="stepChanged">
+            <documentation>This event is fired when the current step changes.</documentation>
+            <parameters>
+                <parameter type="sap.ui.core/int" name="previous">
+                    <documentation>The number of the previous step. One-based.</documentation>
+                </parameter>
+                <parameter type="sap.ui.core/int" name="current">
+                    <documentation>The number of the current step. One-based.</documentation>
+                </parameter>
+            </parameters>
+        </event>
+        <event allowPreventDefault="false" name="stepActivated">
+            <documentation>This event is fired when a new step is activated.</documentation>
+            <parameters>
+                <parameter type="sap.ui.core/int" name="index">
+                    <documentation>The number of the activated step. One-based.</documentation>
+                </parameter>
+            </parameters>
+        </event>
+    </events>
+</control>

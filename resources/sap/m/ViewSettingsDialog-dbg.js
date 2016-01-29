@@ -1,26 +1,28 @@
 /*!
- * UI development toolkit for HTML5 (OpenUI5)
+* UI development toolkit for HTML5 (OpenUI5)
  * (c) Copyright 2009-2015 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
- */
+*/
 
 // Provides control sap.m.ViewSettingsDialog.
 sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/core/IconPool'],
 function(jQuery, library, Control, IconPool) {
 	"use strict";
 
+
+
 	/**
 	 * Constructor for a new ViewSettingsDialog.
 	 *
-	 * @param {string} [sId] ID for the new control, generated automatically if no ID is given
-	 * @param {object} [mSettings] Initial settings for the new control
+	 * @param {string} [sId] id for the new control, generated automatically if no id is given
+	 * @param {object} [mSettings] initial settings for the new control
 	 *
 	 * @class
-	 * The ViewSettingsDialog control provides functionality to easily select the options for sorting, grouping, and filtering data. It is a composite control, consisting of a modal popover and several internal lists. There are three different tabs (Sort, Group, Filter) in the dialog that can be activated by filling the respective associations. If only one association is filled, the other tabs are automatically hidden. The selected options can be used to create sorters and filters for the table.
+	 * ViewSettingsDialog provides functionality to easily select the options for sorting, grouping, and filtering data. It is a composite control, consisting of a modal popover and several internal lists. There are three different tabs (Sort, Group, Filter) in the dialog that can be activated by filling the respecive associations. If only one assication is filled, the other tabs are automatically hidden. The selected options can be used to create sorters and filters for the table.
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -34,126 +36,120 @@ function(jQuery, library, Control, IconPool) {
 		properties : {
 
 			/**
-			 * Defines the title of the dialog. If not set and there is only one active tab, the dialog uses the default "View" or "Sort", "Group", "Filter" respectively.
+			 * Title of the dialog. If not set, the dialog uses the default "View" or "Sort", "Group", "Filter" respectively if there is only one active tab.
 			 */
 			title : {type : "string", group : "Behavior", defaultValue : null},
 
 			/**
-			 * Determines whether the sort order is descending or ascending (default).
+			 * If set to true, the sort order is descending, otherwise ascending (default).
 			 */
 			sortDescending : {type : "boolean", group : "Behavior", defaultValue : false},
 
 			/**
-			 * Determines whether the group order is descending or ascending (default).
+			 * If set to true, the group order is descending, otherwise ascending (default).
 			 */
 			groupDescending : {type : "boolean", group : "Behavior", defaultValue : false}
 		},
 		aggregations : {
 
 			/**
-			 * The list of items with key and value that can be sorted over (for example, a list of columns for a table).
-			 * @since 1.16
+			 * List of items with key and value that can be sorted over (e.g. a list of columns for a table).
 			 */
 			sortItems : {type : "sap.m.ViewSettingsItem", multiple : true, singularName : "sortItem", bindable : "bindable"},
 
 			/**
-			 * The list of items with key and value that can be grouped on (for example, a list of columns for a table).
-			 * @since 1.16
+			 * List of items with key and value that can be grouped on (e.g. a list of columns for a table).
 			 */
 			groupItems : {type : "sap.m.ViewSettingsItem", multiple : true, singularName : "groupItem", bindable : "bindable"},
 
 			/**
-			 * The list of items with key and value that can be filtered on (for example, a list of columns for a table). A filterItem is associated with one or more detail filters.
-			 * @since 1.16
+			 * List of items with key and value that can be filtered on (e.g. a list of columns for a table). A filterItem is associated with one or more detail filters.
 			 */
 			filterItems : {type : "sap.m.ViewSettingsItem", multiple : true, singularName : "filterItem", bindable : "bindable"},
 
 			/**
-			 * The list of preset filter items that allows the selection of more complex or custom filters. These entries are displayed at the top of the filter tab.
-			 * @since 1.16
+			 * List of preset filter items that allow the selection of more complex or custom filters. These entries are displayed at the top of the filter tab.
 			 */
 			presetFilterItems : {type : "sap.m.ViewSettingsItem", multiple : true, singularName : "presetFilterItem", bindable : "bindable"},
 			/**
-			 * The list of all the custom tabs.
-			 * @since 1.30
+			 * List of all the custom tabs.
 			 */
 			customTabs: {type: "sap.m.ViewSettingsCustomTab", multiple: true, singularName: "customTab", bindable : "bindable"}
 		},
 		associations : {
 
 			/**
-			 * The sort item that is selected. It can be set by either passing a key or the item itself to the function setSelectedSortItem.
+			 * Sort item that is selected. It can be set by either passing a key or the item itself to the function "setSelectedSortItem"
 			 */
 			selectedSortItem : {type : "sap.m.ViewSettingsItem", multiple : false},
 
 			/**
-			 * The group item that is selected. It can be set by either passing a key or the item itself to the function setSelectedGroupItem.
+			 * Group item that is selected. It can be set by either passing a key or the item itself to the function "setSelectedGrouptItem"
 			 */
 			selectedGroupItem : {type : "sap.m.ViewSettingsItem", multiple : false},
 
 			/**
-			 * The preset filter item that is selected. It can be set by either passing a key or the item itself to the function setSelectedPresetFilterItem. Note that either a preset filter OR multiple detail filters can be active at the same time.
+			 * Preset filter item that is selected. It can be set by either passing a key or the item itself to the function "setSelectedPresetFilterItem". Note that either a preset filter OR multiple detail filters can be active at the same time.
 			 */
 			selectedPresetFilterItem : {type : "sap.m.ViewSettingsItem", multiple : false}
 		},
 		events : {
 
 			/**
-			 * Indicates that the user has pressed the OK button and the selected sort, group, and filter settings should be applied to the data on this page.
-			 * </br></br><b>Note:</b> Custom tabs are not converted to event parameters automatically. For custom tabs, you have to read the state of your controls inside the callback of this event.
+			 * The event indicates that the user has pressed the OK button and the selected sort, group, and filter settings should be applied to the data on this page.
 			 */
 			confirm : {
 				parameters : {
 
 					/**
-					 * The selected sort item.
+					 * Selected sort item.
 					 */
 					sortItem : {type : "sap.m.ViewSettingsItem"},
 
 					/**
-					 * The selected sort order (true = descending, false = ascending).
+					 * Selected sort order (true = descending, false = ascending).
 					 */
 					sortDescending : {type : "boolean"},
 
 					/**
-					 * The selected group item.
+					 * Selected group item
 					 */
 					groupItem : {type : "sap.m.ViewSettingsItem"},
 
 					/**
-					 * The selected group order (true = descending, false = ascending).
+					 * Selected group order (true = descending, false = ascending).
 					 */
 					groupDescending : {type : "boolean"},
 
 					/**
-					 * The selected preset filter item.
+					 * Selected preset filter item.
 					 */
 					presetFilterItem : {type : "sap.m.ViewSettingsItem"},
 
 					/**
-					 * The selected filters in an array of ViewSettingsItem.
+					 * Selected filters in an array of ViewSettingsItem.
 					 */
 					filterItems : {type : "sap.m.ViewSettingsItem[]"},
 
 					/**
-					 * The selected filter items in an object notation format: { key: boolean }. If a custom control filter was displayed (for example, the user clicked on the filter item), the value for its key is set to true to indicate that there has been an interaction with the control.
+					 * Selected filter items in an object notation format: { key: boolean }. If a custom control filter was displayed (e.g. the user clicked on the filter item), the value for its key is set to true to indicate that there has been an interaction with the control.
 					 */
 					filterKeys : {type : "object"},
 
 					/**
-					 * The selected filter items in a string format to display in the control's header bar in format "Filtered by: key (subkey1, subkey2, subkey3)".
+					 * Selected filter items in string format to display in a control's header bar in format "Filtered by: key (subkey1, subkey2, subkey3)".
 					 */
 					filterString : {type : "string"}
 				}
 			},
 
 			/**
-			 * Called when the Cancel button is pressed. It can be used to set the state of custom filter controls.
+			 * Event is called when the cancel button is pressed. It can be used to set the state of custom filter controls.
 			 */
 			cancel : {},
 
 			/**
-			 * Called when the reset filters button is pressed. It can be used to clear the state of custom filter controls.
+			 * Event is called when the reset filters button is pressed. It can be used to clear the state of custom filter controls.
 			 */
 			resetFilters : {}
 		}
@@ -297,13 +293,11 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Overwrites the aggregation setter in order to have ID validation logic as some strings
+	 * Overwrite the aggregation setter in order to have id validation logic because some strings
 	 * are reserved for the predefined tabs.
 	 *
-	 * @overwrite
-	 * @public
-	 * @param {object} oCustomTab The custom tab to be added
-	 * @returns {sap.m.ViewSettingsDialog} this pointer for chaining
+	 * @param oCustomTab
+	 * @returns {ViewSettingsDialog}
 	 */
 	ViewSettingsDialog.prototype.addCustomTab = function (oCustomTab) {
 		var sId = oCustomTab.getId();
@@ -316,10 +310,9 @@ function(jQuery, library, Control, IconPool) {
 		return this;
 	};
 
-	/**
-	 * Invalidates the control (suppressed as there is no renderer).
-	 * @overwrite
-	 * @public
+	/*
+	 * Invalidates the control (suppressed because we don't have a renderer)
+	 * @overwrite @public
 	 */
 	ViewSettingsDialog.prototype.invalidate = function() {
 		// CSN #80686/2014: only invalidate inner dialog if call does not come from inside
@@ -332,7 +325,7 @@ function(jQuery, library, Control, IconPool) {
 
 
 	/**
-	 * Forward method to the inner dialog method: addStyleClass.
+	 * Forward method to the inner dialog: addStyleClass
 	 * @public
 	 * @override
 	 * @returns {sap.m.ViewSettingsDialog} this pointer for chaining
@@ -345,7 +338,7 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Forward method to the inner dialog method: removeStyleClass.
+	 * Forward method to the inner dialog: removeStyleClass
 	 * @public
 	 * @override
 	 * @returns {sap.m.ViewSettingsDialog} this pointer for chaining
@@ -358,7 +351,7 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Forward method to the inner dialog method: toggleStyleClass.
+	 * Forward method to the inner dialog: toggleStyleClass
 	 * @public
 	 * @override
 	 * @returns {sap.m.ViewSettingsDialog} this pointer for chaining
@@ -371,7 +364,7 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Forward method to the inner dialog method: hasStyleClass.
+	 * Forward method to the inner dialog: hasStyleClass
 	 * @public
 	 * @override
 	 * @returns {boolean} true if the class is set, false otherwise
@@ -383,7 +376,7 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Forward method to the inner dialog method: getDomRef.
+	 * Forward method to the inner dialog: getDomRef
 	 * @public
 	 * @override
 	 * @return {Element} The Element's DOM Element sub DOM Element or null
@@ -398,11 +391,12 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Sets the title of the internal dialog.
+	 * Set the title of the internal dialog
 	 *
 	 * @overwrite
 	 * @public
-	 * @param {string} sTitle The title text for the dialog
+	 * @param {string}
+	 *            sTitle the title text for the dialog
 	 * @return {sap.m.ViewSettingsDialog} this pointer for chaining
 	 */
 	ViewSettingsDialog.prototype.setTitle = function(sTitle) {
@@ -412,11 +406,12 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Adds a sort item and sets the association to reflect the selected state.
+	 * Adds a sort item and sets the association to reflect the selected state
 	 *
 	 * @overwrite
 	 * @public
-	 * @param {sap.m.ViewSettingsItem} oItem The item to be added to the aggregation
+	 * @param {sap.m.ViewSettingsItem}
+	 *            oItem the item to be added to the aggregation
 	 * @return {sap.m.ViewSettingsDialog} this pointer for chaining
 	 */
 	ViewSettingsDialog.prototype.addSortItem = function(oItem) {
@@ -428,11 +423,12 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Adds a group item and sets the association to reflect the selected state.
+	 * Adds a group item and sets the association to reflect the selected state
 	 *
 	 * @overwrite
 	 * @public
-	 * @param {sap.m.ViewSettingsItem} oItem The item to be added to the group items
+	 * @param {sap.m.ViewSettingsItem}
+	 *            oItem the item to be added to the aggregation
 	 * @return {sap.m.ViewSettingsDialog} this pointer for chaining
 	 */
 	ViewSettingsDialog.prototype.addGroupItem = function(oItem) {
@@ -444,11 +440,13 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Adds a preset filter item and sets the association to reflect the selected state.
+	 * Adds a preset filter item and sets the association to reflect the selected
+	 * state
 	 *
 	 * @overwrite
 	 * @public
-	 * @param {sap.m.ViewSettingsItem} oItem The selected item or a string with the key
+	 * @param {sap.m.ViewSettingsItem}
+	 *            oItem the selected item or a string with the key
 	 * @return {sap.m.ViewSettingsDialog} this pointer for chaining
 	 */
 	ViewSettingsDialog.prototype.addPresetFilterItem = function(oItem) {
@@ -460,12 +458,12 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Sets the selected sort item (either by key or by item).
+	 * Set the selected sort item (either by key or by item)
 	 *
 	 * @overwrite
 	 * @public
-	 * @param {sap.m.ViewSettingsItem} oItem The selected item or a string with the key
-	 *
+	 * @param {sap.m.ViewSettingsItem}
+	 *            oItem the selected item or a string with the key
 	 * @return {sap.m.ViewSettingsDialog} this pointer for chaining
 	 */
 	ViewSettingsDialog.prototype.setSelectedSortItem = function(oItem) {
@@ -473,35 +471,38 @@ function(jQuery, library, Control, IconPool) {
 
 		// convenience, also allow strings
 		if (typeof oItem === "string") {
-			oItem = getViewSettingsItemByKey(aItems, oItem);
+			// find item with this id
+			for (; i < aItems.length; i++) {
+				if (aItems[i].getKey() === oItem) {
+					oItem = aItems[i];
+					break;
+				}
+			}
 		}
 
-		//change selected item only if it is found among the sort items
-		if (validateViewSettingsItem(oItem)) {
-			// set selected = true for this item & selected = false for all others items
-			for (i = 0; i < aItems.length; i++) {
-				aItems[i].setProperty('selected', false, true);
-			}
-
-			oItem.setProperty('selected', true, true);
-
-			// update the list selection
-			if (this._getDialog().isOpen()) {
-				this._updateListSelection(this._sortList, oItem);
-			}
-			this.setAssociation("selectedSortItem", oItem, true);
-		} else {
-			jQuery.sap.log.error("Could not set selected sort item. Item is not found: '" + oItem + "'");
+		// set selected = true for this item & selected = false for all others items
+		for (i = 0; i < aItems.length; i++) {
+			aItems[i].setSelected(false);
 		}
+		if (oItem) {
+			oItem.setSelected(true);
+		}
+
+		// update the list selection
+		if (this._getDialog().isOpen()) {
+			this._updateListSelection(this._sortList, oItem);
+		}
+		this.setAssociation("selectedSortItem", oItem, true);
 		return this;
 	};
 
 	/**
-	 * Sets the selected group item (either by key or by item).
+	 * Set the selected group item (either by key or by item)
 	 *
 	 * @overwrite
 	 * @public
-	 * @param {sap.m.ViewSettingsItem} oItem The selected item or a string with the key
+	 * @param {sap.m.ViewSettingsItem}
+	 *            oItem the selected item or a string with the key
 	 * @return {sap.m.ViewSettingsDialog} this pointer for chaining
 	 */
 	ViewSettingsDialog.prototype.setSelectedGroupItem = function(oItem) {
@@ -509,36 +510,38 @@ function(jQuery, library, Control, IconPool) {
 
 		// convenience, also allow strings
 		if (typeof oItem === "string") {
-			oItem = getViewSettingsItemByKey(aItems, oItem);
+			// find item with this id
+			for (; i < aItems.length; i++) {
+				if (aItems[i].getKey() === oItem) {
+					oItem = aItems[i];
+					break;
+				}
+			}
 		}
 
-		//change selected item only if it is found among the group items
-		if (validateViewSettingsItem(oItem)) {
-			// set selected = true for this item & selected = false for all others items
-			for (i = 0; i < aItems.length; i++) {
-				aItems[i].setProperty('selected', false, true);
-			}
-
-			oItem.setProperty('selected', true, true);
-
-			// update the list selection
-			if (this._getDialog().isOpen()) {
-				this._updateListSelection(this._groupList, oItem);
-			}
-			this.setAssociation("selectedGroupItem", oItem, true);
-		} else {
-			jQuery.sap.log.error("Could not set selected group item. Item is not found: '" + oItem + "'");
+		// set selected = true for this item & selected = false for all others items
+		for (i = 0; i < aItems.length; i++) {
+			aItems[i].setSelected(false);
+		}
+		if (oItem) {
+			oItem.setSelected(true);
 		}
 
+		// update the list selection
+		if (this._getDialog().isOpen()) {
+			this._updateListSelection(this._groupList, oItem);
+		}
+		this.setAssociation("selectedGroupItem", oItem, true);
 		return this;
 	};
 
 	/**
-	 * Sets the selected preset filter item.
+	 * Set the selected preset filter item
 	 *
 	 * @overwrite
 	 * @public
-	 * @param {sap.m.ViewSettingsItem} oItem The selected item or a string with the key
+	 * @param {sap.m.ViewSettingsItem}
+	 *            oItem the selected item or a string with the key
 	 * @return {sap.m.ViewSettingsDialog} this pointer for chaining
 	 */
 	ViewSettingsDialog.prototype.setSelectedPresetFilterItem = function(oItem) {
@@ -546,37 +549,33 @@ function(jQuery, library, Control, IconPool) {
 
 		// convenience, also allow strings
 		if (typeof oItem === "string") {
-			oItem = getViewSettingsItemByKey(aItems, oItem);
+			// find item with this id
+			for (; i < aItems.length; i++) {
+				if (aItems[i].getKey() === oItem) {
+					oItem = aItems[i];
+					break;
+				}
+			}
 		}
-
-		//change selected item only if it is found among the preset filter items
-		if (!oItem || validateViewSettingsItem(oItem)) {
-			// set selected = true for this item & selected = false for all others items
-			for (i = 0; i < aItems.length; i++) {
-				aItems[i].setProperty('selected', false, true);
-			}
-
-			if (oItem) {
-				oItem.setProperty('selected', true, true);
-			}
-
+		// set selected = true for this item & selected = false for all others items
+		for (i = 0; i < aItems.length; i++) {
+			aItems[i].setSelected(false);
+		}
+		if (oItem) {
+			oItem.setSelected(true);
 			// clear filters (only one mode is allowed, preset filters or filters)
 			this._clearSelectedFilters();
-
-			this.setAssociation("selectedPresetFilterItem", oItem, true);
-		} else {
-			jQuery.sap.log.error("Could not set selected preset filter item. Item is not found: '" + oItem + "'");
 		}
-
+		this.setAssociation("selectedPresetFilterItem", oItem, true);
 		return this;
 	};
 
 	/**
-	 * Opens the ViewSettingsDialog relative to the parent control.
+	 * Opens the view settings dialog relative to the parent control
 	 *
 	 * @public
-	 * @param {string} sPageId The ID of the initial page to be opened in the dialog.
-	 *	The available values are "sort", "group", "filter" or IDs of custom tabs.
+	 * @param {String} the initial page to be opened in the dialog
+	 *	available values: "sort", "group", "filter" and ids of custom tabs.
 	 *
 	 * @return {sap.m.ViewSettingsDialog} this pointer for chaining
 	 * @ui5-metamodel This method also will be described in the UI5 (legacy) designtime metamodel
@@ -645,7 +644,7 @@ function(jQuery, library, Control, IconPool) {
 	 * It can be used to create matching sorters and filters to apply the selected settings to the data.
 	 * @overwrite
 	 * @public
-	 * @return {sap.m.ViewSettingsItem[]} An array of selected filter items
+	 * @return {sap.m.ViewSettingsItem[]} an array of selected filter items
 	 * @ui5-metamodel This method also will be described in the UI5 (legacy) designtime metamodel
 	 */
 	ViewSettingsDialog.prototype.getSelectedFilterItems = function() {
@@ -675,12 +674,12 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Gets the filter string in format: "filter name (subfilter1 name, subfilter2
-	 * name, ...), ...".
-	 * For custom and preset filters it will only add the filter name to the resulting string.
+	 * Get the filter string in the format "filter name (subfilter1 name, subfilter2
+	 * name, ...), ..." For custom filters and preset filters it will only add the
+	 * filter name to the resulting string
 	 *
 	 * @public
-	 * @return {string} The selected filter string
+	 * @return {string} the selected filter string
 	 * @ui5-metamodel This method also will be described in the UI5 (legacy) designtime metamodel
 	 */
 	ViewSettingsDialog.prototype.getSelectedFilterString = function() {
@@ -743,12 +742,12 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Gets the selected filter object in format {key: boolean}.
+	 * Get the selected filter object in format {key: boolean}.
 	 *
 	 * It can be used to create matching sorters and filters to apply the selected settings to the data.
 	 *
 	 * @public
-	 * @return {object} An object with item and subitem keys
+	 * @return {object} an object with item and subitem keys
 	 * @ui5-metamodel This method also will be described in the UI5 (legacy) designtime metamodel
 	 */
 	ViewSettingsDialog.prototype.getSelectedFilterKeys = function() {
@@ -764,7 +763,7 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Sets the selected filter object in format {key: boolean}.
+	 * Set the selected filter object in format {key: boolean}
 	 *
 	 * @public
 	 * @param {object} oSelectedFilterKeys
@@ -847,9 +846,8 @@ function(jQuery, library, Control, IconPool) {
 	/* begin: internal methods and properties */
 	/* =========================================================== */
 
-	/**
-	 * Lazy initialization of the internal dialog.
-	 * @private
+	/*
+	 * Lazy initialization of the internal dialog @private
 	 */
 	ViewSettingsDialog.prototype._getDialog = function() {
 		var that = this;
@@ -896,9 +894,8 @@ function(jQuery, library, Control, IconPool) {
 		return this._dialog;
 	};
 
-	/**
-	 * Lazy initialization of the internal nav container.
-	 * @private
+	/*
+	 * Lazy initialization of the internal nav container @private
 	 */
 	ViewSettingsDialog.prototype._getNavContainer = function() {
 		// create an internal instance of a dialog
@@ -911,9 +908,8 @@ function(jQuery, library, Control, IconPool) {
 		return this._navContainer;
 	};
 
-	/**
-	 * Lazy initialization of the internal title label.
-	 * @private
+	/*
+	 * Lazy initialization of the internal title label @private
 	 */
 	ViewSettingsDialog.prototype._getTitleLabel = function() {
 		if (this._titleLabel === undefined) {
@@ -924,9 +920,8 @@ function(jQuery, library, Control, IconPool) {
 		return this._titleLabel;
 	};
 
-	/**
-	 * Lazy initialization of the internal reset button.
-	 * @private
+	/*
+	 * Lazy initialization of the internal reset button @private
 	 */
 	ViewSettingsDialog.prototype._getResetButton = function() {
 		var that = this;
@@ -943,9 +938,8 @@ function(jQuery, library, Control, IconPool) {
 		return this._resetButton;
 	};
 
-	/**
-	 * Lazy initialization of the internal detail title label.
-	 * @private
+	/*
+	 * Lazy initialization of the internal detail title lable @private
 	 */
 	ViewSettingsDialog.prototype._getDetailTitleLabel = function() {
 		if (this._detailTitleLabel === undefined) {
@@ -957,9 +951,8 @@ function(jQuery, library, Control, IconPool) {
 		return this._detailTitleLabel;
 	};
 
-	/**
-	 * Lazy initialization of the internal header.
-	 * @private
+	/*
+	 * Lazy initialization of the internal header @private
 	 */
 	ViewSettingsDialog.prototype._getHeader = function() {
 		if (this._header === undefined) {
@@ -970,9 +963,8 @@ function(jQuery, library, Control, IconPool) {
 		return this._header;
 	};
 
-	/**
-	 * Lazy initialization of the internal sub header.
-	 * @private
+	/*
+	 * Lazy initialization of the internal sub header @private
 	 */
 	ViewSettingsDialog.prototype._getSubHeader = function() {
 		if (this._subHeader === undefined) {
@@ -983,15 +975,14 @@ function(jQuery, library, Control, IconPool) {
 		return this._subHeader;
 	};
 
-	/**
-	 * Lazy initialization of the internal segmented button.
-	 * @private
+	/*
+	 * Lazy initialization of the internal segmented button @private
 	 */
 	ViewSettingsDialog.prototype._getSegmentedButton = function() {
 		var that                = this,
-		    aCustomTabs         = this.getCustomTabs(),
-		    iCustomTabsLength   = aCustomTabs.length,
-		    i                   = 0;
+			aCustomTabs         = this.getCustomTabs(),
+			iCustomTabsLength   = aCustomTabs.length,
+			i                   = 0;
 
 		if (this._segmentedButton === undefined) {
 			this._segmentedButton = new sap.m.SegmentedButton({
@@ -1024,9 +1015,8 @@ function(jQuery, library, Control, IconPool) {
 		return this._segmentedButton;
 	};
 
-	/**
-	 * Lazy initialization of the internal sort button.
-	 * @private
+	/*
+	 * Lazy initialization of the internal sort button @private
 	 */
 	ViewSettingsDialog.prototype._getSortButton = function() {
 		if (this._sortButton === undefined) {
@@ -1039,9 +1029,8 @@ function(jQuery, library, Control, IconPool) {
 		return this._sortButton;
 	};
 
-	/**
-	 * Lazy initialization of the internal group button.
-	 * @private
+	/*
+	 * Lazy initialization of the internal group button @private
 	 */
 	ViewSettingsDialog.prototype._getGroupButton = function() {
 		if (this._groupButton === undefined) {
@@ -1054,9 +1043,8 @@ function(jQuery, library, Control, IconPool) {
 		return this._groupButton;
 	};
 
-	/**
-	 * Lazy initialization of the internal filter button.
-	 * @private
+	/*
+	 * Lazy initialization of the internal filter button @private
 	 */
 	ViewSettingsDialog.prototype._getFilterButton = function() {
 		if (this._filterButton === undefined) {
@@ -1069,13 +1057,11 @@ function(jQuery, library, Control, IconPool) {
 		return this._filterButton;
 	};
 
-	/**
-	 * Lazy initialization of the internal page1 (sort/group/filter).
-	 * @param {boolean} bSuppressCreation If true, no page will be create in case it doesn't exist.
-	 * @private
+	/*
+	 * Lazy initialization of the internal page1 (sort/group/filter) @private
 	 */
-	ViewSettingsDialog.prototype._getPage1 = function(bSuppressCreation) {
-		if (this._page1 === undefined && !bSuppressCreation) {
+	ViewSettingsDialog.prototype._getPage1 = function() {
+		if (this._page1 === undefined) {
 			this._page1 = new sap.m.Page(this.getId() + '-page1', {
 				title           : this._rb.getText("VIEWSETTINGS_TITLE"),
 				customHeader    : this._getHeader()
@@ -1085,9 +1071,8 @@ function(jQuery, library, Control, IconPool) {
 		return this._page1;
 	};
 
-	/**
-	 * Lazy initialization of the internal page2 (detail filters).
-	 * @private
+	/*
+	 * Lazy initialization of the internal page2 (detail filters) @private
 	 */
 	ViewSettingsDialog.prototype._getPage2 = function() {
 		var that = this, oDetailHeader, oBackButton, oDetailResetButton;
@@ -1120,9 +1105,8 @@ function(jQuery, library, Control, IconPool) {
 		return this._page2;
 	};
 
-	/**
-	 * Creates and initializes the sort content controls.
-	 * @private
+	/*
+	 * Create and initialize the sort content controls @private
 	 */
 	ViewSettingsDialog.prototype._initSortContent = function() {
 		var that = this;
@@ -1161,9 +1145,8 @@ function(jQuery, library, Control, IconPool) {
 		this._sortContent = [ this._sortOrderList, this._sortList ];
 	};
 
-	/**
-	 * Creates and initializes the group content controls.
-	 * @private
+	/*
+	 * Create and initialize the group content controls @private
 	 */
 	ViewSettingsDialog.prototype._initGroupContent = function() {
 		var that = this;
@@ -1203,9 +1186,8 @@ function(jQuery, library, Control, IconPool) {
 		this._groupContent = [ this._groupOrderList, this._groupList ];
 	};
 
-	/**
-	 * Creates and initializes the filter content controls.
-	 * @private
+	/*
+	 * Create and initialize the filter content controls @private
 	 */
 	ViewSettingsDialog.prototype._initFilterContent = function() {
 		var that = this;
@@ -1236,8 +1218,8 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Fills the dialog with the aggregation data.
-	 * @param {string} sPageId The ID of the page to be opened in the dialog
+	 * Fill the dialog with the aggregation data @private
+	 * @param sPageId
 	 * @private
 	 */
 	ViewSettingsDialog.prototype._initDialogContent = function(sPageId) {
@@ -1356,11 +1338,11 @@ function(jQuery, library, Control, IconPool) {
 		this._updateListSelections();
 	};
 
-	/**
-	 * Sets the state of the dialog when it is opened.
-	 * If content for only one tab is defined, then tabs are not displayed, otherwise,
-	 * a SegmentedButton is displayed and the button for the initially displayed page is focused.
-	 * @param {string} sPageId The ID of the page to be opened in the dialog
+	/*
+	 * Sets the state of the dialog when it is opened. If contents for only one tab
+	 * are defined, then tabs are not displayed. Otherwise, a segmented button is shown
+	 * and the button for the initially shown page is focused.
+	 * @param {string} sPageId
 	 * @private
 	 */
 	ViewSettingsDialog.prototype._updateDialogState = function(sPageId) {
@@ -1464,20 +1446,14 @@ function(jQuery, library, Control, IconPool) {
 
 			this._getSegmentedButton().setSelectedButton(sSelectedButtonId);
 			this._switchToPage(sPageId);
-
-			/* 1580045867 2015: make sure navContainer's current page is always page1,
-			because at this point we are always switching to sort,group,filter or custom tab.*/
-			if (this._getNavContainer().getCurrentPage() !== this._getPage1()) {
-				this._getNavContainer().to(this._getPage1().getId());
-			}
 		}
 	};
 
 
 	/**
-	 * Determines the page ID of a valid page to load.
-	 * @param {string} sPageId The ID of the page to be opened in the dialog
-	 * @returns {string} sPageId
+	 * Determine the page id of a valid page to load
+	 * @param sPageId
+	 * @returns {*}
 	 * @private
 	 */
 	ViewSettingsDialog.prototype._determineValidPageId = function (sPageId) {
@@ -1518,8 +1494,8 @@ function(jQuery, library, Control, IconPool) {
 
 
 	/**
-	 * Fetches a list of valid pages IDs - each page must have valid content.
-	 * @returns {Array} aValidPageIds List of valid page IDs
+	 * Fetch a list of valid pages ids - each page has content.
+	 * @returns {Array}
 	 * @private
 	 */
 	ViewSettingsDialog.prototype._fetchValidPagesIds = function () {
@@ -1551,8 +1527,8 @@ function(jQuery, library, Control, IconPool) {
 
 
 	/**
-	 * Checks whether a custom tab instance is not empty.
-	 * @param {object} oCustomTab
+	 * Verify that a custom tab instance is not empty.
+	 * @param oCustomTab
 	 * @returns {*|boolean}
 	 * @private
 	 */
@@ -1564,9 +1540,9 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Checks whether a given page name corresponds to a valid predefined page ID.
-	 * The meaning of valid would be for the predefined page to also have content.
-	 * @param {string} sName The page name
+	 * Determine if a given string (page name) corresponds with a _valid_ predefined page id.
+	 * The meaning of valid would be for the predefined page to also have contents.
+	 * @param sName
 	 * @returns {boolean}
 	 * @private
 	 */
@@ -1608,17 +1584,44 @@ function(jQuery, library, Control, IconPool) {
 		}
 	};
 
+	/**
+	 * Check if the main VSD page instance has content from a custom tab - if so, set the content back to the custom tab instance
+	 * in order to preserve it for further usage
+	 * @private
+	 */
+	ViewSettingsDialog.prototype._preserveCustomTabContentAggregation = function () {
+		var oCurrentPage1Content = this._getPage1().getContent();
+		// if there is existing page content and the last opened page was a custom tab
+		if (
+			oCurrentPage1Content.length &&
+			this._vContentPage      !== -1 &&
+			this._vContentPage      !== 0 &&
+			this._vContentPage      !== 1 &&
+			this._vContentPage      !== 2 &&
+			this._vContentPage      !== 3
+		) {
+			/* the iContentPage property corresponds to a custom tab id - set the
+			 custom tab content aggregation back to the corresponding custom tab instance, so it can be reused later */
+			this.getCustomTabs().forEach(function (oCustomTab) {
+				if (oCustomTab.getId() === this._vContentPage) {
+					oCurrentPage1Content.forEach(function (oContent) {
+						oCustomTab.addContent(oContent);
+					});
+				}
+			}, this);
+		}
+	};
+
 
 	/**
-	 * Overwrites the model setter to reset the remembered page in case it was a filter detail page, to make sure
-	 * that the dialog is not trying to re-open a page for a removed item.
+	 * Overwrite the model setter in order to reset the remembered page in case it was a filter detail page to make sure
+	 * the dialog is not trying to re-open a page for a removed item BCP 1570030370
 	 *
-	 * @param {object} oModel
-	 * @param {string} sName
-	 * @returns {sap.m.ViewSettingsDialog} this pointer for chaining
+	 * @param oModel
+	 * @param sName
+	 * @returns {ViewSettingsDialog}
 	 */
 	ViewSettingsDialog.prototype.setModel = function (oModel, sName) {
-		// BCP 1570030370
 		if (this._vContentPage === 3 && this._oContentItem) {
 			resetFilterPage.call(this);
 		}
@@ -1626,12 +1629,10 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Removes a filter Item and resets the remembered page if it was the filter detail page of the removed filter.
+	 * Reset the remembered page if it was the filter detail page of the removed filter
 	 *
-	 * @overwrite
-	 * @public
-	 * @param oFilterItem The filter item to be removed
-	 * @returns {sap.m.ViewSettingsDialog} this pointer for chaining
+	 * @param oFilterItem
+	 * @returns {ViewSettingsDialog}
 	 */
 	ViewSettingsDialog.prototype.removeFilterItem = function (oFilterItem) {
 		if (this._vContentPage === 3 && this._oContentItem && this._oContentItem.getId() === oFilterItem.getId()) {
@@ -1641,11 +1642,8 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Removes all filter Items and resets the remembered page if it was a filter detail page and all of its filter items are being removed.
-	 *
-	 * @overwrite
-	 * @public
-	 * @returns {sap.m.ViewSettingsDialog} this pointer for chaining
+	 * Reset the remembered page if it was a filter detail page and all filter items are being removed
+	 * @returns {ViewSettingsDialog}
 	 */
 	ViewSettingsDialog.prototype.removeAllFilterItems = function () {
 		if (this._vContentPage === 3 && this._oContentItem) {
@@ -1656,10 +1654,9 @@ function(jQuery, library, Control, IconPool) {
 
 
 	/**
-	 * Switches to a dialog page (0 = sort, 1 = group, 2 = filter, 3 = subfilter and custom pages).
-	 * @param {int|string} vWhich The page to be navigated to
-	 * @param {sap.m.FilterItem} oItem The filter item for the detail page (optional, only used for page 3).
-	 *
+	 * Switches to a dialog page (0 = sort, 1 = group, 2 = filter, 3 = subfilter and custom pages)
+	 * @param {int|string} vWhich the page to be navigated to @param {sap.m.FilterItem}
+	 * oItem The filter item for the detail page (optional, only used for page 3)
 	 * @private
 	 */
 	ViewSettingsDialog.prototype._switchToPage = function(vWhich, oItem) {
@@ -1672,27 +1669,15 @@ function(jQuery, library, Control, IconPool) {
 		    oSubHeader      = this._getSubHeader(),
 		    oListItem;
 
-		// nothing to do if we are already on the requested page (except for filter detail page)
+
 		if (this._vContentPage === vWhich && vWhich !== 3) {
-
-			// On switching to different pages, the content (Reset Button) of the header and sub-header is removed and added again
-			// only if vWhich is not 3(filter detail page). So when opening the dialog and navigating to
-			// filter detail page the Reset Button is only removed from page1. On clicking Ok and opening the dialog again vWhich is 2 and
-			// is equal to this._vContentPage so we skip all the following logic that should add the reset button again.
-			// Added logic for adding the Reset Button explicitly when we going into this state and there is no Reset Button.
-			// BCP 0020079747 0000728077 2015
-			if (oHeader.getContentRight().length === 0 && oSubHeader.getContentRight().length === 0) {
-				this._addResetButtonToPage1();
-			}
-
+					// nothing to do if we are already on the requested page (except for filter
+			// detail page)
 			return false;
 		}
 
 		// needed because the content aggregation is changing it's owner control from custom tab to page and vice-versa
-		// if there is existing page content and the last opened page was a custom tab
-		if (isLastPageContentCustomTab.call(this)) {
-			restoreCustomTabContentAggregation.call(this);
-		}
+		this._preserveCustomTabContentAggregation();
 
 		// reset controls
 		oHeader.removeAllContentRight();
@@ -1706,7 +1691,19 @@ function(jQuery, library, Control, IconPool) {
 			// purge page contents
 			this._getPage1().removeAllAggregation("content", true);
 			// set subheader when there are multiple tabs active
-			this._addResetButtonToPage1();
+			if (this._showSubHeader) {
+				if (!this._getPage1().getSubHeader()) {
+					this._getPage1().setSubHeader(oSubHeader);
+				}
+				// show reset button in subheader
+				oSubHeader.addContentRight(oResetButton);
+			} else {
+				if (this._getPage1().getSubHeader()) {
+					this._getPage1().setSubHeader();
+				}
+				// show reset button in header
+				oHeader.addContentRight(oResetButton);
+			}
 		} else if (vWhich === 3) {
 			this._getPage2().removeAllAggregation("content", true);
 		}
@@ -1845,9 +1842,8 @@ function(jQuery, library, Control, IconPool) {
 		}
 	};
 
-	/**
-	 * Updates the internal lists based on the dialogs state.
-	 * @private
+	/*
+	 * Updates the internal lists based on the dialogs state @private
 	 */
 	ViewSettingsDialog.prototype._updateListSelections = function() {
 		this._updateListSelection(this._sortList, sap.ui.getCore().byId(this.getSelectedSortItem()));
@@ -1858,8 +1854,8 @@ function(jQuery, library, Control, IconPool) {
 		this._updateFilterCounters();
 	};
 
-	/**
-	 * Sets selected item on single selection lists based on the item data.
+	/*
+	 * Sets selected item on single selection lists based on the "item" data
 	 * @private
 	 */
 	ViewSettingsDialog.prototype._updateListSelection = function(oList, oItem) {
@@ -1886,9 +1882,8 @@ function(jQuery, library, Control, IconPool) {
 		return false;
 	};
 
-	/**
-	 * Updates the amount of selected filters in the filter list.
-	 * @private
+	/*
+	 * Updates the amount of selected filters in the filter list @private
 	 */
 	ViewSettingsDialog.prototype._updateFilterCounters = function() {
 		var aListItems = (this._filterList ? this._filterList.getItems() : []),
@@ -1942,9 +1937,8 @@ function(jQuery, library, Control, IconPool) {
 		}
 	};
 
-	/**
-	 * Clears preset filter item.
-	 * @private
+	/*
+	 * Clears preset filter item @private
 	 */
 	ViewSettingsDialog.prototype._clearPresetFilter = function() {
 		if (this.getSelectedPresetFilterItem()) {
@@ -1954,9 +1948,9 @@ function(jQuery, library, Control, IconPool) {
 
 
 	/**
-	 * Determines the number of pages (tabs).
+	 * Determine what is the number of pages (tabs)
 	 * @private
-	 * @return {int} iActivePages The number of pages in the dialog
+	 * @return {number} the number of pages in the dialog
 	 */
 	ViewSettingsDialog.prototype._calculateNumberOfPages = function () {
 		var iActivePages        = 0,
@@ -1985,7 +1979,7 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Determines if a sub header should be displayed or not.
+	 * Determine if a sub header should be shown or not.
 	 * @private
 	 * @return {boolean}
 	 */
@@ -1994,48 +1988,15 @@ function(jQuery, library, Control, IconPool) {
 	};
 
 	/**
-	 * Sets the current page to the filter page, clears info about the last opened page (content),
-	 * and navigates to the filter page.
+	 * Sets the current page to the filter page, clears info about the last opened page (content)
+	 * and navigates to the filter page
 	 * @private
+	 * @return
 	 */
 	function resetFilterPage() {
 		this._vContentPage = 2;
 		this._oContentItem = null;
 		this._navContainer.to(this._getPage1().getId(), "show");
-	}
-
-	/**
-	 * Gets a sap.m.ViewSettingsItem from a list of items by a given key.
-	 *
-	 * @param aViewSettingsItems The list of sap.m.ViewSettingsItem objects to be searched
-	 * @param sKey
-	 * @returns {*} The sap.m.ViewSettingsItem found in the list of items
-	 * @private
-	 */
-	function getViewSettingsItemByKey(aViewSettingsItems, sKey) {
-		var i, oItem = sKey;
-
-		// convenience, also allow strings
-		// find item with this key
-		for (i = 0; i < aViewSettingsItems.length; i++) {
-			if (aViewSettingsItems[i].getKey() === sKey) {
-				oItem = aViewSettingsItems[i];
-				break;
-			}
-		}
-
-		return oItem;
-	}
-
-	/**
-	 * Checks if the item is a sap.m.ViewSettingsItem.
-	 *
-	 * @param {*} oItem The item to be validated
-	 * @returns {*|boolean} Returns true if the item is a sap.m.ViewSettingsItem
-	 * @private
-	 */
-	function validateViewSettingsItem(oItem) {
-		return oItem && oItem instanceof sap.m.ViewSettingsItem;
 	}
 
 	/* =========================================================== */
@@ -2046,9 +2007,8 @@ function(jQuery, library, Control, IconPool) {
 	/* begin: event handlers */
 	/* =========================================================== */
 
-	/**
-	 * Internal event handler for the Confirm button.
-	 * @private
+	/*
+	 * Internal event handler for the confirm button @private
 	 */
 	ViewSettingsDialog.prototype._onConfirm = function(oEvent) {
 		var that            = this,
@@ -2065,11 +2025,11 @@ function(jQuery, library, Control, IconPool) {
 				    filterString        : that.getSelectedFilterString()
 			    };
 
-			    // detach this function
-			    that._dialog.detachAfterClose(fnAfterClose);
-			    // fire confirm event
-			    that.fireConfirm(oSettingsState);
-		    };
+				// detach this function
+				that._dialog.detachAfterClose(fnAfterClose);
+				// fire confirm event
+				that.fireConfirm(oSettingsState);
+			};
 
 		// attach the reset function to afterClose to hide the dialog changes from
 		// the end user
@@ -2077,9 +2037,8 @@ function(jQuery, library, Control, IconPool) {
 		oDialog.close();
 	};
 
-	/**
-	 * Internal event handler for the Cancel button.
-	 * @private
+	/*
+	 * Internal event handler for the cancel button @private
 	 */
 	ViewSettingsDialog.prototype._onCancel = function(oEvent) {
 		var that = this, oDialog = this._getDialog(), fnAfterClose = function() {
@@ -2117,9 +2076,8 @@ function(jQuery, library, Control, IconPool) {
 		oDialog.close();
 	};
 
-	/**
-	 * Internal event handler for the reset filter button.
-	 * @private
+	/*
+	 * Internal event handler for the reset filter button @private
 	 */
 	ViewSettingsDialog.prototype._onClearFilters = function() {
 		// clear data and update selections
@@ -2143,134 +2101,10 @@ function(jQuery, library, Control, IconPool) {
 			this.getSelectedPresetFilterItem()));
 	};
 
-	/**
-	 * Adds the Reset Button to the header/subheader of page1.
-	 * @private
-	 */
-	ViewSettingsDialog.prototype._addResetButtonToPage1 = function() {
-		var oHeader         = this._getHeader(),
-		    oSubHeader      = this._getSubHeader(),
-		    oResetButton    = this._getResetButton();
-
-		// set subheader when there are multiple tabs active
-		if (this._showSubHeader) {
-			if (!this._getPage1().getSubHeader()) {
-				this._getPage1().setSubHeader(oSubHeader);
-			}
-			// show reset button in subheader
-			oSubHeader.addContentRight(oResetButton);
-		} else {
-			if (this._getPage1().getSubHeader()) {
-				this._getPage1().setSubHeader();
-			}
-			// show reset button in header
-			oHeader.addContentRight(oResetButton);
-		}
-	};
 	/* =========================================================== */
 	/* end: event handlers */
 	/* =========================================================== */
 
-	/**
-	 * Overwrite the method to make sure the proper internal managing of the aggregations takes place.
-	 * @param {string} sAggregationName The string identifying the aggregation that the given object should be removed from
-	 * @param {int | string | sap.ui.base.ManagedObject} vObject The position or ID of the ManagedObject that should be removed or that ManagedObject itself
-	 * @param {boolean} bSuppressInvalidate If true, this ManagedObject is not marked as changed
-	 * @returns {sap.m.ViewSettingsDialog} This pointer for chaining
-	 */
-	ViewSettingsDialog.prototype.removeAggregation = function (sAggregationName, vObject, bSuppressInvalidate) {
-		// custom tabs aggregation needs special handling - make sure it happens
-		restoreCustomTabContentAggregation.call(this, sAggregationName, vObject);
-
-		return sap.ui.core.Control.prototype.removeAggregation.call(this, sAggregationName, vObject,
-			bSuppressInvalidate);
-	};
-
-	/**
-	 * Overwrite the method to make sure the proper internal managing of the aggregations takes place.
-	 * @param {string} sAggregationName The string identifying the aggregation that the given object should be removed from
-	 * @param {int | string | sap.ui.base.ManagedObject} vObject tThe position or ID of the ManagedObject that should be removed or that ManagedObject itself
-	 * @param {boolean} bSuppressInvalidate If true, this ManagedObject is not marked as changed
-	 * @returns {sap.m.ViewSettingsDialog} This pointer for chaining
-	 */
-	ViewSettingsDialog.prototype.removeAllAggregation = function (sAggregationName, bSuppressInvalidate) {
-		// custom tabs aggregation needs special handling - make sure it happens
-		restoreCustomTabContentAggregation.call(this);
-
-		return sap.ui.core.Control.prototype.removeAllAggregation.call(this, sAggregationName, bSuppressInvalidate);
-	};
-
-	/**
-	 * Overwrite the method to make sure the proper internal managing of the aggregations takes place.
-	 * @param {string} sAggregationName The string identifying the aggregation that the given object should be removed from
-	 * @param {int | string | sap.ui.base.ManagedObject} vObject tThe position or ID of the ManagedObject that should be removed or that ManagedObject itself
-	 * @param {boolean} bSuppressInvalidate If true, this ManagedObject is not marked as changed
-	 * @returns {sap.m.ViewSettingsDialog} This pointer for chaining
-	 */
-	ViewSettingsDialog.prototype.destroyAggregation = function (sAggregationName, bSuppressInvalidate) {
-		// custom tabs aggregation needs special handling - make sure it happens
-		restoreCustomTabContentAggregation.call(this);
-
-		return sap.ui.core.Control.prototype.destroyAggregation.call(this, sAggregationName, bSuppressInvalidate);
-	};
-
-	/**
-	 * Handle the "content" aggregation of a custom tab, as the items in it might be transferred to the dialog page
-	 * instance.
-	 * @param {string} sAggregationName The string identifying the aggregation that the given object should be removed from
-	 * @param {object} oCustomTab Custom tab instance
-	 * @private
-	 */
-	function restoreCustomTabContentAggregation(sAggregationName, oCustomTab) {
-		// Make sure page1 exists, as this method may be called on destroy(), after the page was destroyed
-		// Suppress creation of new page as the following logic is needed only when a page already exists
-		if (!this._getPage1(true)) {
-			return;
-		}
-
-		// only the 'customTabs' aggregation is manipulated with shenanigans
-		if (sAggregationName === 'customTabs' && oCustomTab) {
-			/* oCustomTab must be an instance of the "customTab" aggregation type and must be the last opened page */
-			if (oCustomTab.getMetadata().getName() === this.getMetadata().getManagedAggregation(sAggregationName).type &&
-				this._vContentPage === oCustomTab.getId()) {
-				/* the iContentPage property corresponds to the custom tab id - set the custom tab content aggregation
-				 back to the custom tab instance */
-				var oPage1Content = this._getPage1().getContent();
-				oPage1Content.forEach(function (oContent) {
-					oCustomTab.addAggregation('content', oContent, true);
-				});
-			}
-		} else if (!sAggregationName && !oCustomTab) {
-			/* when these parameters are missing, cycle through all custom tabs and detect if any needs manipulation */
-			var oPage1Content = this._getPage1().getContent();
-			/* the vContentPage property corresponds to a custom tab id - set the  custom tab content aggregation back
-			 to the corresponding custom tab instance, so it can be reused later */
-			this.getCustomTabs().forEach(function (oCustomTab) {
-				if (this._vContentPage === oCustomTab.getId()) {
-					oPage1Content.forEach(function (oContent) {
-						oCustomTab.addAggregation('content', oContent, true);
-					});
-				}
-			}, this);
-		}
-	}
-
-	/**
-	 * Determine if the last opened page has custom tab contents
-	 * @private
-	 * @returns {boolean}
-	 */
-	function isLastPageContentCustomTab() {
-		// ToDo: make this into enumeration
-		var aPageIds = [
-			-1, // not set
-			0,  // sort
-			1,  // group
-			2,  // filter
-			3   // filter detail
-		];
-		return (this._getPage1().getContent().length && aPageIds.indexOf(this._vContentPage) === -1);
-	}
 
 	return ViewSettingsDialog;
 

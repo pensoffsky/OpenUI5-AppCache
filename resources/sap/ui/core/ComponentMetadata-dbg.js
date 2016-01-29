@@ -37,11 +37,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 		}
 	}
 
-	function getVersionWithoutSuffix(sVersion) {
-		var oVersion = jQuery.sap.Version(sVersion);
-		return oVersion.getSuffix() ? jQuery.sap.Version(oVersion.getMajor() + "." + oVersion.getMinor() + "." + oVersion.getPatch()) : oVersion;
-	}
-
 	// Manifest Template RegExp: {{foo}}
 	var rManifestTemplate = /\{\{([^\}\}]+)\}\}/g;
 
@@ -51,10 +46,10 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 	 * @param {string} sClassName fully qualified name of the class that is described by this metadata object
 	 * @param {object} oStaticInfo static info to construct the metadata from
 	 *
-	 * @public
+	 * @experimental Since 1.9.2. The Component concept is still under construction, so some implementation details can be changed in future.
 	 * @class
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 * @since 1.9.2
 	 * @alias sap.ui.core.ComponentMetadata
 	 */
@@ -117,6 +112,11 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 		this._bInitialized = false;
 		this._iInstanceCount = 0;
 
+		// get the parent component
+		var oParent = this.getParent(),
+		    bIsComponentBaseClass = /^sap\.ui\.core\.(UI)?Component$/.test(sName),
+		    sParentName = bIsComponentBaseClass && oParent && oParent._sComponentName;
+
 		// extract the manifest
 		var oManifest = oStaticInfo["manifest"];
 
@@ -160,7 +160,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 			oManifest = {};
 
 		}
-
+		
 		// ensure the general property name, the namespace sap.app with the id,
 		// the namespace sap.ui5 and eventually the extends property
 		oManifest["name"] = oManifest["name"] || sName;
@@ -168,10 +168,9 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 			"id": sPackage // use the "package" namespace instead of the classname (without ".Component")
 		};
 		oManifest["sap.ui5"] = oManifest["sap.ui5"] || {};
-		// the extends property will be added when the component is not a base class
-		var bIsComponentBaseClass = /^sap\.ui\.core\.(UI)?Component$/.test(sName);
-		if (!bIsComponentBaseClass) {
+		if (sParentName) {
 			oManifest["sap.ui5"]["extends"] = oManifest["sap.ui5"]["extends"] || {};
+			oManifest["sap.ui5"]["extends"].component = oManifest["sap.ui5"]["extends"].component || sParentName;
 		}
 
 		// convert the old legacy metadata and merge with the new manifest
@@ -204,34 +203,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 			if (oParent instanceof ComponentMetadata) {
 				oParent.init();
 			}
-
-			// version check => only if minVersion is available a warning
-			// will be logged and the debug mode is turned on
-			// TODO: enhance version check also for libraries and components
-			var oManifestUI5 = this.getManifestEntry("sap.ui5");
-			var sMinUI5Version = oManifestUI5["dependencies"] && oManifestUI5["dependencies"]["minUI5Version"];
-			if (sMinUI5Version &&
-				jQuery.sap.log.isLoggable(jQuery.sap.log.LogLevel.WARNING) &&
-				sap.ui.getCore().getConfiguration().getDebug()) {
-				// try catch to avoid that getVersionInfo breaks the execution
-				try {
-					var oVersionInfo = sap.ui.getVersionInfo();
-					var oMinVersion = getVersionWithoutSuffix(sMinUI5Version);
-					var oVersion = getVersionWithoutSuffix(oVersionInfo && oVersionInfo.version);
-					if (oMinVersion.compareTo(oVersion) > 0) {
-						jQuery.sap.log.warning("Component \"" + this.getComponentName() + "\" requires at least version \"" + oMinVersion.toString() + "\" but running on \"" + oVersion.toString() + "\"!");
-					}
-				} catch (e) {
-					jQuery.sap.log.warning("The validation of the version for Component \"" + this.getComponentName() + "\" failed! Reasion: " + e);
-				}
-			}
-
-			// define the resource roots
-			// => if not loaded via manifest first approach the resource roots
-			//    will be registered too late for the AMD modules of the Component
-			//    controller. This is a constraint for the resource roots config
-			//    in the manifest!
-			this._defineResourceRoots();
 
 			// first the dependencies have to be loaded (other UI5 libraries)
 			this._loadDependencies();
@@ -287,7 +258,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 	 * @private
 	 */
 	ComponentMetadata.prototype.onExitComponent = function() {
-		this._iInstanceCount = Math.max(this._iInstanceCount - 1, 0);
+		this._iInstanceCount--;
 		var oUI5Manifest = this.getManifestEntry("sap.ui5", true),
 			mExtensions = oUI5Manifest && oUI5Manifest["extends"] && oUI5Manifest["extends"].extensions;
 		if (this._iInstanceCount === 0 && !jQuery.isEmptyObject(mExtensions)) {
@@ -339,7 +310,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 	ComponentMetadata.prototype._getManifest = function() {
 
 		// check if the manifest was already processed and set as a separate private property
-		var oProcessedManifest = this._oStaticInfo["processed-manifest"];
+		var oProcessedManifest = this._oStaticInfo["processed-manifest"]; 
 		if (!oProcessedManifest) {
 
 			// use public getter to get a copy of the raw manifest
@@ -374,7 +345,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 	 * @since 1.29.0
 	 */
 	ComponentMetadata.prototype._getRawManifest = function() {
-		return this._oStaticInfo["manifest"];
+		return this._oStaticInfo["manifest"]; 
 	};
 
 	/**
@@ -401,7 +372,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 					// only create a resource bundle if there is something to replace
 					if (!oResourceBundle) {
 						oResourceBundle = jQuery.sap.resources({
-							url: that._resolveUri(new URI(sComponentRelativeI18nUri)).toString()
+							url: that._resolveUri(new URI(sComponentRelativeI18nUri))
 						});
 					}
 					return oResourceBundle.getText(s1);
@@ -632,7 +603,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 		//jQuery.sap.log.warning("Usage of sap.ui.core.ComponentMetadata.protoype.getConfig is deprecated!");
 		var oUI5Manifest = this.getManifestEntry("sap.ui5", !bDoNotMerge),
 		    mConfig = oUI5Manifest && oUI5Manifest.config;
-
+		
 		// return the configuration
 		return jQuery.extend(true, {}, mConfig && sKey ? mConfig[sKey] : mConfig);
 	};
@@ -651,7 +622,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 		//jQuery.sap.log.warning("Usage of sap.ui.core.ComponentMetadata.protoype.getCustomizing is deprecated!");
 		var  oUI5Manifest = this.getManifestEntry("sap.ui5", !bDoNotMerge),
 		    mExtensions = jQuery.extend(true, {}, oUI5Manifest && oUI5Manifest["extends"] && oUI5Manifest["extends"].extensions);
-
+		
 		// return the exensions object
 		return mExtensions;
 	};
@@ -680,15 +651,15 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 				this._oLegacyModels[sDataSource].uri = oDataSource.uri;
 			}
 		}
-
+		
 		// deep copy of the legacy models object
-		var oParent,
+		var oParent, 
 		    mModels = jQuery.extend(true, {}, this._oLegacyModels);
 		// merge the models object if defined via parameter
 		if (!bDoNotMerge && (oParent = this.getParent()) instanceof ComponentMetadata) {
 			mModels = jQuery.extend(true, {}, oParent.getModels(), mModels);
 		}
-
+		
 		// return a clone of the models
 		return mModels;
 	};
@@ -814,11 +785,11 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 
 	/**
 	 * Converts the legacy metadata into the new manifest format
-	 *
+	 * 
 	 * @private
 	 */
 	ComponentMetadata.prototype._convertLegacyMetadata = function(oStaticInfo, oManifest) {
-
+		
 		// this function can be outsourced in future when the ComponentMetadata
 		// is not used anymore and the new Application manifest is used -
 		// but for now we keep it as it will be one of the common use cases
@@ -842,8 +813,8 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 		// add the old information on component metadata to the manifest info
 		var oAppManifest = oManifest["sap.app"];
 		var oUI5Manifest = oManifest["sap.ui5"];
-
-		// we do not merge the manifest and the metadata - once a manifest
+		
+		// we do not merge the manifest and the metadata - once a manifest 
 		// entry exists, the metadata entries will be ignored and the specific
 		// metadata entry needs to be migrated into the manifest.
 		for (var sName in oStaticInfo) {
@@ -926,7 +897,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 				}
 			}
 		}
-
+		
 	};
 
 	/**
@@ -957,41 +928,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/ManagedObjectMetadata', 'sap/ui
 		var oPageBase = new URI().search("");
 		oBase = oBase.absoluteTo(oPageBase);
 		return oUri.absoluteTo(oBase).relativeTo(oPageBase);
-	};
-
-	/**
-	 * Define the resource roots in the manifest
-	 *
-	 * <p>
-	 *
-	 * TODO: Once enabling manifest first for Components we need to consider
-	 *       to move the registration of the resource roots before loading
-	 *       the component controller in order to allow to use the resource
-	 *       roots configuration for the Component controller dependencies
-	 *       (sap.ui.define dependencies).
-	 *
-	 * @private
-	 */
-	ComponentMetadata.prototype._defineResourceRoots = function() {
-
-		var oUI5Manifest = this.getManifestEntry("sap.ui5");
-		var mResourceRoots = oUI5Manifest["resourceRoots"];
-
-		if (!mResourceRoots) {
-			return;
-		}
-
-		for (var sResourceRoot in mResourceRoots) {
-			var sResourceRootPath = mResourceRoots[sResourceRoot];
-			var oResourceRootURI = new URI(sResourceRootPath);
-			if (oResourceRootURI.is("absolute") || (oResourceRootURI.path() && oResourceRootURI.path()[0] === "/")) {
-				jQuery.sap.log.error("Resource root for \"" + sResourceRoot + "\" is absolute and therefore won't be registered! \"" + sResourceRootPath + "\"", this.getComponentName());
-				continue;
-			}
-			sResourceRootPath = this._resolveUri(oResourceRootURI).toString();
-			jQuery.sap.registerModulePath(sResourceRoot, sResourceRootPath);
-		}
-
 	};
 
 	return ComponentMetadata;

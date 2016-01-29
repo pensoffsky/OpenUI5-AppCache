@@ -16,7 +16,7 @@ function(jQuery, ManagedObjectObserver) {
 	/**
 	 * Constructor for a new ControlObserver.
 	 *
-	 * @param {string} [sId] id for the new object, generated automatically if no id is given
+	 * @param {string} [sId] id for the new object, generated automatically if no id is given 
 	 * @param {object} [mSettings] initial settings for the new object
 	 *
 	 * @class
@@ -24,7 +24,7 @@ function(jQuery, ManagedObjectObserver) {
 	 * @extends sap.ui.dt.ManagedObjectObserver
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @private
@@ -40,7 +40,7 @@ function(jQuery, ManagedObjectObserver) {
 			// ---- control specific ----
 			library : "sap.ui.dt",
 			properties : {
-
+				
 			},
 			associations : {
 				/**
@@ -73,19 +73,19 @@ function(jQuery, ManagedObjectObserver) {
 
 	/**
 	 * Starts observing the target control.
-	 * @param {sap.ui.core.Control} oControl The target to observe
+	 * @param {sap.ui.core.Control} oControl The target to observe	
 	 * @override
 	 */
 	ControlObserver.prototype.observe = function(oControl) {
 		ManagedObjectObserver.prototype.observe.apply(this, arguments);
 		jQuery(window).on("resize", this._fnFireDomChanged);
 		this._startMutationObserver();
-		oControl.addEventDelegate(this._oControlDelegate, this);
+		oControl.addEventDelegate(this._oControlDelegate, this);	
 	};
 
 	/**
 	 * Stops observing the target control.
-	 * @param {sap.ui.core.Control} oControl The target to unobserve
+	 * @param {sap.ui.core.Control} oControl The target to unobserve	
 	 * @override
 	 */
 	ControlObserver.prototype.unobserve = function(oControl) {
@@ -130,7 +130,7 @@ function(jQuery, ManagedObjectObserver) {
 	ControlObserver.prototype._onBeforeRendering = function() {
 		this._stopMutationObserver();
 	};
-
+	
 	/**
 	 * @private
 	 */

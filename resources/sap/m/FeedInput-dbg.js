@@ -10,11 +10,11 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	"use strict";
 
 
-
+	
 	/**
 	 * Constructor for a new FeedInput.
 	 *
-	 * @param {string} [sId] id for the new control, generated automatically if no id is given
+	 * @param {string} [sId] id for the new control, generated automatically if no id is given 
 	 * @param {object} [mSettings] initial settings for the new control
 	 *
 	 * @class
@@ -22,7 +22,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -82,7 +82,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			 * The default value is set language dependent.
 			 * @since 1.28
 			 */
-			buttonTooltip : {type : "sap.ui.core.TooltipBase", group : "Accessibility", defaultValue : "Submit"},
+			buttonTooltip : {type : "string" , altTypes : ["sap.ui.core.TooltipBase"], multiple : false, group : "Data", defaultValue : "Submit"},
 
 			/**
 			 * Text for Picture which will be read by screenreader.
@@ -173,12 +173,11 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 		return this;
 	};
 
-	FeedInput.prototype.setButtonTooltip = function (vButtonTooltip) {
-		this.setProperty("buttonTooltip", vButtonTooltip, true);
-		this._getPostButton().setTooltip(vButtonTooltip);
+	FeedInput.prototype.setButtonTooltip = function (sButtonTooltip) {
+		this.setProperty("buttonTooltip", sButtonTooltip, true);
+		this._getPostButton().setTooltip(sButtonTooltip);
 		return this;
 	};
-
 	/////////////////////////////////// Private /////////////////////////////////////////////////////////
 
 	/**
@@ -251,8 +250,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 				src : sIconSrc,
 				alt : this.getAriaLabelForPicture(),
 				densityAware : this.getIconDensityAware(),
-				decorative : false,
-				useIconTooltip: false
+				decorative : false
 			},
 			aCssClasses = ['sapMFeedInImage'];
 

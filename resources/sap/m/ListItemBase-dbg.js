@@ -10,19 +10,19 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	"use strict";
 
 
-
+	
 	/**
 	 * Constructor for a new ListItemBase.
 	 *
-	 * @param {string} [sId] Id for the new control, generated automatically if no id is given
-	 * @param {object} [mSettings] Initial settings for the new control
+	 * @param {string} [sId] id for the new control, generated automatically if no id is given 
+	 * @param {object} [mSettings] initial settings for the new control
 	 *
 	 * @class
-	 * ListItemBase contains the base features of all specific list items.
+	 * ListItemBase contains the core features of all specific list items.
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -30,34 +30,34 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	 * @ui5-metamodel This control/element also will be described in the UI5 (legacy) designtime metamodel
 	 */
 	var ListItemBase = Control.extend("sap.m.ListItemBase", /** @lends sap.m.ListItemBase.prototype */ { metadata : {
-
+	
 		library : "sap.m",
 		properties : {
-
+	
 			/**
-			 * Defines the visual indication and behavior of the list items, e.g. <code>Active</code>, <code>Navigation</code>, <code>Detail</code>.
+			 * Type of the list item, defines the behaviour
 			 */
 			type : {type : "sap.m.ListType", group : "Misc", defaultValue : sap.m.ListType.Inactive},
-
+	
 			/**
-			 * Whether the control should be visible on the screen. If set to false, a placeholder is rendered instead of the real control.
+			 * Invisible list items are not rendered
 			 */
 			visible : {type : "boolean", group : "Appearance", defaultValue : true},
-
+	
 			/**
-			 * Activates the unread indicator for the list item, if set to <code>true</code>.
-			 * <b>Note:</b> This flag is ignored when the <code>showUnread</code> property of the parent is set to <code>false</code>.
+			 * If the unread indicator is set on the list, this boolean defines if it will be shown on this list item. Default is false.
 			 */
 			unread : {type : "boolean", group : "Misc", defaultValue : false},
-
+	
 			/**
-			 * Defines the selected state of the list items.
-			 * <b>Note:</b> Binding the <code>selected</code> property in single selection modes may cause unwanted results if you have more than one selected items in your binding.
+			 * This property defines the select state of the list item when using Single/Multi-Selection.
+			 * 
+			 * Note: Binding the "selected" property in single selection mode, may cause unwanted results, if you have more than one selected item in your binding
 			 */
 			selected : {type : "boolean", defaultValue : false},
-
+	
 			/**
-			 * Defines the counter value of the list items.
+			 * Property sets a counter bubble with the integer given.
 			 */
 			counter : {type : "int", group : "Misc", defaultValue : null}
 		},
@@ -70,48 +70,53 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			ariaLabelledBy: { type: "sap.ui.core.Control", multiple: true, singularName: "ariaLabelledBy" }
 		},
 		events : {
-
+	
 			/**
-			 * Fires when the user taps on the control.
-			 * @deprecated Since version 1.20.0. Instead, use <code>press</code> event.
+			 * Event is fired when the user taps on the control.
+			 * @deprecated Since version 1.20.0. 
+			 * This event is deprecated, use the press event instead.
 			 */
-			tap : {deprecated: true},
-
+			tap : {deprecated: true}, 
+	
 			/**
-			 * Fires when the user taps on the detail button of the control.
-			 * @deprecated Since version 1.20.0. Instead, use <code>detailPress</code> event.
+			 * Event is fired when the user taps on the detail button of the control.
+			 * @deprecated Since version 1.20.0. 
+			 * This event is deprecated, use the detailPress event instead.
 			 */
-			detailTap : {deprecated: true},
-
+			detailTap : {deprecated: true}, 
+	
 			/**
-			 * Fires when the user clicks on the control.
-			 * <b>Note:</b> This event is not fired when the parent <code>mode</code> is <code>SingleSelectMaster</code> or when the <code>includeItemInSelection</code> property is set to <code>true</code>.
-			 * If there is an interactive element that handles its own <code>press</code> event then the list item's <code>press</code> event is not fired.
-			 * Also see {@link sap.m.ListBase#attachItemPress}.
+			 * Event is fired when the user clicks on the control.
+			 * 
+			 * Note: When the parent mode is SingleSelectMaster or includeItemInSelection is true then this event is not fired but the parent fires a selectionChange event instead.
+			 * Also if there is an interactive element that handles the press event then the list item's press is not fired.
+			 * 
+			 * If mode detection is not necessary for the press event then the itemPress event of the parent can be used. 
+			 * {@link sap.m.ListBase#attachItemPress}
 			 */
-			press : {},
-
+			press : {}, 
+	
 			/**
-			 * Fires when the user clicks on the detail button of the control.
+			 * Event is fired when the user clicks on the detail button of the control.
 			 */
 			detailPress : {}
 		}
 	}});
-
+	
 	// icon URI configuration
 	ListItemBase.prototype.DetailIconURI = IconPool.getIconURI("edit");
 	ListItemBase.prototype.DeleteIconURI = IconPool.getIconURI("sys-cancel");
 	ListItemBase.prototype.NavigationIconURI = IconPool.getIconURI("slim-arrow-right");
-
+	
 	// internal active state of the listitem
 	ListItemBase.prototype.init = function() {
 		this._active = false;
 	};
-
+	
 	ListItemBase.prototype.onAfterRendering = function() {
 		this.informList("DOMUpdate", true);
 	};
-
+	
 	/*
 	 * Returns the binding context path via checking the named model of parent
 	 *
@@ -123,13 +128,13 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 		if (oList && !sModelName) {
 			sModelName = (oList.getBindingInfo("items") || {}).model;
 		}
-
+	
 		var oContext = this.getBindingContext(sModelName);
 		if (oContext) {
 			return oContext.getPath();
 		}
 	};
-
+	
 	/*
 	 * Returns whether selected property is two-way bound or not
 	 * @protected
@@ -140,11 +145,11 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			return true;
 		}
 	};
-
+	
 	/*
 	 * Returns the responsible list control
-	 *
-	 * @returns {sap.m.ListBase|undefined}
+	 * 
+	 * @returns {sap.m.ListBase|undefined} 
 	 * @protected
 	 */
 	ListItemBase.prototype.getList = function() {
@@ -153,10 +158,10 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			return oParent;
 		}
 	};
-
+	
 	/*
-	 * Returns the property of the responsible list container according to given parameter.
-	 *
+	 * Returns the property of the responsible list container according to given parameter. 
+	 * 
 	 * @param {string} sProperty property name
 	 * @param {*} [vFallbackValue] fallback value when list is not found
 	 * @return {*}
@@ -171,10 +176,10 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 
 		return vFallbackValue;
 	};
-
+	
 	/*
 	 * Informs the responsible list for item events
-	 *
+	 * 
 	 * @param {string} sEvent the name of the event
 	 * @param {*} [vParam1] first additional parameter
 	 * @param {*} [vParam2] second additional parameter
@@ -189,7 +194,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			}
 		}
 	};
-
+	
 	ListItemBase.prototype.informSelectedChange = function(bSelected) {
 		var oList = this.getList();
 		if (oList) {
@@ -199,22 +204,22 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			this.bSelectedDelayed = bSelected;
 		}
 	};
-
+	
 	/*
 	 * Returns the mode of the current item according to list mode
 	 * Subclasses can overwrite this if item should not have any mode
 	 * Default empty mode is used when list mode is not yet known
-	 *
+	 * 
 	 * @returns {sap.m.ListMode|""}
 	 * @protected
 	 */
 	ListItemBase.prototype.getMode = function() {
 		return this.getListProperty("mode", "");
 	};
-
+	
 	/*
 	 * Updates the accessibility state of the control.
-	 *
+	 * 
 	 * @param {Object} [mAccessibility] a map of accessibility properties
 	 * @protected
 	 */
@@ -223,17 +228,17 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 		if (!$This.length) {
 			return;
 		}
-
+		
 		var $Items = $This.parent().find(".sapMLIB");
 		$This.attr(jQuery.extend({
 			"aria-setsize": $Items.length,
 			"aria-posinset": $Items.index($This) + 1
 		}, mAccessibility));
 	};
-
+	
 	/**
 	 * Returns the delete icon when mode is Delete
-	 *
+	 * 
 	 * @return {sap.ui.core.Icon}
 	 * @private
 	 */
@@ -250,13 +255,13 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 		}).setParent(this, null, true).addStyleClass("sapMLIBIconDel").attachPress(function(oEvent) {
 			this.informList("Delete");
 		}, this);
-
+		
 		return this._oDeleteControl;
 	};
-
+	
 	/**
 	 * Returns the detail icon when item type is Detail|DetailAndActive
-	 *
+	 * 
 	 * @return {sap.ui.core.Icon}
 	 * @private
 	 */
@@ -274,13 +279,13 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			this.fireDetailTap();
 			this.fireDetailPress();
 		}, this).addStyleClass("sapMLIBType sapMLIBIconDet");
-
+		
 		return this._oDetailControl;
 	};
-
+	
 	/**
 	 * Returns the navigation icon when item type is Navigation
-	 *
+	 * 
 	 * @return {sap.ui.core.Icon}
 	 * @private
 	 */
@@ -295,13 +300,13 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			useIconTooltip: false,
 			noTabStop: true
 		}).setParent(this, null, true).addStyleClass("sapMLIBType sapMLIBImgNav");
-
+		
 		return this._oNavigationControl;
 	};
-
+	
 	/**
 	 * Returns RadioButton control when mode is one of Single Selection type
-	 *
+	 * 
 	 * @return {sap.m.RadioButton}
 	 * @private
 	 */
@@ -320,13 +325,13 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			this.setSelected(bSelected);
 			this.informList("Select", bSelected);
 		}, this);
-
+		
 		return this._oSingleSelectControl;
 	};
-
+	
 	/**
 	 * Returns CheckBox control when mode is MultiSelection
-	 *
+	 * 
 	 * @return {sap.m.CheckBox}
 	 * @private
 	 */
@@ -344,20 +349,20 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			this.setSelected(bSelected);
 			this.informList("Select", bSelected);
 		}, this);
-
+		
 		return this._oMultiSelectControl;
 	};
-
+	
 	/**
 	 * Returns responsible control depends on the mode
-	 *
+	 * 
 	 * @returns {sap.ui.core.Control}
 	 * @private
 	 */
 	ListItemBase.prototype.getModeControl = function(bUpdate) {
 		var sMode = this.getMode(),
 			mListMode = sap.m.ListMode;
-
+			
 		if (!sMode || sMode == mListMode.None) {
 			return;
 		}
@@ -365,24 +370,24 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 		if (sMode == mListMode.Delete) {
 			return this.getDeleteControl();
 		}
-
+		
 		var oSelectionControl = null;
 		if (sMode == mListMode.MultiSelect) {
 			oSelectionControl = this.getMultiSelectControl();
 		} else {
 			oSelectionControl = this.getSingleSelectControl();
 		}
-
+		
 		if (oSelectionControl && bUpdate) {
 			oSelectionControl.setSelected(this.getSelected());
 		}
-
+		
 		return oSelectionControl;
 	};
 
 	/**
-	 * Returns item type icon
-	 *
+	 * Returns item type icon 
+	 * 
 	 * @returns {sap.ui.core.Icon}
 	 * @private
 	 */
@@ -393,15 +398,15 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 		if (sType == mType.Detail || sType == mType.DetailAndActive) {
 			return this.getDetailControl();
 		}
-
+		
 		if (sType == mType.Navigation) {
 			return this.getNavigationControl();
 		}
 	};
-
+	
 	/**
 	 * Destroys generated mode/type controls
-	 *
+	 * 
 	 * @param {String[]} aControls array of control names
 	 * @private
 	 */
@@ -414,34 +419,35 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			}
 		}, this);
 	};
-
+	
 	/**
-	 * Determines whether item has any action or not.
+	 * Determines whether item should be clickable or not
 	 * @private
 	 */
-	ListItemBase.prototype.isActionable = function() {
+	ListItemBase.prototype.isClickable = function() {
 		return	this.getListProperty("includeItemInSelection") ||
 				this.getMode() == sap.m.ListMode.SingleSelectMaster || (
 					this.getType() != sap.m.ListType.Inactive &&
 					this.getType() != sap.m.ListType.Detail
 				);
 	};
-
+	
+	
 	ListItemBase.prototype.exit = function() {
 		this._oLastFocused = null;
 		this.destroyControls([
-			"Delete",
-			"SingleSelect",
-			"MultiSelect",
-			"Detail",
+			"Delete", 
+			"SingleSelect", 
+			"MultiSelect", 
+			"Detail", 
 			"Navigation"
 		]);
 	};
-
+	
 	/**
 	 * Determines whether item is selectable or not.
 	 * By default, when item should be in selectable mode
-	 *
+	 * 
 	 * Subclasses can overwrite in case of unselectable item.
 	 * @returns {Boolean}
 	 * @private
@@ -450,7 +456,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 		var sMode = this.getMode();
 		return !(sMode == sap.m.ListMode.None || sMode == sap.m.ListMode.Delete);
 	};
-
+	
 	ListItemBase.prototype.getSelected = function() {
 		if (this.isSelectable()) {
 			return this.getProperty("selected");
@@ -463,124 +469,123 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	 *
 	 * @public
 	 * @return boolean
-	 * @deprecated Since version 1.10.2.
+	 * @deprecated Since version 1.10.2. 
 	 * API Change makes this method unnecessary. Use getSelected method instead.
 	 * @ui5-metamodel This method also will be described in the UI5 (legacy) designtime metamodel
 	 */
 	ListItemBase.prototype.isSelected = ListItemBase.prototype.getSelected;
-
+	
 	ListItemBase.prototype.setSelected = function(bSelected, bDontNotifyParent) {
 		// do not handle when item is not selectable or in same status
 		bSelected = this.validateProperty("selected", bSelected);
 		if (!this.isSelectable() || bSelected == this.getSelected()) {
 			return this;
 		}
-
+	
 		// notify parent about the selection first
 		if (!bDontNotifyParent) {
 			this.informSelectedChange(bSelected);
 		}
-
+	
 		// update the selection control status
 		var oSelectionControl = this.getModeControl();
 		if (oSelectionControl) {
 			oSelectionControl.setSelected(bSelected);
 		}
 
-		// run the hook to update dom state
+		// run the hook to update dom state 
 		this.updateSelectedDOM(bSelected, this.$());
-
+	
 		// set the property and do not invalidate
 		this.setProperty("selected", bSelected, true);
-
+		
 		return this;
 	};
-
+	
 	// Updates the selected state of the DOM
-	ListItemBase.prototype.updateSelectedDOM = function(bSelected, $This) {
-		$This.toggleClass("sapMLIBSelected", bSelected);
-		$This.attr("aria-selected", bSelected);
+	ListItemBase.prototype.updateSelectedDOM = function(bSelected, $LI) {
+		$LI.toggleClass("sapMLIBSelected", bSelected);
+		$LI.attr("aria-selected", bSelected);
 	};
-
+	
 	ListItemBase.prototype.setParent = function(oParent) {
 		Control.prototype.setParent.apply(this, arguments);
 		if (!oParent) {
 			return;
 		}
-
+		
 		this.informList("Inserted", this.bSelectedDelayed);
 		return this;
 	};
-
+	
 	ListItemBase.prototype.setBindingContext = function() {
 		Control.prototype.setBindingContext.apply(this, arguments);
 		this.informList("BindingContextSet");
 		return this;
 	};
-
+	
 	/**
-	 * Determines whether item is in SingleSelectMaster mode or
+	 * Determines whether item is in SingleSelectMaster mode or 
 	 * other selection modes when includeItemInSelection is true
-	 *
+	 * 
 	 * @return {Boolean}
 	 */
 	ListItemBase.prototype.isIncludedIntoSelection = function() {
 		var sMode = this.getMode(),
 			mMode = sap.m.ListMode;
-
+		
 		return (sMode == mMode.SingleSelectMaster || (
 				 this.getListProperty("includeItemInSelection") && (
 					sMode == mMode.SingleSelectLeft ||
-					sMode == mMode.SingleSelect ||
+					sMode == mMode.SingleSelect ||  
 					sMode == mMode.MultiSelect)
 				));
 	};
-
+	
 	/**
 	 * Determines whether item needs icon to render type or not
-	 *
+	 * 
 	 * @return {Boolean}
 	 */
 	ListItemBase.prototype.hasActiveType = function() {
 		var mType = sap.m.ListType,
 			sType = this.getType();
-
-		return (sType == mType.Active ||
-				sType == mType.Navigation ||
+		
+		return (sType == mType.Active || 
+				sType == mType.Navigation || 
 				sType == mType.DetailAndActive);
 	};
-
+	
 	ListItemBase.prototype.setActive = function(bActive) {
 		if (bActive != this._active) {
-			var $This = this.$();
 			this._active = bActive;
-			this._activeHandling($This);
-
+			this._activeHandling();
+	
 			if (this.getType() == sap.m.ListType.Navigation) {
-				this._activeHandlingNav($This);
+				this._activeHandlingNav();
 			}
-
+	
 			if (bActive) {
-				this._activeHandlingInheritor($This);
+				this._activeHandlingInheritor();
 			} else {
-				this._inactiveHandlingInheritor($This);
+				this._inactiveHandlingInheritor();
 			}
 		}
-
+	
 		return this;
 	};
-
+	
 	ListItemBase.prototype.ontap = function(oEvent) {
-
+		
 		// do not handle already handled events
 		if (this._eventHandledByControl) {
 			return;
 		}
-
+	
 		// if includeItemInSelection all tap events will be used for the mode select and delete
 		// SingleSelectMaster always behaves like includeItemInSelection is set
 		if (this.isIncludedIntoSelection()) {
-
+			
 			// update selected property
 			if (this.getMode() == sap.m.ListMode.MultiSelect) {
 				this.setSelected(!this.getSelected());
@@ -590,14 +595,14 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 				this.informList("Select", true);
 			}
 		} else if (this.hasActiveType()) {
-
+	
 			// if a fast tap happens deactivate the touchstart/touchend timers and their logic
 			window.clearTimeout(this._timeoutIdStart);
 			window.clearTimeout(this._timeoutIdEnd);
-
+			
 			// active feedback
 			this.setActive(true);
-
+			
 			jQuery.sap.delayedCall(180, this, function() {
 				this.setActive(false);
 			});
@@ -607,39 +612,39 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 				this.firePress();
 			});
 		}
-
+	
 		// tell the parent, item is pressed
 		this.informList("Press", oEvent.srcControl);
 	};
-
+	
 	ListItemBase.prototype.ontouchstart = function(oEvent) {
 		this._eventHandledByControl = oEvent.isMarked();
-
+		
 		var oTargetTouch = oEvent.targetTouches[0];
 		this._touchedY = oTargetTouch.clientY;
 		this._touchedX = oTargetTouch.clientX;
-
+		
 		// active handling if not handled already by control
-		// several fingers could be used
-		if (this._eventHandledByControl ||
-			oEvent.touches.length != 1 ||
+		// several fingers could be used 
+		if (this._eventHandledByControl || 
+			oEvent.touches.length != 1 || 
 			!this.hasActiveType()) {
 			return;
 		}
-
+	
 		// timeout regarding active state when scrolling
 		this._timeoutIdStart = jQuery.sap.delayedCall(100, this, function() {
 			this.setActive(true);
 			oEvent.setMarked();
 		});
 	};
-
+	
 	// handle touchmove to prevent active state when scrolling
 	ListItemBase.prototype.ontouchmove = function(oEvent) {
-
-		if ((this._active || this._timeoutIdStart) &&
+		
+		if ((this._active || this._timeoutIdStart) && 
 			(Math.abs(this._touchedY - oEvent.targetTouches[0].clientY) > 10 || Math.abs(this._touchedX - oEvent.targetTouches[0].clientX) > 10)) {
-
+	
 			// there is movement and therefore no tap...remove active styles
 			clearTimeout(this._timeoutIdStart);
 			this._timeoutIdStart = null;
@@ -647,9 +652,9 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			this.setActive(false);
 		}
 	};
-
+	
 	ListItemBase.prototype.ontouchend = function(oEvent) {
-
+	
 		// several fingers could be used
 		if (oEvent.targetTouches.length == 0 && this.hasActiveType()) {
 			this._timeoutIdEnd = jQuery.sap.delayedCall(100, this, function() {
@@ -657,44 +662,40 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			});
 		}
 	};
-
+	
 	// During native scrolling: Chrome sends touchcancel and no touchend thereafter
 	ListItemBase.prototype.ontouchcancel = ListItemBase.prototype.ontouchend;
-
+	
 	// toggle active styles for navigation items
 	ListItemBase.prototype._activeHandlingNav = function() {};
-
+	
 	// hook method for active handling...inheritors should overwrite this method
 	ListItemBase.prototype._activeHandlingInheritor = function() {};
-
+	
 	// hook method for inactive handling...inheritors should overwrite this method
 	ListItemBase.prototype._inactiveHandlingInheritor = function() {};
-
+	
 	// switch background style... toggle active feedback
-	ListItemBase.prototype._activeHandling = function($This) {
-		$This.toggleClass("sapMLIBActive", this._active);
-
-		if (this.isActionable()) {
-			$This.toggleClass("sapMLIBHoverable", !this._active);
-		}
+	ListItemBase.prototype._activeHandling = function() {
+		this.$().toggleClass("sapMLIBActive", this._active);
 	};
-
+	
 	/* Keyboard Handling */
 	ListItemBase.prototype.onsapspace = function(oEvent) {
-
+		
 		// handle only the events that are coming from ListItemBase
 		if (oEvent.srcControl !== this) {
 			return;
 		}
-
+		
 		// prevent default not to scroll down
 		oEvent.preventDefault();
-
+		
 		// allow only for selectable items
 		if (oEvent.isMarked() || !this.isSelectable()) {
 			return;
 		}
-
+		
 		// update selected property
 		if (this.getMode() == sap.m.ListMode.MultiSelect) {
 			this.setSelected(!this.getSelected());
@@ -703,29 +704,29 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			this.setSelected(true);
 			this.informList("Select", true);
 		}
-
+	
 		// event is handled
 		oEvent.setMarked();
 	};
-
+	
 	ListItemBase.prototype.onsapenter = function(oEvent) {
 		if (oEvent.isMarked() ||
 			oEvent.srcControl !== this) {
 			return;
 		}
-
+		
 		if (this.isIncludedIntoSelection()) {
-
-			// support old bug and mimic space key handling and
+			
+			// support old bug and mimic space key handling and 
 			// do not fire item's press event when item is included into selection
 			this.onsapspace(oEvent);
-
+			
 		} else if (this.hasActiveType()) {
-
+			
 			// active feedback
 			oEvent.setMarked();
 			this.setActive(true);
-
+			
 			jQuery.sap.delayedCall(180, this, function() {
 				this.setActive(false);
 			});
@@ -736,27 +737,27 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 				this.firePress();
 			});
 		}
-
+		
 		// let the parent know item is pressed
 		this.informList("Press", this);
 	};
-
+	
 	ListItemBase.prototype.onsapdelete = function(oEvent) {
 		if (oEvent.isMarked() ||
 			oEvent.srcControl !== this ||
 			this.getMode() != sap.m.ListMode.Delete) {
 			return;
 		}
-
+	
 		this.informList("Delete");
 		oEvent.preventDefault();
 		oEvent.setMarked();
 	};
-
+	
 	ListItemBase.prototype._switchFocus = function(oEvent) {
 		var oParent = this.getParent();
 		var $Tabbables = this.getTabbables();
-
+		
 		if (oEvent.srcControl !== this) {
 			oParent._iLastFocusPosOfItem = $Tabbables.index(oEvent.target);
 			this.focus();
@@ -766,14 +767,14 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			$Tabbables.eq(iFocusPos).focus();
 		}
 	};
-
+	
 	ListItemBase.prototype.onkeydown = function(oEvent) {
 		// check whether event is marked or not
 		var mKeyCodes = jQuery.sap.KeyCodes;
 		if (oEvent.isMarked()) {
 			return;
 		}
-
+	
 		// switch focus to row and focused item with F7
 		if (oEvent.which == mKeyCodes.F7) {
 			this._switchFocus(oEvent);
@@ -781,12 +782,12 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			oEvent.setMarked();
 			return;
 		}
-
+	
 		// handle only the events that are coming from ListItem
 		if (oEvent.srcControl !== this) {
 			return;
 		}
-
+		
 		// F2 should fire detail event
 		if (oEvent.which == mKeyCodes.F2 && this.getType().indexOf("Detail") == 0) {
 			this.fireDetailTap();
@@ -795,7 +796,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			oEvent.setMarked();
 		}
 	};
-
+	
 	/**
 	 * Returns the tabbable DOM elements as a jQuery collection
 	 *
@@ -806,7 +807,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	ListItemBase.prototype.getTabbables = function() {
 		return this.$().find(":sapTabbable");
 	};
-
+	
 	// handle the TAB key
 	ListItemBase.prototype.onsaptabnext = function(oEvent) {
 		// check whether event is marked or not
@@ -814,7 +815,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 		if (!oList || oEvent.isMarked()) {
 			return;
 		}
-
+	
 		// if tab key is pressed while the last tabbable element of the list item
 		// has been focused, we forward tab to the last pseudo element of the table
 		var oLastTabbableDomRef = this.getTabbables().get(-1) || this.getDomRef();
@@ -823,14 +824,14 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			oEvent.setMarked();
 		}
 	};
-
+	
 	// handle the SHIFT-TAB key
 	ListItemBase.prototype.onsaptabprevious = function(oEvent) {
 		var oList = this.getList();
 		if (!oList || oEvent.isMarked()) {
 			return;
 		}
-
+	
 		// if shift-tab is pressed while the list item has been focused,
 		// we forward tab to the root element of the list
 		if (oEvent.target === this.getDomRef()) {
@@ -838,7 +839,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			oEvent.setMarked();
 		}
 	};
-
+	
 	// handle propagated focus to make the item row focusable
 	ListItemBase.prototype.onfocusin = function(oEvent) {
 		var oList = this.getList();
@@ -848,7 +849,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			!jQuery(oEvent.target).is(":sapFocusable")) {
 			return;
 		}
-
+	
 		// inform the list async that this item should be focusable
 		jQuery.sap.delayedCall(0, oList, "setItemFocusable", [this]);
 		oEvent.setMarked();

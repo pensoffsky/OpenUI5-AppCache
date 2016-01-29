@@ -38,7 +38,7 @@ sap.ui.define('sap/ui/debug/Highlighter', ['jquery.sap.global', 'jquery.sap.dom'
 			this.iBorderWidth = iBorderWidth;
 		}
 	};
-
+	
 	/**
 	 * Shows a rectangle/box that surrounds the given DomRef.
 	 *
@@ -52,7 +52,7 @@ sap.ui.define('sap/ui/debug/Highlighter', ['jquery.sap.global', 'jquery.sap.dom'
 		if (!oDomRef || !oDomRef.parentNode) {
 			return;
 		}
-
+	
 		var oHighlightRect = jQuery.sap.domById(this.sId);
 		if (!oHighlightRect) {
 			oHighlightRect = oDomRef.ownerDocument.createElement("DIV");
@@ -74,7 +74,7 @@ sap.ui.define('sap/ui/debug/Highlighter', ['jquery.sap.global', 'jquery.sap.dom'
 		oHighlightRect.style.height = (oRect.height) + "px";
 		oHighlightRect.style.display = "block";
 	};
-
+	
 	/**
 	 * Hides the rectangle/box if it is currently shown.
 	 */

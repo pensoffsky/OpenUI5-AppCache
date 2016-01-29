@@ -20,7 +20,7 @@ sap.ui.define(["sap/m/semantic/SemanticConfiguration", "sap/ui/base/ManagedObjec
 	 * @abstract
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -61,10 +61,7 @@ sap.ui.define(["sap/m/semantic/SemanticConfiguration", "sap/ui/base/ManagedObjec
 
 	SemanticControl.prototype.setProperty = function (key, value, bSuppressInvalidate) {
 		ManagedObject.prototype.setProperty.call(this, key, value, true);
-		var sSetter = "set" + this._capitalize(key); //we call the setter, rather than setProperty on the control,
-													// to make sure we cover the case when the control has
-													// overwritten the setter with custom implementation
-		this._getControl()[sSetter](value, bSuppressInvalidate);
+		this._getControl().setProperty(key, value, bSuppressInvalidate);
 
 		return this;
 	};
@@ -165,10 +162,6 @@ sap.ui.define(["sap/m/semantic/SemanticConfiguration", "sap/ui/base/ManagedObjec
 				this._getControl().applySettings(oSettings);
 			}
 		}
-	};
-
-	SemanticControl.prototype._capitalize = function(sName) {
-		return sName.charAt(0).toUpperCase() + sName.slice(1);
 	};
 
 	return SemanticControl;

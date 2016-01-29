@@ -24,7 +24,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -323,14 +323,6 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 				//mobify carousel is 1-based
 				this._oMobifyCarousel.move(iIndex + 1);
 				this._changePage(iIndex + 1);
-
-				// BCP: 1580078315
-				if (sap.zen && sap.zen.commons && this.getParent() instanceof sap.zen.commons.layout.PositionContainer) {
-					if (this._isCarouselUsedWithCommonsLayout === undefined){
-						jQuery.sap.delayedCall(0, this, "invalidate");
-						this._isCarouselUsedWithCommonsLayout = true;
-					}
-				}
 			}
 		}
 
@@ -721,12 +713,6 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	 * @param {Object} oEvent - key object
 	 */
 	Carousel.prototype.onkeydown = function(oEvent) {
-
-		// Exit the function if the event is not from the Carousel
-		if (oEvent.target != this.getDomRef()) {
-			return;
-		}
-
 		switch (oEvent.keyCode) {
 			// F7 key
 			case jQuery.sap.KeyCodes.F7:
@@ -955,7 +941,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 
 	/**
 	 * Returns the last element that has been focus in the curent active page
-	 * @returns {Element | undefined}  HTML DOM or undefined
+	 * @returns {Element || undefined}  HTML DOM or undefined
 	 * @private
 	 */
 	Carousel.prototype._getActivePageLastFocusedElement = function() {
@@ -973,14 +959,13 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	 * @private
 	 */
 	Carousel.prototype._fnSkipToIndex = function(oEvent, nIndex) {
+		oEvent.preventDefault();
 		var nNewIndex = nIndex;
 
 		// Exit the function if the event is not from the Carousel
-		if (oEvent.target !== this.getDomRef()) {
+		if (oEvent.target !== this.$()[0]) {
 			return;
 		}
-
-		oEvent.preventDefault();
 
 		// Calculate the index of the next page that will be shown
 		if (nIndex !== 0) {

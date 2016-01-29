@@ -13,12 +13,12 @@ function(Element) {
 
 	/**
 	 * Class for OverlayRegistry.
-	 *
+	 * 
 	 * @class
 	 * Static registry for Overlays
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @private
 	 * @static

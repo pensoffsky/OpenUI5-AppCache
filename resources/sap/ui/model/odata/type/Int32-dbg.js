@@ -23,7 +23,7 @@ sap.ui.define(['sap/ui/model/odata/type/Int'],
 	 * @extends sap.ui.model.odata.type.Int
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @alias sap.ui.model.odata.type.Int32
@@ -38,7 +38,9 @@ sap.ui.define(['sap/ui/model/odata/type/Int'],
 	 * @public
 	 * @since 1.27.0
 	 */
-	var Int32 = Int.extend("sap.ui.model.odata.type.Int32", {
+	var Int32 = Int.extend("sap.ui.model.odata.type.Int32",
+		/** @lends sap.ui.model.odata.type.Int32.prototype */
+		{
 			constructor : function () {
 				Int.apply(this, arguments);
 			}

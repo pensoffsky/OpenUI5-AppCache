@@ -10,7 +10,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/TreeBinding', './v2/ODataTreeB
 	"use strict";
 
 	/**
-	 * Adapter for TreeBindings to add the ListBinding functionality and use the
+	 * Adapter for TreeBindings to add the ListBinding functionality and use the 
 	 * tree structure in list based controls.
 	 *
 	 * @alias sap.ui.model.odata.ODataTreeBindingAdapter
@@ -19,7 +19,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/TreeBinding', './v2/ODataTreeB
 	 * @protected
 	 */
 	var ODataTreeBindingAdapter = function() {
-
+	
 		// ensure only TreeBindings are enhanced which have not been enhanced yet
 		if (!(this instanceof TreeBinding && this.getContexts === undefined)) {
 			return;
@@ -33,27 +33,27 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/TreeBinding', './v2/ODataTreeB
 				this[fn] = ODataTreeBindingAdapter.prototype[fn];
 			}
 		}
-
+		
 		// make sure we have a parameter object
 		this.mParameters = this.mParameters || {};
-
+		
 		// initialize the contexts
 		this._aRowIndexMap = [];
-
+		
 		//Store length and threshold for all requests
 		this._iThreshold = 0;
 		this._iPageSize = 0;
-
+		
 		//set the default auto expand mode
 		this.setAutoExpandMode(this.mParameters.autoExpandMode || TreeAutoExpandMode.Sequential);
-
+		
 		//default value for collapse recursive
 		if (this.mParameters.collapseRecursive === undefined) {
 			this.bCollapseRecursive = true;
 		} else {
 			this.bCollapseRecursive = !!this.mParameters.collapseRecursive;
 		}
-
+		
 		//create general tree structure
 		this._createTreeState();
 	};
@@ -74,48 +74,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/TreeBinding', './v2/ODataTreeB
 		} else {
 			return ODataTreeBinding.prototype.hasChildren.call(this, oNode.context);
 		}
-	};
-
-	/**
-	 * Calculates a group id for the given node.
-	 * The actual group ID differs between hierarchy-annotations and navigation properties
-	 * @override
-	 */
-	ODataTreeBindingAdapter.prototype._calculateGroupID = function (oNode) {
-
-		var sGroupIDBase = "";
-		var sGroupIDSuffix = "";
-
-		//artificial root has always "/" as groupID
-		if (oNode.context === null) {
-			return "/";
-		}
-
-		if (oNode.parent) {
-			//case 1: nested node, group id is the path along the parents
-			sGroupIDBase = oNode.parent.groupID;
-			sGroupIDBase = sGroupIDBase[sGroupIDBase.length - 1] !== "/" ? sGroupIDBase + "/" : sGroupIDBase;
-			if (this.bHasTreeAnnotations) {
-				sGroupIDSuffix = oNode.context.getProperty(this.oTreeProperties["hierarchy-node-for"]) + "/";
-			} else {
-				//odata navigation properties
-				sGroupIDSuffix = oNode.context.sPath.substring(1) + "/";
-			}
-		} else {
-			//case 2: node sits on root level
-			if (this.bHasTreeAnnotations) {
-				sGroupIDBase = "/";
-				sGroupIDSuffix = oNode.context.getProperty(this.oTreeProperties["hierarchy-node-for"]) + "/";
-			} else {
-				//odata nav properties case
-				sGroupIDBase = "/";
-				sGroupIDSuffix = oNode.context.sPath[0] === "/" ? oNode.context.sPath.substring(1) : oNode.context.sPath;
-			}
-		}
-
-		var sGroupID = sGroupIDBase + sGroupIDSuffix;
-
-		return sGroupID;
 	};
 
 	ODataTreeBindingAdapter.prototype.resetData = function(oContext, mParameters) {
@@ -143,5 +101,5 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/TreeBinding', './v2/ODataTreeB
 	};
 
 	return ODataTreeBindingAdapter;
-
+	
 }, /* bExport= */ true);

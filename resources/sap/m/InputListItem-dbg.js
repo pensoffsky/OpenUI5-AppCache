@@ -10,11 +10,11 @@ sap.ui.define(['jquery.sap.global', './ListItemBase', './library'],
 	"use strict";
 
 
-
+	
 	/**
 	 * Constructor for a new InputListItem.
 	 *
-	 * @param {string} [sId] id for the new control, generated automatically if no id is given
+	 * @param {string} [sId] id for the new control, generated automatically if no id is given 
 	 * @param {object} [mSettings] initial settings for the new control
 	 *
 	 * @class
@@ -22,7 +22,7 @@ sap.ui.define(['jquery.sap.global', './ListItemBase', './library'],
 	 * @extends sap.m.ListItemBase
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -30,15 +30,15 @@ sap.ui.define(['jquery.sap.global', './ListItemBase', './library'],
 	 * @ui5-metamodel This control/element also will be described in the UI5 (legacy) designtime metamodel
 	 */
 	var InputListItem = ListItemBase.extend("sap.m.InputListItem", /** @lends sap.m.InputListItem.prototype */ { metadata : {
-
+	
 		library : "sap.m",
 		properties : {
-
+	
 			/**
 			 * Label of the list item
 			 */
 			label : {type : "string", group : "Misc", defaultValue : null},
-
+	
 			/**
 			 * This property specifies the label text directionality with enumerated options. By default, the label inherits text direction from the DOM.
 			 * @since 1.30.0
@@ -47,15 +47,15 @@ sap.ui.define(['jquery.sap.global', './ListItemBase', './library'],
 		},
 		defaultAggregation : "content",
 		aggregations : {
-
+	
 			/**
 			 * Content controls can be added
 			 */
 			content : {type : "sap.ui.core.Control", multiple : true, singularName : "content", bindable : "bindable"}
 		}
 	}});
-
-
+	
+	
 
 	return InputListItem;
 

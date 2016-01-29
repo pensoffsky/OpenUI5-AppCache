@@ -291,10 +291,6 @@ sap.ui.define(['jquery.sap.global', './InstanceManager', 'sap/ui/core/Popup'],
 			var sCssTransition = "opacity " + mSettings.animationTimingFunction + " " + mSettings.animationDuration + "ms",
 				sTransitionEnd = "webkitTransitionEnd." + CSSCLASS + " transitionend." + CSSCLASS;
 
-			if (!sap.ui.getCore().getConfiguration().getAnimation()) {
-				sCssTransition = "0ms";
-			}
-
 			if (mSettings.animationDuration > 0) {
 				$MessageToastDomRef[0].style.webkitTransition = sCssTransition;
 				$MessageToastDomRef[0].style.transition = sCssTransition;
@@ -323,7 +319,7 @@ sap.ui.define(['jquery.sap.global', './InstanceManager', 'sap/ui/core/Popup'],
 		 * The only mandatory parameter is <code>sMessage</code>.
 		 *
 		 * @param {string} sMessage The message to be displayed.
-		 * @param {object} [mOptions] Object which can contain all other options. Not all entries in this object are required. This property is optional.
+		 * @param {object} [mOptions] Optionally other options.
 		 * @param {int} [mOptions.duration=3000] Time in milliseconds before the close animation starts. Needs to be a finite positive nonzero integer.
 		 * @param {sap.ui.core.CSSSize} [mOptions.width='15em'] The width of the message toast, this value can be provided in %, em, px and all possible CSS measures.
 		 * @param {sap.ui.core.Popup.Dock} [mOptions.my='center bottom'] Specifies which point of the message toast should be aligned.
@@ -335,7 +331,7 @@ sap.ui.define(['jquery.sap.global', './InstanceManager', 'sap/ui/core/Popup'],
 		 * @param {boolean} [mOptions.autoClose=true] Specify whether the message toast should close as soon as the end user touches the screen.
 		 * @param {string} [mOptions.animationTimingFunction='ease'] Describes how the close animation will progress. Possible values "ease", "linear", "ease-in", "ease-out", "ease-in-out". This feature is not supported in android and ie9 browsers.
 		 * @param {int} [mOptions.animationDuration=1000] Time in milliseconds that the close animation takes to complete. Needs to be a finite positive integer. For not animation set to 0. This feature is not supported in android and ie9 browsers.
-		 * @param {boolean} [mOptions.closeOnBrowserNavigation=true] Specifies if the message toast closes on browser navigation.
+		 * @param {boolean} [mOptions.closeOnBrowserNavigation=true] Whether the message toast closes on browser navigation.
 		 *
 		 * @type void
 		 * @public

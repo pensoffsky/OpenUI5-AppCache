@@ -56,15 +56,13 @@ sap.ui.define(['jquery.sap.global'],
 
 		var aPages = oCarousel.getPages();
 		var iPageCount = aPages.length;
-		var sPageIndicatorPlacement = oCarousel.getPageIndicatorPlacement();
+		var sPageIndicatorPlacement = oCarousel.getShowPageIndicator() ?
+			oCarousel.getPageIndicatorPlacement() : null;
+
 
 		//visual indicator
 		if (sPageIndicatorPlacement === sap.m.PlacementType.Top) {
-			this._renderPageIndicator({
-				rm: rm,
-				iPageCount: iPageCount,
-				sShowPageIndicator: oCarousel.getShowPageIndicator()
-			});
+			this._renderPageIndicator(rm, iPageCount);
 		}
 
 		//inner carousel div
@@ -72,19 +70,16 @@ sap.ui.define(['jquery.sap.global'],
 		//do housekeeping
 		oCarousel._cleanUpScrollContainer();
 
-		var fnRenderPage = function(oPage, iIndex, aArray) {
+		var fnRenderPage = function(oPage, iIndex) {
 			//item div
 			rm.write("<div class='sapMCrslItem");
 			if (sPageIndicatorPlacement === sap.m.PlacementType.Bottom) {
 				rm.write(" sapMCrslBottomOffset");
 			}
 			rm.write("' id='" + oCarousel.sId + "-" + oPage.sId + "-slide'");
-
 			// ARIA
 			rm.writeAccessibilityState(oPage, {
-				role: "listitem",
-				posinset: iIndex + 1,
-				setsize: aArray.length
+				role:"listitem"
 			});
 
 			rm.write(">");
@@ -116,14 +111,10 @@ sap.ui.define(['jquery.sap.global'],
 
 		//visual indicator
 		if (sPageIndicatorPlacement === sap.m.PlacementType.Bottom) {
-			this._renderPageIndicator({
-				rm: rm,
-				iPageCount: iPageCount,
-				bBottom: true,
-				bShowPageIndicator: oCarousel.getShowPageIndicator()
-			});
+			this._renderPageIndicator(rm, iPageCount, true);
 		}
 		rm.write("</div>");
+
 		//page-wrap ends
 	};
 
@@ -132,34 +123,24 @@ sap.ui.define(['jquery.sap.global'],
 	 * Renders the page indicator, using the provided {@link sap.ui.core.RenderManager}.
 	 * Page indicator is only rendered if there is more than one carousel page
 	 *
-	 * @param {Object} settings.rm - oRm the RenderManager that can be used for writing to the render output buffer
-	 * @param {Array} settings.iPages
-	 * @param {boolean} settings.bBottom
-	 * @param {boolean} settings.bShowPageIndicator
+	 * @param {sap.ui.core.RenderManager} oRm the RenderManager that can be used for writing to the render output buffer
+	 * @param aPages array of controls to be rendered
 	 * @private
 	 */
-	CarouselRenderer._renderPageIndicator = function(settings){
-		var rm = settings.rm,
-		iPageCount = settings.iPageCount,
-		bBottom = settings.bBottom,
-		bShowPageIndicator = settings.bShowPageIndicator;
+	CarouselRenderer._renderPageIndicator = function(rm, iPageCount, bBottom){
+		var oResourceBundle = sap.ui.getCore().getLibraryResourceBundle('sap.m');
 
-		var oResourceBundle = sap.ui.getCore().getLibraryResourceBundle('sap.m'),
-		sOffsetCSSClass = bBottom ? " sapMCrslBottomOffset" : "",
-		sDisplayStyle = bShowPageIndicator ? "" : "display: none";
-
-		// If there is only one page - do not render the indicator
-		if (iPageCount <= 1) {
-			return;
+		//page indicator div
+		if (iPageCount > 1) {
+			rm.write("<div class='sapMCrslControls sapMCrslBulleted" +
+					(bBottom ? " sapMCrslBottomOffset" : "") +
+					"'>");
+			for ( var i = 1; i <= iPageCount; i++) {
+				//item span
+				rm.write("<span role='img' data-slide=" + i + " aria-label='" + oResourceBundle.getText('CAROUSEL_POSITION', [i, iPageCount]) + "'>" + i + "</span>");
+			}
+			rm.write("</div>");
 		}
-
-		rm.write('<div class="sapMCrslControls sapMCrslBulleted' + sOffsetCSSClass + '" style="' + sDisplayStyle + '">');
-
-		for ( var i = 1; i <= iPageCount; i++) {
-			rm.write("<span role='img' data-slide=" + i + " aria-label='" + oResourceBundle.getText('CAROUSEL_POSITION', [i, iPageCount]) + "'>" + i + "</span>");
-		}
-
-		rm.write("</div>");
 	};
 
 	return CarouselRenderer;

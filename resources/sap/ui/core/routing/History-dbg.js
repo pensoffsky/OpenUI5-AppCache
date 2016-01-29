@@ -109,19 +109,17 @@ sap.ui.define(['jquery.sap.global', './HashChanger'],
 		this.aHistory[0] = this._oHashChanger.getHash();
 	};
 
-		/**
-		 * Determines what the navigation direction for a newly given hash would be
-		 * @param {string} sNewHash the new hash
-		 * @param bHistoryLengthIncreased if the history length has increased compared with the last check
-		 * @param bCheckHashChangerEvents Checks if the hash was set or replaced by the hashchanger. When getDirection is called by an app this has to be false.
-		 * @returns {sap.ui.core.routing.HistoryDirection}
-		 * @private
-		 */
-	History.prototype._getDirection = function(sNewHash, bHistoryLengthIncreased, bCheckHashChangerEvents) {
+	/**
+	 * Determines what the navigation direction for a newly given hash would be
+	 * @param {string} sNewHash the new hash
+	 * @returns {sap.ui.core.routing.HistoryDirection}
+	 * @private
+	 */
+	History.prototype._getDirection = function(sNewHash, bHistoryLengthIncreased) {
 		var oDirection = sap.ui.core.routing.HistoryDirection;
 
 		//Next hash was set by the router - it has to be a new entry
-		if (bCheckHashChangerEvents && this._oNextHash && this._oNextHash.sHash === sNewHash) {
+		if (this._oNextHash && this._oNextHash.sHash === sNewHash) {
 			return oDirection.NewEntry;
 		}
 
@@ -180,7 +178,7 @@ sap.ui.define(['jquery.sap.global', './HashChanger'],
 		//a navigation has taken place so the history is not initial anymore.
 		this._bIsInitial = false;
 
-		sDirection = this._sCurrentDirection = this._getDirection(sNewHash, this._iHistoryLength < window.history.length, true);
+		sDirection = this._sCurrentDirection = this._getDirection(sNewHash, this._iHistoryLength < window.history.length);
 
 		// Remember the new history length, after it has been taken into account by getDirection
 		this._iHistoryLength = actualHistoryLength;

@@ -5,8 +5,8 @@
  */
 
 // Provides control sap.m.PagingButton.
-sap.ui.define(['jquery.sap.global', './Button', 'sap/ui/core/Control', 'sap/ui/core/IconPool'],
-	function (jQuery, Button, Control, IconPool) {
+sap.ui.define(['jquery.sap.global', './Button', 'sap/ui/core/Control'],
+	function (jQuery, Button, Control) {
 		"use strict";
 
 		/**
@@ -20,7 +20,7 @@ sap.ui.define(['jquery.sap.global', './Button', 'sap/ui/core/Control', 'sap/ui/c
 		 * @extends sap.ui.core.Control
 		 *
 		 * @author SAP SE
-		 * @version 1.32.10
+		 * @version 1.30.8
 		 *
 		 * @constructor
 		 * @public
@@ -89,7 +89,7 @@ sap.ui.define(['jquery.sap.global', './Button', 'sap/ui/core/Control', 'sap/ui/c
 		PagingButton.prototype._getNextButton = function () {
 			if (!this.getAggregation("nextButton")) {
 				this.setAggregation("nextButton", new sap.m.Button({
-					icon: IconPool.getIconURI("slim-arrow-down"),
+					icon: "sap-icon://slim-arrow-down",
 					enabled: false,
 					id: this.getId() + "-nextButton"
 				}));
@@ -105,7 +105,7 @@ sap.ui.define(['jquery.sap.global', './Button', 'sap/ui/core/Control', 'sap/ui/c
 		PagingButton.prototype._getPreviousButton = function () {
 			if (!this.getAggregation("previousButton")) {
 				this.setAggregation("previousButton", new sap.m.Button({
-					icon: IconPool.getIconURI("slim-arrow-up"),
+					icon: "sap-icon://slim-arrow-up",
 					enabled: false,
 					id: this.getId() + "-previousButton"
 				}));

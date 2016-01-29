@@ -13,7 +13,7 @@
  */
 
 // Provides class sap.m.semantic.ShareMenu
-sap.ui.define(['jquery.sap.global', 'sap/ui/base/Metadata', 'sap/m/Button', 'sap/m/OverflowToolbarLayoutData', 'sap/ui/core/IconPool'], function(jQuery, Metadata, Button, OverflowToolbarLayoutData, IconPool) {
+sap.ui.define(['jquery.sap.global', 'sap/ui/base/Metadata', 'sap/m/Button', 'sap/m/OverflowToolbarLayoutData'], function(jQuery, Metadata, Button, OverflowToolbarLayoutData) {
 	"use strict";
 
 	/**
@@ -24,7 +24,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/Metadata', 'sap/m/Button', 'sap
 	 * ShareMenu is a special menu that is represented by (1) an actionSheet with the menu items and (2) a button that opens the actionSheet.
 	 * If the menu has only one item, then that item appears in place of the button that opens the actionSheet.
 	 *
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 * @private
 	 * @since 1.30.0
 	 * @alias sap.m.semantic.ShareMenu
@@ -350,8 +350,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/Metadata', 'sap/m/Button', 'sap
 			var that = this;
 
 			this._oShareMenuBtn = new sap.m.Button(this._oActionSheet.getParent().getId() + "-shareButton", {
-				icon: IconPool.getIconURI("action"),
-				tooltip: sap.ui.getCore().getLibraryResourceBundle("sap.m").getText("SEMANTIC_CONTROL_ACTION_SHARE"),
+				icon: "sap-icon://action",
 				layoutData: new OverflowToolbarLayoutData({
 					moveToOverflow: false,
 					stayInOverflow: false

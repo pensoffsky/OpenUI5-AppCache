@@ -14,7 +14,7 @@ function(Plugin) {
 	/**
 	 * Constructor for a new MouseSelection.
 	 *
-	 * @param {string} [sId] id for the new object, generated automatically if no id is given
+	 * @param {string} [sId] id for the new object, generated automatically if no id is given 
 	 * @param {object} [mSettings] initial settings for the new object
 	 *
 	 * @class
@@ -22,7 +22,7 @@ function(Plugin) {
 	 * @extends sap.ui.dt.Plugin
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @private
@@ -30,7 +30,7 @@ function(Plugin) {
 	 * @alias sap.ui.dt.plugin.MouseSelection
 	 * @experimental Since 1.30. This class is experimental and provides only limited functionality. Also the API might be changed in future.
 	 */
-	var MouseSelection = Plugin.extend("sap.ui.dt.plugin.MouseSelection", /** @lends sap.ui.dt.plugin.MouseSelection.prototype */ {
+	var MouseSelection = Plugin.extend("sap.ui.dt.plugin.MouseSelection", /** @lends sap.ui.dt.plugin.MouseSelection.prototype */ {		
 		metadata : {
 			// ---- object ----
 
@@ -63,9 +63,9 @@ function(Plugin) {
 		oOverlay.addEventDelegate(this._mEventDelegate, oOverlay);
 	};
 
-
+	
 	//  * @override
-
+	 
 	MouseSelection.prototype.deregisterOverlay = function(oOverlay) {
 		oOverlay.removeEventDelegate(this._mEventDelegate, oOverlay);
 	};

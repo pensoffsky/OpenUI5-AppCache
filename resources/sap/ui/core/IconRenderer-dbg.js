@@ -3,7 +3,7 @@
  * (c) Copyright 2009-2015 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
-sap.ui.define(['jquery.sap.global'], function(jQuery) {
+sap.ui.define(function() {
 	"use strict";
 
 	/**
@@ -35,8 +35,8 @@ sap.ui.define(['jquery.sap.global'], function(jQuery) {
 		oRm.writeControlData(oControl);
 		oRm.writeAccessibilityState(oControl, oControl._getAccessibilityAttributes());
 
-		if (sTooltip || (bUseIconTooltip && oIconInfo)) {
-			oRm.writeAttributeEscaped("title", sTooltip || oIconInfo.text || oIconInfo.name);
+		if (sTooltip || (bUseIconTooltip && oIconInfo && oIconInfo.text)) {
+			oRm.writeAttributeEscaped("title", sTooltip || oIconInfo.text);
 		}
 
 		if (oControl.hasListeners("press") && !bNoTabStop) {
@@ -44,8 +44,8 @@ sap.ui.define(['jquery.sap.global'], function(jQuery) {
 		}
 
 		if (oIconInfo) {
-			oRm.writeAttributeEscaped("data-sap-ui-icon-content", oIconInfo.content);
-			oRm.addStyle("font-family", "'" + jQuery.sap.encodeHTML(oIconInfo.fontFamily) + "'");
+			oRm.writeAttribute("data-sap-ui-icon-content", oIconInfo.content);
+			oRm.addStyle("font-family", "'" + oIconInfo.fontFamily + "'");
 		}
 
 		if (sWidth) {
@@ -58,11 +58,11 @@ sap.ui.define(['jquery.sap.global'], function(jQuery) {
 		}
 
 		if (!(sColor in sap.ui.core.IconColor)) {
-			oRm.addStyle("color", jQuery.sap.encodeHTML(sColor));
+			oRm.addStyle("color", sColor);
 		}
 
 		if (!(sBackgroundColor in sap.ui.core.IconColor)) {
-			oRm.addStyle("background-color", jQuery.sap.encodeHTML(sBackgroundColor));
+			oRm.addStyle("background-color", sBackgroundColor);
 		}
 
 		if (sSize) {
@@ -73,10 +73,6 @@ sap.ui.define(['jquery.sap.global'], function(jQuery) {
 
 		if (oIconInfo && !oIconInfo.suppressMirroring) {
 			oRm.addClass("sapUiIconMirrorInRTL");
-		}
-
-		if (oControl.hasListeners("press")) {
-			oRm.addClass("sapUiIconPointer");
 		}
 
 		oRm.writeClasses();

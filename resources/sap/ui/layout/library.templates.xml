@@ -6,7 +6,6 @@
 	busy: false, // boolean
 	busyIndicatorDelay: 1000, // int
 	visible: true, // boolean
-	fieldGroupIds: [], // string[], since 1.31
 	vertical: true, // boolean
 	fixFirst: true, // boolean
 	fixContentSize: "auto", // sap.ui.core.CSSSize
@@ -15,10 +14,7 @@
 	customData: [], // sap.ui.core.CustomData
 	dependents: [], // sap.ui.core.Control, since 1.19
 	fixContent: [], // sap.ui.core.Control
-	flexContent: undefined, // sap.ui.core.Control
-	validateFieldGroup: [function (oEvent) {
-		var ${control} = oEvent.getSource();
-	}, this]
+	flexContent: undefined // sap.ui.core.Control
 })
 ]]></jsTemplate>
 	<xmlTemplate><![CDATA[<FixFlex xmlns="sap.ui.layout"
@@ -26,12 +22,10 @@
 	busy="false"
 	busyIndicatorDelay="1000"
 	visible="true"
-	fieldGroupIds=""
 	vertical="true"
 	fixFirst="true"
 	fixContentSize="auto"
-	minFlexSize="0"
-	validateFieldGroup="">
+	minFlexSize="0">
 		<tooltip></tooltip> <!-- sap.ui.core.TooltipBase -->
 		<dependents></dependents> <!-- sap.ui.core.Control, since 1.19 -->
 		<fixContent></fixContent> <!-- sap.ui.core.Control -->
@@ -45,7 +39,6 @@
 	busy: false, // boolean
 	busyIndicatorDelay: 1000, // int
 	visible: true, // boolean
-	fieldGroupIds: [], // string[], since 1.31
 	width: "100%", // sap.ui.core.CSSSize
 	vSpacing: 1, // float
 	hSpacing: 1, // float
@@ -56,10 +49,7 @@
 	tooltip: undefined, // sap.ui.core.TooltipBase
 	customData: [], // sap.ui.core.CustomData
 	dependents: [], // sap.ui.core.Control, since 1.19
-	content: [], // sap.ui.core.Control
-	validateFieldGroup: [function (oEvent) {
-		var ${control} = oEvent.getSource();
-	}, this]
+	content: [] // sap.ui.core.Control
 })
 ]]></jsTemplate>
 	<xmlTemplate><![CDATA[<Grid xmlns="sap.ui.layout"
@@ -67,15 +57,13 @@
 	busy="false"
 	busyIndicatorDelay="1000"
 	visible="true"
-	fieldGroupIds=""
 	width="100%"
 	vSpacing="1"
 	hSpacing="1"
 	position="Left"
 	defaultSpan="XL3 L3 M6 S12"
 	defaultIndent="XL0 L0 M0 S0"
-	containerQuery="false"
-	validateFieldGroup="">
+	containerQuery="false">
 		<tooltip></tooltip> <!-- sap.ui.core.TooltipBase -->
 		<dependents></dependents> <!-- sap.ui.core.Control, since 1.19 -->
 		<content></content> <!-- sap.ui.core.Control -->
@@ -163,15 +151,11 @@
 	busy: false, // boolean
 	busyIndicatorDelay: 1000, // int
 	visible: true, // boolean
-	fieldGroupIds: [], // string[], since 1.31
 	allowWrapping: false, // boolean
 	tooltip: undefined, // sap.ui.core.TooltipBase
 	customData: [], // sap.ui.core.CustomData
 	dependents: [], // sap.ui.core.Control, since 1.19
-	content: [], // sap.ui.core.Control
-	validateFieldGroup: [function (oEvent) {
-		var ${control} = oEvent.getSource();
-	}, this]
+	content: [] // sap.ui.core.Control
 })
 ]]></jsTemplate>
 	<xmlTemplate><![CDATA[<HorizontalLayout xmlns="sap.ui.layout"
@@ -179,9 +163,7 @@
 	busy="false"
 	busyIndicatorDelay="1000"
 	visible="true"
-	fieldGroupIds=""
-	allowWrapping="false"
-	validateFieldGroup="">
+	allowWrapping="false">
 		<tooltip></tooltip> <!-- sap.ui.core.TooltipBase -->
 		<dependents></dependents> <!-- sap.ui.core.Control, since 1.19 -->
 		<content></content> <!-- sap.ui.core.Control -->
@@ -194,15 +176,11 @@
 	busy: false, // boolean
 	busyIndicatorDelay: 1000, // int
 	visible: true, // boolean
-	fieldGroupIds: [], // string[], since 1.31
 	responsive: true, // boolean
 	tooltip: undefined, // sap.ui.core.TooltipBase
 	customData: [], // sap.ui.core.CustomData
 	dependents: [], // sap.ui.core.Control, since 1.19
-	content: [], // sap.ui.core.Control
-	validateFieldGroup: [function (oEvent) {
-		var ${control} = oEvent.getSource();
-	}, this]
+	content: [] // sap.ui.core.Control
 })
 ]]></jsTemplate>
 	<xmlTemplate><![CDATA[<ResponsiveFlowLayout xmlns="sap.ui.layout"
@@ -210,9 +188,7 @@
 	busy="false"
 	busyIndicatorDelay="1000"
 	visible="true"
-	fieldGroupIds=""
-	responsive="true"
-	validateFieldGroup="">
+	responsive="true">
 		<tooltip></tooltip> <!-- sap.ui.core.TooltipBase -->
 		<dependents></dependents> <!-- sap.ui.core.Control, since 1.19 -->
 		<content></content> <!-- sap.ui.core.Control -->
@@ -250,7 +226,6 @@
 	busy: false, // boolean
 	busyIndicatorDelay: 1000, // int
 	visible: true, // boolean
-	fieldGroupIds: [], // string[], since 1.31
 	orientation: sap.ui.core.Orientation.Horizontal, // sap.ui.core.Orientation
 	width: "100%", // sap.ui.core.CSSSize
 	height: "100%", // sap.ui.core.CSSSize
@@ -258,9 +233,6 @@
 	customData: [], // sap.ui.core.CustomData
 	dependents: [], // sap.ui.core.Control, since 1.19
 	contentAreas: [], // sap.ui.core.Control
-	validateFieldGroup: [function (oEvent) {
-		var ${control} = oEvent.getSource();
-	}, this],
 	resize: [function (oEvent) {
 		var ${control} = oEvent.getSource();
 	}, this]
@@ -271,11 +243,9 @@
 	busy="false"
 	busyIndicatorDelay="1000"
 	visible="true"
-	fieldGroupIds=""
 	orientation="Horizontal"
 	width="100%"
 	height="100%"
-	validateFieldGroup=""
 	resize="">
 		<tooltip></tooltip> <!-- sap.ui.core.TooltipBase -->
 		<dependents></dependents> <!-- sap.ui.core.Control, since 1.19 -->
@@ -310,16 +280,12 @@
 	busy: false, // boolean
 	busyIndicatorDelay: 1000, // int
 	visible: true, // boolean
-	fieldGroupIds: [], // string[], since 1.31
 	width: undefined, // sap.ui.core.CSSSize
 	enabled: true, // boolean
 	tooltip: undefined, // sap.ui.core.TooltipBase
 	customData: [], // sap.ui.core.CustomData
 	dependents: [], // sap.ui.core.Control, since 1.19
-	content: [], // sap.ui.core.Control
-	validateFieldGroup: [function (oEvent) {
-		var ${control} = oEvent.getSource();
-	}, this]
+	content: [] // sap.ui.core.Control
 })
 ]]></jsTemplate>
 	<xmlTemplate><![CDATA[<VerticalLayout xmlns="sap.ui.layout"
@@ -327,10 +293,8 @@
 	busy="false"
 	busyIndicatorDelay="1000"
 	visible="true"
-	fieldGroupIds=""
 	width=""
-	enabled="true"
-	validateFieldGroup="">
+	enabled="true">
 		<tooltip></tooltip> <!-- sap.ui.core.TooltipBase -->
 		<dependents></dependents> <!-- sap.ui.core.Control, since 1.19 -->
 		<content></content> <!-- sap.ui.core.Control -->
@@ -343,7 +307,6 @@
 	busy: false, // boolean
 	busyIndicatorDelay: 1000, // int
 	visible: true, // boolean
-	fieldGroupIds: [], // string[], since 1.31
 	width: undefined, // sap.ui.core.CSSSize
 	editable: false, // boolean, since 1.20.0
 	tooltip: undefined, // sap.ui.core.TooltipBase
@@ -352,10 +315,7 @@
 	formContainers: [], // sap.ui.layout.form.FormContainer
 	title: undefined, // sap.ui.core.Title
 	layout: undefined, // sap.ui.layout.form.FormLayout
-	ariaLabelledBy: [], // sap.ui.core.Control, since 1.28.0
-	validateFieldGroup: [function (oEvent) {
-		var ${control} = oEvent.getSource();
-	}, this]
+	ariaLabelledBy: [] // sap.ui.core.Control, since 1.28.0
 })
 ]]></jsTemplate>
 	<xmlTemplate><![CDATA[<form/Form xmlns="sap.ui.layout"
@@ -363,11 +323,9 @@
 	busy="false"
 	busyIndicatorDelay="1000"
 	visible="true"
-	fieldGroupIds=""
 	width=""
 	editable="false"
-	ariaLabelledBy=""
-	validateFieldGroup="">
+	ariaLabelledBy="">
 		<tooltip></tooltip> <!-- sap.ui.core.TooltipBase -->
 		<dependents></dependents> <!-- sap.ui.core.Control, since 1.19 -->
 		<formContainers></formContainers> <!-- sap.ui.layout.form.FormContainer -->
@@ -428,22 +386,16 @@
 	busy: false, // boolean
 	busyIndicatorDelay: 1000, // int
 	visible: true, // boolean
-	fieldGroupIds: [], // string[], since 1.31
 	tooltip: undefined, // sap.ui.core.TooltipBase
 	customData: [], // sap.ui.core.CustomData
-	dependents: [], // sap.ui.core.Control, since 1.19
-	validateFieldGroup: [function (oEvent) {
-		var ${control} = oEvent.getSource();
-	}, this]
+	dependents: [] // sap.ui.core.Control, since 1.19
 })
 ]]></jsTemplate>
 	<xmlTemplate><![CDATA[<form/FormLayout xmlns="sap.ui.layout"
 	id="${id}"
 	busy="false"
 	busyIndicatorDelay="1000"
-	visible="true"
-	fieldGroupIds=""
-	validateFieldGroup="">
+	visible="true">
 		<tooltip></tooltip> <!-- sap.ui.core.TooltipBase -->
 		<dependents></dependents> <!-- sap.ui.core.Control, since 1.19 -->
 </form/FormLayout>
@@ -491,14 +443,10 @@
 	busy: false, // boolean
 	busyIndicatorDelay: 1000, // int
 	visible: true, // boolean
-	fieldGroupIds: [], // string[], since 1.31
 	singleColumn: false, // boolean
 	tooltip: undefined, // sap.ui.core.TooltipBase
 	customData: [], // sap.ui.core.CustomData
-	dependents: [], // sap.ui.core.Control, since 1.19
-	validateFieldGroup: [function (oEvent) {
-		var ${control} = oEvent.getSource();
-	}, this]
+	dependents: [] // sap.ui.core.Control, since 1.19
 })
 ]]></jsTemplate>
 	<xmlTemplate><![CDATA[<form/GridLayout xmlns="sap.ui.layout"
@@ -506,9 +454,7 @@
 	busy="false"
 	busyIndicatorDelay="1000"
 	visible="true"
-	fieldGroupIds=""
-	singleColumn="false"
-	validateFieldGroup="">
+	singleColumn="false">
 		<tooltip></tooltip> <!-- sap.ui.core.TooltipBase -->
 		<dependents></dependents> <!-- sap.ui.core.Control, since 1.19 -->
 </form/GridLayout>
@@ -520,7 +466,6 @@
 	busy: false, // boolean
 	busyIndicatorDelay: 1000, // int
 	visible: true, // boolean
-	fieldGroupIds: [], // string[], since 1.31
 	labelSpanL: 4, // int, since 1.16.3
 	labelSpanM: 2, // int, since 1.16.3
 	labelSpanS: 12, // int, since 1.16.3
@@ -533,10 +478,7 @@
 	breakpointM: 600, // int, since 1.16.3
 	tooltip: undefined, // sap.ui.core.TooltipBase
 	customData: [], // sap.ui.core.CustomData
-	dependents: [], // sap.ui.core.Control, since 1.19
-	validateFieldGroup: [function (oEvent) {
-		var ${control} = oEvent.getSource();
-	}, this]
+	dependents: [] // sap.ui.core.Control, since 1.19
 })
 ]]></jsTemplate>
 	<xmlTemplate><![CDATA[<form/ResponsiveGridLayout xmlns="sap.ui.layout"
@@ -544,7 +486,6 @@
 	busy="false"
 	busyIndicatorDelay="1000"
 	visible="true"
-	fieldGroupIds=""
 	labelSpanL="4"
 	labelSpanM="2"
 	labelSpanS="12"
@@ -554,8 +495,7 @@
 	columnsL="2"
 	columnsM="1"
 	breakpointL="1024"
-	breakpointM="600"
-	validateFieldGroup="">
+	breakpointM="600">
 		<tooltip></tooltip> <!-- sap.ui.core.TooltipBase -->
 		<dependents></dependents> <!-- sap.ui.core.Control, since 1.19 -->
 </form/ResponsiveGridLayout>
@@ -567,22 +507,16 @@
 	busy: false, // boolean
 	busyIndicatorDelay: 1000, // int
 	visible: true, // boolean
-	fieldGroupIds: [], // string[], since 1.31
 	tooltip: undefined, // sap.ui.core.TooltipBase
 	customData: [], // sap.ui.core.CustomData
-	dependents: [], // sap.ui.core.Control, since 1.19
-	validateFieldGroup: [function (oEvent) {
-		var ${control} = oEvent.getSource();
-	}, this]
+	dependents: [] // sap.ui.core.Control, since 1.19
 })
 ]]></jsTemplate>
 	<xmlTemplate><![CDATA[<form/ResponsiveLayout xmlns="sap.ui.layout"
 	id="${id}"
 	busy="false"
 	busyIndicatorDelay="1000"
-	visible="true"
-	fieldGroupIds=""
-	validateFieldGroup="">
+	visible="true">
 		<tooltip></tooltip> <!-- sap.ui.core.TooltipBase -->
 		<dependents></dependents> <!-- sap.ui.core.Control, since 1.19 -->
 </form/ResponsiveLayout>
@@ -594,7 +528,6 @@
 	busy: false, // boolean
 	busyIndicatorDelay: 1000, // int
 	visible: true, // boolean
-	fieldGroupIds: [], // string[], since 1.31
 	maxContainerCols: 2, // int
 	minWidth: -1, // int
 	width: undefined, // sap.ui.core.CSSSize, since 1.28.0
@@ -615,11 +548,7 @@
 	customData: [], // sap.ui.core.CustomData
 	dependents: [], // sap.ui.core.Control, since 1.19
 	content: [], // sap.ui.core.Element
-	title: undefined, // sap.ui.core.Title, since 1.16.3
-	ariaLabelledBy: [], // sap.ui.core.Control, since 1.32.0
-	validateFieldGroup: [function (oEvent) {
-		var ${control} = oEvent.getSource();
-	}, this]
+	title: undefined // sap.ui.core.Title, since 1.16.3
 })
 ]]></jsTemplate>
 	<xmlTemplate><![CDATA[<form/SimpleForm xmlns="sap.ui.layout"
@@ -627,7 +556,6 @@
 	busy="false"
 	busyIndicatorDelay="1000"
 	visible="true"
-	fieldGroupIds=""
 	maxContainerCols="2"
 	minWidth="-1"
 	width=""
@@ -643,9 +571,7 @@
 	columnsL="2"
 	columnsM="1"
 	breakpointL="1024"
-	breakpointM="600"
-	ariaLabelledBy=""
-	validateFieldGroup="">
+	breakpointM="600">
 		<tooltip></tooltip> <!-- sap.ui.core.TooltipBase -->
 		<dependents></dependents> <!-- sap.ui.core.Control, since 1.19 -->
 		<content></content> <!-- sap.ui.core.Element -->

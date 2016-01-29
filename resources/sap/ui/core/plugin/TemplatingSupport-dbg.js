@@ -10,7 +10,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Core', 'sap/ui/core/tmpl/Templa
 	"use strict";
 
 
-
+	
 	/**
 	 * Creates an instance of the class <code>sap.ui.core.plugin.TemplatingSupport</code>
 	 * The plugin uses the <code>sap.ui.core.tmpl.Template</code>.
@@ -18,13 +18,13 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Core', 'sap/ui/core/tmpl/Templa
 	 * @author Peter Muessig
 	 * @public
 	 * @since 1.15.0
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 * @alias sap.ui.core.plugin.TemplatingSupport
 	 */
 	var TemplatingSupport = function() {
 	};
-
-
+	
+	
 	/**
 	 * Will be invoked by <code>sap.ui.core.Core</code> to notify the plugin to start.
 	 *
@@ -37,7 +37,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Core', 'sap/ui/core/tmpl/Templa
 		this.oCore = oCore;
 		sap.ui.template();
 	};
-
+	
 	/**
 	 * Will be invoked by <code>sap.ui.core.Core</code> to notify the plugin to start
 	 * @param {sap.ui.core.Core} oCore reference to the Core
@@ -47,8 +47,8 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Core', 'sap/ui/core/tmpl/Templa
 		jQuery.sap.log.info("Stopping TemplatingSupport plugin.");
 		this.oCore = null;
 	};
-
-
+	
+	
 	/**
 	 * Create the <code>sap.ui.core.plugin.TemplatingSupport</code> plugin and
 	 * register it within the <code>sap.ui.core.Core</code>.

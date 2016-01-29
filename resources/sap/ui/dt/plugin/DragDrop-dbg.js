@@ -15,7 +15,7 @@ function(Plugin, DOMUtil) {
 	/**
 	 * Constructor for a new DragDrop.
 	 *
-	 * @param {string} [sId] id for the new object, generated automatically if no id is given
+	 * @param {string} [sId] id for the new object, generated automatically if no id is given 
 	 * @param {object} [mSettings] initial settings for the new object
 	 *
 	 * @class
@@ -24,7 +24,7 @@ function(Plugin, DOMUtil) {
 	 * @extends sap.ui.dt.plugin.Plugin
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @private
@@ -32,9 +32,9 @@ function(Plugin, DOMUtil) {
 	 * @alias sap.ui.dt.plugin.DragDrop
 	 * @experimental Since 1.30. This class is experimental and provides only limited functionality. Also the API might be changed in future.
 	 */
-	var DragDrop = Plugin.extend("sap.ui.dt.plugin.DragDrop", /** @lends sap.ui.dt.plugin.DragDrop.prototype */ {
+	var DragDrop = Plugin.extend("sap.ui.dt.plugin.DragDrop", /** @lends sap.ui.dt.plugin.DragDrop.prototype */ {		
 		metadata : {
-			"abstract" : true,
+			abstract : true,
 			// ---- object ----
 
 			// ---- control specific ----
@@ -68,7 +68,7 @@ function(Plugin, DOMUtil) {
 
 		oOverlay.attachEvent("draggableChange", this._onDraggableChange, this);
 
-		if (oOverlay.isDraggable()) {
+		if (oOverlay.isDraggable()) {		
 			this._attachDragEvents(oOverlay);
 		}
 
@@ -97,7 +97,7 @@ function(Plugin, DOMUtil) {
 		oOverlay.detachBrowserEvent("dragover", this._onDragOver, this);
 		oOverlay.detachBrowserEvent("dragenter", this._onDragEnter, this);
 
-	};
+	};	
 
 	/**
 	 * @override
@@ -113,7 +113,7 @@ function(Plugin, DOMUtil) {
 	 */
 	DragDrop.prototype._attachDragEvents = function(oOverlay) {
 		oOverlay.attachBrowserEvent("dragstart", this._onDragStart, this);
-		oOverlay.attachBrowserEvent("drag", this._onDrag, this);
+		oOverlay.attachBrowserEvent("drag", this._onDrag, this);	
 		oOverlay.attachBrowserEvent("dragend", this._onDragEnd, this);
 	};
 
@@ -125,7 +125,7 @@ function(Plugin, DOMUtil) {
 		oOverlay.detachBrowserEvent("dragstart", this._onDragStart, this);
 		oOverlay.detachBrowserEvent("dragend", this._onDragEnd, this);
 		oOverlay.detachBrowserEvent("drag", this._onDrag, this);
-	};
+	};	
 
 	/**
 	 * @protected
@@ -213,10 +213,10 @@ function(Plugin, DOMUtil) {
 
 		// Fix for Firfox - Firefox only fires drag events when data is set
 		if (sap.ui.Device.browser.firefox && oEvent && oEvent.originalEvent && oEvent.originalEvent.dataTransfer && oEvent.originalEvent.dataTransfer.setData) {
-			oEvent.originalEvent.dataTransfer.setData('text/plain', '');
+			oEvent.originalEvent.dataTransfer.setData('text/plain', '');		
 		}
 
-		this.showGhost(oOverlay, oEvent);
+		this.showGhost(oOverlay, oEvent);		
 		this.onDragStart(oOverlay, oEvent);
 	};
 
@@ -402,7 +402,7 @@ function(Plugin, DOMUtil) {
 		oAggregationOverlay.attachBrowserEvent("dragover", this._onAggregationDragOver, this);
 		oAggregationOverlay.attachBrowserEvent("dragleave", this._onAggregationDragLeave, this);
 		oAggregationOverlay.attachBrowserEvent("drop", this._onAggregationDrop, this);
-	};
+	};		
 
 	/**
 	 * @private
@@ -412,7 +412,7 @@ function(Plugin, DOMUtil) {
 		oAggregationOverlay.detachBrowserEvent("dragover", this._onAggregationDragOver, this);
 		oAggregationOverlay.detachBrowserEvent("dragleave", this._onAggregationDragLeave, this);
 		oAggregationOverlay.detachBrowserEvent("drop", this._onAggregationDrop, this);
-	};
+	};		
 
 
 	/**

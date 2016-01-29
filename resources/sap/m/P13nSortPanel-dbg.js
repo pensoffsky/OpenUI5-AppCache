@@ -12,12 +12,12 @@ sap.ui.define([
 
 	/**
 	 * Constructor for a new P13nSortPanel.
-	 *
+	 * 
 	 * @param {string} [sId] id for the new control, generated automatically if no id is given
 	 * @param {object} [mSettings] initial settings for the new control
 	 * @class The P13nSortPanel control is used to define settings for sorting in table personalization.
 	 * @extends sap.m.P13nPanel
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 * @constructor
 	 * @public
 	 * @alias sap.m.P13nSortPanel
@@ -33,7 +33,7 @@ sap.ui.define([
 				/**
 				 * defines if the mediaQuery or a ContainerResize will be used for layout update. When the ConditionPanel is used on a dialog the
 				 * property should be set to true!
-				 *
+				 * 
 				 * @since 1.26
 				 */
 				containerQuery: {
@@ -45,7 +45,7 @@ sap.ui.define([
 				/**
 				 * can be used to control the layout behavior. Default is "" which will automatically change the layout. With "Desktop", "Table"
 				 * or"Phone" you can set a fixed layout.
-				 *
+				 * 
 				 * @since 1.26
 				 */
 				layoutMode: {
@@ -68,7 +68,7 @@ sap.ui.define([
 
 				/**
 				 * defined Sort Items
-				 *
+				 * 
 				 * @since 1.26
 				 */
 				sortItems: {
@@ -82,21 +82,21 @@ sap.ui.define([
 
 				/**
 				 * event raised when a SortItem was added
-				 *
+				 * 
 				 * @since 1.26
 				 */
 				addSortItem: {},
 
 				/**
 				 * remove a sort item
-				 *
+				 * 
 				 * @since 1.26
 				 */
 				removeSortItem: {},
 
 				/**
 				 * update a sort item
-				 *
+				 * 
 				 * @since 1.26
 				 */
 				updateSortItem: {}
@@ -106,7 +106,7 @@ sap.ui.define([
 
 	/**
 	 * returns the array of conditions.
-	 *
+	 * 
 	 * @private
 	 */
 	P13nSortPanel.prototype._getConditions = function() {
@@ -128,7 +128,7 @@ sap.ui.define([
 	/**
 	 * check if the entered/modified conditions are correct, marks invalid fields yellow (Warning state) and opens a popup message dialog to give the
 	 * user the feedback that some values are wrong or missing.
-	 *
+	 * 
 	 * @public
 	 * @since 1.26
 	 */
@@ -138,7 +138,7 @@ sap.ui.define([
 
 	/**
 	 * removes all invalid sort conditions.
-	 *
+	 * 
 	 * @public
 	 * @since 1.28
 	 */
@@ -148,7 +148,7 @@ sap.ui.define([
 
 	/**
 	 * removes all errors/warning states from of all sort conditions.
-	 *
+	 * 
 	 * @public
 	 * @since 1.28
 	 */
@@ -166,7 +166,7 @@ sap.ui.define([
 
 	/**
 	 * setter for the supported operations array
-	 *
+	 * 
 	 * @public
 	 * @since 1.26
 	 * @param {array} array of operations [sap.m.P13nConditionOperation.BT, sap.m.P13nConditionOperation.EQ]
@@ -181,7 +181,7 @@ sap.ui.define([
 
 	/**
 	 * Initialize the control
-	 *
+	 * 
 	 * @private
 	 */
 	P13nSortPanel.prototype.init = function() {
@@ -222,80 +222,27 @@ sap.ui.define([
 		this._aOperations = destroyHelper(this._aOperations);
 	};
 
-	P13nSortPanel.prototype.onBeforeRendering = function() {
-		// P13nPanel.prototype.onBeforeRendering.apply(this, arguments); does not exist!!!!
-
-		if (this._bUpdateRequired) {
-			this._bUpdateRequired = false;
-
-			var aKeyFields = [];
-			var sModelName = (this.getBindingInfo("items") || {}).model;
-			var fGetValueOfProperty = function(sName, oContext, oItem) {
-				var oBinding = oItem.getBinding(sName);
-				if (oBinding && oContext) {
-					return oContext.getObject()[oBinding.getPath()];
-				}
-				return oItem.getMetadata().getProperty(sName) ? oItem.getProperty(sName) : oItem.getAggregation(sName);
-			};
-			this.getItems().forEach(function(oItem_) {
-				var oContext = oItem_.getBindingContext(sModelName);
-				// Update key of model (in case of 'restore' the key in model gets lost because it is overwritten by Restore Snapshot)
-				if (oItem_.getBinding("key")) {
-					oContext.getObject()[oItem_.getBinding("key").getPath()] = oItem_.getKey();
-				}
-				aKeyFields.push({
-					key: oItem_.getColumnKey(),
-					text: fGetValueOfProperty("text", oContext, oItem_),
-					tooltip: fGetValueOfProperty("tooltip", oContext, oItem_)
-				});
-			});
-			this._oSortPanel.setKeyFields(aKeyFields);
-
-			var aConditions = [];
-			sModelName = (this.getBindingInfo("sortItems") || {}).model;
-			this.getSortItems().forEach(function(oSortItem_) {
-				// Note: current implementation assumes that the length of sortItems aggregation is equal
-				// to the number of corresponding model items.
-				// Currently the model data is up-to-date so we need to resort to the Binding Context;
-				// the "sortItems" aggregation data - obtained via getSortItems() - has the old state !
-				var oContext = oSortItem_.getBindingContext(sModelName);
-				// Update key of model (in case of 'restore' the key in model gets lost because it is overwritten by Restore Snapshot)
-				if (oSortItem_.getBinding("key")) {
-					oContext.getObject()[oSortItem_.getBinding("key").getPath()] = oSortItem_.getKey();
-				}
-				aConditions.push({
-					key: oSortItem_.getKey(),
-					keyField: fGetValueOfProperty("columnKey", oContext, oSortItem_),
-					operation: fGetValueOfProperty("operation", oContext, oSortItem_)
-				});
-			});
-			this._oSortPanel.setConditions(aConditions);
-		}
-	};
-
 	P13nSortPanel.prototype.addItem = function(oItem) {
 		P13nPanel.prototype.addItem.apply(this, arguments);
 
-		if (!this._bIgnoreBindCalls) {
-			this._bUpdateRequired = true;
-		}
-	};
+		var oKeyField = {
+			key: oItem.getColumnKey(),
+			text: oItem.getText(),
+			tooltip: oItem.getTooltip()
+		};
 
-	P13nSortPanel.prototype.removeItem = function(oItem) {
-		P13nPanel.prototype.removeItem.apply(this, arguments);
+		this._aKeyFields.push(oKeyField);
 
-		if (!this._bIgnoreBindCalls) {
-			this._bUpdateRequired = true;
+		if (this._oSortPanel) {
+			this._oSortPanel.addKeyField(oKeyField);
 		}
 	};
 
 	P13nSortPanel.prototype.destroyItems = function() {
 		this.destroyAggregation("items");
-
-		if (!this._bIgnoreBindCalls) {
-			this._bUpdateRequired = true;
+		if (this._oSortPanel) {
+			this._oSortPanel.removeAllKeyFields();
 		}
-
 		return this;
 	};
 
@@ -303,34 +250,51 @@ sap.ui.define([
 		this.addAggregation("sortItems", oSortItem);
 
 		if (!this._bIgnoreBindCalls) {
-			this._bUpdateRequired = true;
+			var aConditions = [];
+			this.getSortItems().forEach(function(oSortItem_) {
+				aConditions.push({
+					key: oSortItem_.getKey(),
+					keyField: oSortItem_.getColumnKey(),
+					operation: oSortItem_.getOperation()
+				});
+			});
+			this._oSortPanel.setConditions(aConditions);
 		}
 	};
 
 	P13nSortPanel.prototype.insertSortItem = function(oSortItem) {
 		this.insertAggregation("sortItems", oSortItem);
-
-		if (!this._bIgnoreBindCalls) {
-			this._bUpdateRequired = true;
-		}
-
+		// TODO: implement this
 		return this;
 	};
 
 	P13nSortPanel.prototype.updateSortItems = function(sReason) {
 		this.updateAggregation("sortItems");
 
-		if (sReason == "change" && !this._bIgnoreBindCalls) {
-			this._bUpdateRequired = true;
+		if (sReason !== "change") {
+			return;
+		}
+		if (!this._bIgnoreBindCalls) {
+			var aConditions = [];
+			this.getSortItems().forEach(function(oSortItem_) {
+				// Note: current implementation assumes that the length of sortItems aggregation is equal
+				// to the number of corresponding model items.
+				// Currently the model data is up-to-date so we need to resort to the Binding Context;
+				// the "sortItems" aggregation data - obtained via getSortItems() - has the old state !
+				var oContext = oSortItem_.getBindingContext();
+				var oModelItem = oContext.getObject();
+				aConditions.push({
+					key: oSortItem_.getKey(),
+					keyField: oModelItem.columnKey,
+					operation: oModelItem.operation
+				});
+			});
+			this._oSortPanel.setConditions(aConditions);
 		}
 	};
 
 	P13nSortPanel.prototype.removeSortItem = function(oSortItem) {
 		oSortItem = this.removeAggregation("sortItems", oSortItem);
-
-		if (!this._bIgnoreBindCalls) {
-			this._bUpdateRequired = true;
-		}
 
 		return oSortItem;
 	};
@@ -338,9 +302,7 @@ sap.ui.define([
 	P13nSortPanel.prototype.removeAllSortItems = function() {
 		var aSortItems = this.removeAllAggregation("sortItems");
 
-		if (!this._bIgnoreBindCalls) {
-			this._bUpdateRequired = true;
-		}
+		this._oSortPanel.setConditions([]);
 
 		return aSortItems;
 	};
@@ -349,7 +311,7 @@ sap.ui.define([
 		this.destroyAggregation("sortItems");
 
 		if (!this._bIgnoreBindCalls) {
-			this._bUpdateRequired = true;
+			this._oSortPanel.setConditions([]);
 		}
 
 		return this;
@@ -363,10 +325,18 @@ sap.ui.define([
 			var sOperation = oEvent.getParameter("operation");
 			var sKey = oEvent.getParameter("key");
 			var iIndex = oEvent.getParameter("index");
-			var oSortItem;
+
+			var oSortItemData = null;
+			if (oNewData) {
+				var oSortItemData = new sap.m.P13nSortItem({
+					key: sKey,
+					columnKey: oNewData.keyField,
+					operation: oNewData.operation
+				});
+			}
 
 			if (sOperation === "update") {
-				oSortItem = that.getSortItems()[iIndex];
+				var oSortItem = that.getSortItems()[iIndex];
 				if (oSortItem) {
 					oSortItem.setColumnKey(oNewData.keyField);
 					oSortItem.setOperation(oNewData.operation);
@@ -374,30 +344,23 @@ sap.ui.define([
 				that.fireUpdateSortItem({
 					key: sKey,
 					index: iIndex,
-					sortItemData: oSortItem
+					sortItemData: oSortItemData
 				});
 			}
 			if (sOperation === "add") {
-				oSortItem = new sap.m.P13nSortItem({
-					key: sKey,
-					columnKey: oNewData.keyField,
-					operation: oNewData.operation
-				});
 				that._bIgnoreBindCalls = true;
 				that.fireAddSortItem({
 					key: sKey,
 					index: iIndex,
-					sortItemData: oSortItem
+					sortItemData: oSortItemData
 				});
 				that._bIgnoreBindCalls = false;
 			}
 			if (sOperation === "remove") {
-				that._bIgnoreBindCalls = true;
 				that.fireRemoveSortItem({
 					key: sKey,
 					index: iIndex
 				});
-				that._bIgnoreBindCalls = false;
 			}
 		};
 	};

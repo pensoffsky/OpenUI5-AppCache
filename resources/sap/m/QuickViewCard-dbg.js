@@ -15,8 +15,8 @@ sap.ui.define([
 	/**
 	 * Constructor for a new QuickViewCard.
 	 *
-	 * @param {string} [sId] ID for the new control, generated automatically if no ID is given
-	 * @param {object} [mSettings] Initial settings for the new control
+	 * @param {string} [sId] id for the new control, generated automatically if no id is given
+	 * @param {object} [mSettings] initial settings for the new control
 	 *
 	 * @class The QuickViewCard control displays information of an object in a business-card format.
 	 * It also allows this object to be linked to another object using one of the links.
@@ -24,17 +24,14 @@ sap.ui.define([
 	 * Unlimited number of objects can be linked.
 	 *
 	 * @extends sap.m.QuickViewBase
-	 *
 	 * @author SAP SE
-	 * @version 1.32.10
-	 *
 	 * @constructor
 	 * @public
-	 * @since 1.28.11
 	 * @alias sap.m.QuickViewCard
 	 * @ui5-metamodel This control/element also will be described in the UI5 (legacy) designtime metamodel
 	 */
-	var QuickViewCard = QuickViewBase.extend("sap.m.QuickViewCard", /** @lends sap.m.QuickViewCard.prototype */ {
+	var QuickViewCard = QuickViewBase.extend("sap.m.QuickViewCard",
+			{
 				metadata: {
 					library : "sap.m",
 					properties : {
@@ -71,11 +68,6 @@ sap.ui.define([
 			this._initPages();
 		};
 
-		QuickViewCard.prototype.onAfterRendering = function() {
-			//Sets the correct length of the links inside the QuickView. This is done to overwrite the styles set by the ResponsiveGridLayout
-			this.$().find(".sapMLnk").css("width", "auto");
-		};
-
 		QuickViewCard.prototype.exit = function() {
 			if (this._oNavContainer) {
 				this._oNavContainer.destroy();
@@ -86,12 +78,6 @@ sap.ui.define([
 			this._processKeyboard(oEvent);
 		};
 
-		/**
-		 * Creates a new {@link sap.m.ScrollContainer} and adds content to it.
-		 * @param {sap.m.QuickViewPage} oQuickViewPage The object that contains the data that has to be displayed.
-		 * @returns {sap.m.ScrollContainer} The ScrollContainer that is added to the QuickViewCard
-		 * @private
-		 */
 		QuickViewCard.prototype._createPage = function(oQuickViewPage) {
 
 			var mContent = oQuickViewPage._createPageContent();

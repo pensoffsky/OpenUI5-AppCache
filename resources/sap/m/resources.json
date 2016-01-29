@@ -115,6 +115,13 @@
 			"name": "BusyDialog.js"
 		},
 		{
+			"name": "BusyDialogRenderer-dbg.js",
+			"isDebug":true
+		},
+		{
+			"name": "BusyDialogRenderer.js"
+		},
+		{
 			"name": "BusyIndicator-dbg.js",
 			"isDebug":true
 		},
@@ -377,26 +384,6 @@
 		},
 		{
 			"name": "DisplayListItemRenderer.js"
-		},
-		{
-			"name": "DraftIndicator-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "DraftIndicator.control"
-		},
-		{
-			"name": "DraftIndicator.js"
-		},
-		{
-			"name": "DraftIndicatorRenderer-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "DraftIndicatorRenderer.js"
-		},
-		{
-			"name": "DraftIndicatorState.type"
 		},
 		{
 			"name": "FacetFilter-dbg.js",
@@ -860,27 +847,6 @@
 			"name": "ListType.type"
 		},
 		{
-			"name": "MaskInput-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "MaskInput.js"
-		},
-		{
-			"name": "MaskInputRenderer-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "MaskInputRenderer.js"
-		},
-		{
-			"name": "MaskInputRule-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "MaskInputRule.js"
-		},
-		{
 			"name": "MessageBox-dbg.js",
 			"isDebug":true
 		},
@@ -1158,9 +1124,6 @@
 		},
 		{
 			"name": "OverflowToolbarLayoutData.js"
-		},
-		{
-			"name": "OverflowToolbarPriority.type"
 		},
 		{
 			"name": "OverflowToolbarRenderer-dbg.js",
@@ -1994,48 +1957,6 @@
 			"name": "TileRenderer.js"
 		},
 		{
-			"name": "TimePicker-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "TimePicker.js"
-		},
-		{
-			"name": "TimePickerRenderer-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "TimePickerRenderer.js"
-		},
-		{
-			"name": "TimePickerSlider-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "TimePickerSlider.js"
-		},
-		{
-			"name": "TimePickerSliderRenderer-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "TimePickerSliderRenderer.js"
-		},
-		{
-			"name": "TimePickerSliders-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "TimePickerSliders.js"
-		},
-		{
-			"name": "TimePickerSlidersRenderer-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "TimePickerSlidersRenderer.js"
-		},
-		{
 			"name": "Title-dbg.js",
 			"isDebug":true
 		},
@@ -2294,6 +2215,9 @@
 		{
 			"name": "WizardProgressNavigator-dbg.js",
 			"isDebug":true
+		},
+		{
+			"name": "WizardProgressNavigator.control"
 		},
 		{
 			"name": "WizardProgressNavigator.js"
@@ -2833,20 +2757,6 @@
 			"name": "semantic/SaveAction.js"
 		},
 		{
-			"name": "semantic/Segment-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "semantic/Segment.js"
-		},
-		{
-			"name": "semantic/SegmentedContainer-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "semantic/SegmentedContainer.js"
-		},
-		{
 			"name": "semantic/SemanticButton-dbg.js",
 			"isDebug":true
 		},
@@ -2889,6 +2799,20 @@
 		},
 		{
 			"name": "semantic/SemanticPageRenderer.js"
+		},
+		{
+			"name": "semantic/SemanticPageSegment-dbg.js",
+			"isDebug":true
+		},
+		{
+			"name": "semantic/SemanticPageSegment.js"
+		},
+		{
+			"name": "semantic/SemanticPageSegmentedContainer-dbg.js",
+			"isDebug":true
+		},
+		{
+			"name": "semantic/SemanticPageSegmentedContainer.js"
 		},
 		{
 			"name": "semantic/SemanticSelect-dbg.js",
@@ -3062,10 +2986,6 @@
 			"theme":"base"
 		},
 		{
-			"name": "themes/base/DraftIndicator.less",
-			"theme":"base"
-		},
-		{
 			"name": "themes/base/FacetFilter.less",
 			"theme":"base"
 		},
@@ -3139,10 +3059,6 @@
 		},
 		{
 			"name": "themes/base/ListItemBase.less",
-			"theme":"base"
-		},
-		{
-			"name": "themes/base/MaskInput.less",
 			"theme":"base"
 		},
 		{
@@ -3362,10 +3278,6 @@
 			"theme":"base"
 		},
 		{
-			"name": "themes/base/TimePicker.less",
-			"theme":"base"
-		},
-		{
 			"name": "themes/base/Title.less",
 			"theme":"base"
 		},
@@ -3407,10 +3319,6 @@
 		},
 		{
 			"name": "themes/base/WizardProgressNavigator.less",
-			"theme":"base"
-		},
-		{
-			"name": "themes/base/WizardStep.less",
 			"theme":"base"
 		},
 		{
@@ -3469,6 +3377,10 @@
 		},
 		{
 			"name": "themes/sap_hcb/BusyDialog.less",
+			"theme":"sap_hcb"
+		},
+		{
+			"name": "themes/sap_hcb/BusyIndicator.less",
 			"theme":"sap_hcb"
 		},
 		{
@@ -3585,10 +3497,6 @@
 		},
 		{
 			"name": "themes/sap_hcb/List_noFlex.less",
-			"theme":"sap_hcb"
-		},
-		{
-			"name": "themes/sap_hcb/MaskInput.less",
 			"theme":"sap_hcb"
 		},
 		{
@@ -3744,10 +3652,6 @@
 			"theme":"sap_hcb"
 		},
 		{
-			"name": "themes/sap_hcb/TimePicker.less",
-			"theme":"sap_hcb"
-		},
-		{
 			"name": "themes/sap_hcb/Title.less",
 			"theme":"sap_hcb"
 		},
@@ -3781,10 +3685,6 @@
 		},
 		{
 			"name": "themes/sap_hcb/WizardProgressNavigator.less",
-			"theme":"sap_hcb"
-		},
-		{
-			"name": "themes/sap_hcb/WizardStep.less",
 			"theme":"sap_hcb"
 		},
 		{

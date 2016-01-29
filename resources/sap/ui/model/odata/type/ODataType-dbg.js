@@ -97,7 +97,7 @@ sap.ui.define(['sap/ui/model/SimpleType'],
 	 * @extends sap.ui.model.SimpleType
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @alias sap.ui.model.odata.type.ODataType
 	 * @param {object} [oFormatOptions]
@@ -107,7 +107,9 @@ sap.ui.define(['sap/ui/model/SimpleType'],
 	 * @public
 	 * @since 1.27.0
 	 */
-	var ODataType = SimpleType.extend("sap.ui.model.odata.type.ODataType", {
+	var ODataType = SimpleType.extend("sap.ui.model.odata.type.ODataType",
+			/** @lends sap.ui.model.odata.type.ODataType.prototype */
+			{
 				constructor : function (oFormatOptions, oConstraints) {
 					// do not call super constructor to avoid generation of unused objects
 				},

@@ -17,7 +17,7 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 
 	/**
 	 * Renders the HTML for single line of Attribute and Status.
-	 *
+	 * 
 	 * @param {sap.ui.core.RenderManager}
 	 *            rm the RenderManager that can be used for writing to the render output buffer
 	 * @param {sap.m.ObjectListItem}
@@ -91,7 +91,7 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 	/**
 	 * Renders the HTML for the given control, using the provided
 	 * {@link sap.ui.core.RenderManager}.
-	 *
+	 * 
 	 * @param {sap.ui.core.RenderManager}
 	 *          oRenderManager the RenderManager that can be used for writing to the
 	 *          Render-Output-Buffer
@@ -108,6 +108,10 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 		var sTitleDir = oLI.getTitleTextDirection(),
 			sIntroDir = oLI.getIntroTextDirection(),
 			sNumberDir = oLI.getNumberTextDirection();
+
+		rm.write("<div"); // Start Main container
+		rm.writeControlData(oLI);
+		rm.write(">");
 
 		// Introductory text at the top of the item, like "On behalf of Julie..."
 		if (oLI.getIntro()) {
@@ -131,7 +135,7 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 
 		// Container for fields placed on the top half of the item, below the intro. This
 		// includes title, number, and number units.
-		rm.write("<div");  // Start Top row container
+		rm.write("<div");  // Start Top row container     
 		rm.addClass("sapMObjLTopRow");
 		rm.writeClasses();
 		rm.write(">");
@@ -196,13 +200,11 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 			rm.renderControl(oTitleText);
 		}
 
-		rm.write("</div>"); // End Title container
+		rm.write("</div>"); // End Title container	
 
 		rm.write("</div>"); // End Top row container
 
-		if (!(sap.ui.Device.browser.internet_explorer && sap.ui.Device.browser.version < 10)) {
-			rm.write("<div style=\"clear: both;\"></div>");
-		}
+		rm.write('<div style="clear:both"/>');
 
 		// Bottom row container.
 		if (oLI._hasBottomContent()) {
@@ -259,6 +261,8 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 
 		// ARIA description node
 		this.renderAriaNode(rm, oLI, this.getAriaNodeText(oLI));
+
+		rm.write("</div>"); // End Main container
 	};
 
 	/**
@@ -274,7 +278,7 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 	 *			sAriaNodeText the ARIA node description text
 	 */
 	ObjectListItemRenderer.renderAriaNode = function(rm, oLI, sAriaNodeText) {
-		if (sAriaNodeText) {
+		if (sAriaNodeText) {	
 			rm.write("<div");
 
 			rm.writeAttribute("id", oLI.getId() + "-aria");
@@ -341,18 +345,18 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 			aLabelledByIds.push(oLI.getId() + "-numberUnit");
 		}
 
-		if (oLI.getAttributes()) {
-			oLI.getAttributes().forEach(function(attribute) {
-				aLabelledByIds.push(attribute.getId());
-			});
-		}
-
 		if (oLI.getFirstStatus()) {
 			aLabelledByIds.push(oLI.getFirstStatus().getId());
 		}
 
 		if (oLI.getSecondStatus()) {
 			aLabelledByIds.push(oLI.getSecondStatus().getId());
+		}
+
+		if (oLI.getAttributes()) {
+			oLI.getAttributes().forEach(function(attribute) {
+				aLabelledByIds.push(attribute.getId());
+			});
 		}
 
 		if (this.getAriaNodeText(oLI)) {

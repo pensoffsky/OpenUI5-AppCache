@@ -12,7 +12,7 @@ sap.ui.define([
 
 	/**
 	 * Constructor for a new P13nDialog.
-	 *
+	 * 
 	 * @param {string} [sId] ID for the new control, generated automatically if no ID is given
 	 * @param {object} [mSettings] initial settings for the new control
 	 * @class The P13nDialog control provides a dialog that contains one or more panels. On each of the panels, one or more changes with regards to a
@@ -20,7 +20,7 @@ sap.ui.define([
 	 *        tables.
 	 * @extends sap.m.Dialog
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 * @constructor
 	 * @public
 	 * @since 1.26.0
@@ -36,7 +36,7 @@ sap.ui.define([
 				/**
 				 * This property determines which panel is initially shown when dialog is opened. Due to extensibility reason the type should be
 				 * <code>string</code>. So it is feasible to add a custom panel without expanding the type.
-				 *
+				 * 
 				 * @since 1.26.0
 				 */
 				initialVisiblePanelType: {
@@ -48,7 +48,7 @@ sap.ui.define([
 				/**
 				 * This property determines whether the 'Reset' button is shown inside the dialog. If this property is set to true, clicking the
 				 * 'Reset' button will trigger the <code>reset</code> event sending a notification that model data must be reset.
-				 *
+				 * 
 				 * @since 1.26.0
 				 */
 				showReset: {
@@ -70,7 +70,7 @@ sap.ui.define([
 
 				/**
 				 * The dialog panels displayed in the dialog.
-				 *
+				 * 
 				 * @since 1.26.0
 				 */
 				panels: {
@@ -84,19 +84,19 @@ sap.ui.define([
 
 				/**
 				 * Event fired if the 'ok' button in P13nDialog is clicked.
-				 *
+				 * 
 				 * @since 1.26.0
 				 */
 				ok: {},
 				/**
 				 * Event fired if the 'cancel' button in P13nDialog is clicked.
-				 *
+				 * 
 				 * @since 1.26.0
 				 */
 				cancel: {},
 				/**
 				 * Event fired if the 'reset' button in P13nDialog is clicked.
-				 *
+				 * 
 				 * @since 1.26.0
 				 */
 				reset: {}
@@ -193,7 +193,7 @@ sap.ui.define([
 
 	/**
 	 * Create dialog depending on the device.
-	 *
+	 * 
 	 * @private
 	 */
 	P13nDialog.prototype._createDialog = function() {
@@ -231,7 +231,7 @@ sap.ui.define([
 
 	/**
 	 * Creates and returns navigation control depending on device.
-	 *
+	 * 
 	 * @returns {sap.m.List | sap.m.SegmentedButton | null}
 	 * @private
 	 */
@@ -276,7 +276,7 @@ sap.ui.define([
 
 	/**
 	 * Show validation dialog
-	 *
+	 * 
 	 * @private
 	 */
 	P13nDialog.prototype.showValidationDialog = function(fCallbackOK, aFailedPanelTypes, aValidationResult) {
@@ -316,7 +316,7 @@ sap.ui.define([
 
 	/**
 	 * Map an item of type sap.m.P13nPanel to an item of type sap.m.IconTabBarFilter
-	 *
+	 * 
 	 * @param {sap.m.P13nPanel} oItem
 	 * @returns {sap.m.Button | sap.m.StandardListItem | null}
 	 * @private
@@ -331,12 +331,12 @@ sap.ui.define([
 		if (sap.ui.Device.system.phone) {
 			oNavigationItem = new sap.m.StandardListItem({
 				type: sap.m.ListType.Navigation,
-				title: oPanel.getBindingPath("title") ? jQuery.extend(true, {}, oPanel.getBindingInfo("title")) : oPanel.getTitle()
+				title: oPanel.getBindingPath("title") ? "{" + oPanel.getBindingPath("title") + "}" : oPanel.getTitle()
 			});
 		} else {
 			oNavigationItem = new sap.m.Button({
 				type: ButtonType.Default,
-				text: oPanel.getBindingPath("title") ? jQuery.extend(true, {}, oPanel.getBindingInfo("title")) : oPanel.getTitle()
+				text: oPanel.getBindingPath("title") ? "{" + oPanel.getBindingPath("title") + "}" : oPanel.getTitle()
 			});
 			// oNavigationItem.addDelegate({
 			// ontap: function(oEvent) {
@@ -369,7 +369,7 @@ sap.ui.define([
 
 	/**
 	 * Switch panel.
-	 *
+	 * 
 	 * @private
 	 */
 	P13nDialog.prototype._switchPanel = function(oNavigationItem) {
@@ -400,7 +400,7 @@ sap.ui.define([
 
 	/**
 	 * Switch back to the list.
-	 *
+	 * 
 	 * @private
 	 */
 	P13nDialog.prototype._backToList = function() {
@@ -416,7 +416,7 @@ sap.ui.define([
 
 	/**
 	 * Returns visible panel.
-	 *
+	 * 
 	 * @returns {sap.m.P13nPanel | null}
 	 * @public
 	 * @since 1.26.0
@@ -434,7 +434,7 @@ sap.ui.define([
 
 	/**
 	 * Returns panel.
-	 *
+	 * 
 	 * @private
 	 */
 	P13nDialog.prototype._getPanelByNavigationItem = function(oNavigationItem) {
@@ -448,7 +448,7 @@ sap.ui.define([
 
 	/**
 	 * Returns NavigationItem.
-	 *
+	 * 
 	 * @private
 	 */
 	P13nDialog.prototype._getNavigationItemByPanel = function(oPanel) {
@@ -460,7 +460,7 @@ sap.ui.define([
 
 	/**
 	 * Set all panels to bVisible except of oPanel
-	 *
+	 * 
 	 * @private
 	 */
 	P13nDialog.prototype._setVisibilityOfOtherPanels = function(oPanel, bVisible) {
@@ -474,7 +474,7 @@ sap.ui.define([
 
 	/**
 	 * Sets property 'visible' for oPanel regarding the 'initialVisiblePanelType' property and number of content objects.
-	 *
+	 * 
 	 * @private
 	 */
 	P13nDialog.prototype._setVisibilityOfPanel = function(oPanel) {
@@ -483,9 +483,6 @@ sap.ui.define([
 			bVisible = this.getPanels().length === 1;
 			if (bVisible) {
 				oPanel.beforeNavigationTo();
-				if (!this.getModel()) {
-					this.setModel(oPanel.getModel());
-				}
 			}
 			oPanel.setVisible(bVisible);
 			this._setVisibilityOfOtherPanels(oPanel, false);
@@ -494,9 +491,6 @@ sap.ui.define([
 			bVisible = this.getInitialVisiblePanelType() === oPanel.getType() || this.getPanels().length === 1;
 			if (bVisible) {
 				oPanel.beforeNavigationTo();
-				if (!this.getModel()) {
-					this.setModel(oPanel.getModel());
-				}
 			}
 			oPanel.setVisible(bVisible);
 			if (bVisible) {
@@ -524,7 +518,7 @@ sap.ui.define([
 
 	/**
 	 * Determine panel id.
-	 *
+	 * 
 	 * @private
 	 */
 	P13nDialog.prototype._getVisiblePanelID = function() {
@@ -537,7 +531,7 @@ sap.ui.define([
 
 	/**
 	 * Sets title of dialog in regard to oPanel.
-	 *
+	 * 
 	 * @private
 	 */
 	P13nDialog.prototype._setDialogTitleFor = function(oPanel) {
@@ -571,7 +565,7 @@ sap.ui.define([
 
 	/**
 	 * Registers a listener in order to be notified about the validation result.
-	 *
+	 * 
 	 * @param {sap.m.P13nPanel} oPanel - listener panel
 	 * @param {object} fCallback - callback method
 	 * @private
@@ -584,7 +578,7 @@ sap.ui.define([
 
 	/**
 	 * Calls the controller validation. Notifies the validation result to all registered panel listeners.
-	 *
+	 * 
 	 * @private
 	 */
 	P13nDialog.prototype._callValidationExecutor = function() {
@@ -602,7 +596,7 @@ sap.ui.define([
 
 	/**
 	 * In case that validation has detected an issue belonging to some panels this issue is duplicated for them.
-	 *
+	 * 
 	 * @param {object} aResult
 	 */
 	P13nDialog.prototype._distributeValidationResult = function(aResult) {
@@ -624,7 +618,7 @@ sap.ui.define([
 
 	/**
 	 * Creates and returns OK Button
-	 *
+	 * 
 	 * @returns {sap.m.Button}
 	 * @private
 	 */
@@ -672,7 +666,7 @@ sap.ui.define([
 
 	/**
 	 * Creates and returns CANCEL Button
-	 *
+	 * 
 	 * @returns {sap.m.Button}
 	 * @private
 	 */
@@ -688,7 +682,7 @@ sap.ui.define([
 
 	/**
 	 * Creates and returns RESET Button
-	 *
+	 * 
 	 * @returns {sap.m.Button}
 	 * @private
 	 */

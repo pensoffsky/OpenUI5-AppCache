@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<control xmlns="http://www.sap.com/sap.ui.library.xsd">
+    <name>form/SimpleForm</name>
+    <derived/>
+    <documentation>The &lt;code&gt;SimpleForm&lt;/code&gt; provides an easy to use API to create simple forms.
+Inside a &lt;code&gt;SimpleForm&lt;/code&gt;, a &lt;code&gt;Form&lt;/code&gt; control is created along with its &lt;code&gt;FormContainers&lt;/code&gt; and &lt;code&gt;FormElements&lt;/code&gt;, but the complexity in the API is removed.
+&lt;ul&gt;
+&lt;li&gt;A new title starts a new group (&lt;code&gt;FormContainer&lt;/code&gt;) in the form.&lt;/li&gt;
+&lt;li&gt;A new label starts a new row (&lt;code&gt;FormElement&lt;/code&gt;) in the form.&lt;/li&gt;
+&lt;li&gt;All other controls will be assigned to the row (&lt;code&gt;FormElement&lt;/code&gt;) started with the last label.&lt;/li&gt;
+&lt;/ul&gt;
+Use &lt;code&gt;LayoutData&lt;/code&gt; to influence the layout for special cases in the Input/Display controls.
+&lt;b&gt;Note:&lt;/b&gt; If a more complex form is needed, use &lt;code&gt;Form&lt;/code&gt; instead.</documentation>
+    <since>1.16.0</since>
+    <baseType>sap.ui.core/Control</baseType>
+    <properties>
+        <property group="Appearance" defaultValue="2" type="sap.ui.core/int" name="maxContainerCols">
+            <documentation>The maximum amount of groups (&lt;code&gt;FormContainers&lt;/code&gt;) per row that is used before a new row is started.
+&lt;b&gt;Note:&lt;/b&gt; If a &lt;code&gt;ResponsiveGridLayout&lt;/code&gt; is used as a layout, this property is not used. Please use the properties &lt;code&gt;ColumnsL&lt;/code&gt; and &lt;code&gt;ColumnsM&lt;/code&gt; in this case.</documentation>
+        </property>
+        <property group="Appearance" defaultValue="-1" type="sap.ui.core/int" name="minWidth">
+            <documentation>The overall minimum width in pixels that is used for the &lt;code&gt;SimpleForm&lt;/code&gt;. If the available width is below the given minWidth the SimpleForm will create a new row for the next group(&lt;code&gt;FormContainer&lt;/code&gt;).
+The default value is -1, meaning that inner groups (&lt;code&gt;FormContainers&lt;/code&gt;) will be stacked until maxCols is reached, irrespective of whether a maxWidth is reached or the available parents width is reached.
+&lt;b&gt;Note:&lt;/b&gt; This property is only used if a &lt;code&gt;ResponsiveLayout&lt;/code&gt; is used as a layout.</documentation>
+        </property>
+        <property since="1.28.0" group="Dimension" type="sap.ui.core/CSSSize" name="width">
+            <documentation>Width of the form.</documentation>
+        </property>
+        <property group="Misc" type="sap.ui.core/boolean" name="editable">
+            <documentation>Applies a device-specific and theme-specific line-height to the form rows if the form has editable content.
+If set, all (not only the editable) rows of the form will get the line height of editable fields.
+The accessibility aria-readonly attribute is set according to this property.
+&lt;b&gt;Note:&lt;/b&gt; The setting of the property has no influence on the editable functionality of the form's content.</documentation>
+        </property>
+        <property group="Misc" defaultValue="192" type="sap.ui.core/int" name="labelMinWidth">
+            <documentation>Specifies the min-width in pixels of the label in all form containers.
+&lt;b&gt;Note:&lt;/b&gt; This property is only used if a &lt;code&gt;ResponsiveLayout&lt;/code&gt; is used as a layout.</documentation>
+        </property>
+        <property group="Misc" defaultValue="ResponsiveLayout" type="sap.ui.layout/form/SimpleFormLayout" name="layout">
+            <documentation>The &lt;code&gt;FormLayout&lt;/code&gt; that is used to render the &lt;code&gt;SimpleForm&lt;/code&gt;.
+We suggest using the &lt;code&gt;ResponsiveGridLayout&lt;/code&gt; for rendering a &lt;code&gt;SimpleForm&lt;/code&gt;, as its responsiveness uses the space available in the best way possible.</documentation>
+        </property>
+        <property since="1.16.3" group="Misc" defaultValue="4" type="sap.ui.core/int" name="labelSpanL">
+            <documentation>Default span for labels in large size.
+This span is only used if more than 1 group (&lt;code&gt;FormContainer&lt;/code&gt;) is in one row. If only 1 group (&lt;code&gt;FormContainer&lt;/code&gt;) is in the row the &lt;code&gt;labelSpanM&lt;/code&gt; value is used.
+&lt;b&gt;Note:&lt;/b&gt; This property is only used if a &lt;code&gt;ResponsiveGridLayout&lt;/code&gt; is used as a layout.</documentation>
+        </property>
+        <property since="1.16.3" group="Misc" defaultValue="2" type="sap.ui.core/int" name="labelSpanM">
+            <documentation>Default span for labels in medium size.
+This property is used for full-size groups (&lt;code&gt;FormContainers&lt;/code&gt;). If more than one group (&lt;code&gt;FormContainer&lt;/code&gt;) is in one line, &lt;code&gt;labelSpanL&lt;/code&gt; is used.
+&lt;b&gt;Note:&lt;/b&gt; This property is only used if a &lt;code&gt;ResponsiveGridLayout&lt;/code&gt; is used as a layout.</documentation>
+        </property>
+        <property since="1.16.3" group="Misc" defaultValue="12" type="sap.ui.core/int" name="labelSpanS">
+            <documentation>Default span for labels in small size.
+&lt;b&gt;Note:&lt;/b&gt; This property is only used if a &lt;code&gt;ResponsiveGridLayout&lt;/code&gt; is used as a layout.</documentation>
+        </property>
+        <property since="1.16.3" group="Misc" defaultValue="0" type="sap.ui.core/int" name="emptySpanL">
+            <documentation>Number of grid cells that are empty at the end of each line on large size.
+&lt;b&gt;Note:&lt;/b&gt; This property is only used if a &lt;code&gt;ResponsiveGridLayout&lt;/code&gt; is used as a layout.</documentation>
+        </property>
+        <property since="1.16.3" group="Misc" defaultValue="0" type="sap.ui.core/int" name="emptySpanM">
+            <documentation>Number of grid cells that are empty at the end of each line on medium size.
+&lt;b&gt;Note:&lt;/b&gt; This property is only used if a &lt;code&gt;ResponsiveGridLayout&lt;/code&gt; is used as a layout.</documentation>
+        </property>
+        <property since="1.16.3" group="Misc" defaultValue="0" type="sap.ui.core/int" name="emptySpanS">
+            <documentation>Number of grid cells that are empty at the end of each line on small size.
+&lt;b&gt;Note:&lt;/b&gt; This property is only used if a &lt;code&gt;ResponsiveGridLayout&lt;/code&gt; is used as a layout.</documentation>
+        </property>
+        <property since="1.16.3" group="Misc" defaultValue="2" type="sap.ui.core/int" name="columnsL">
+            <documentation>Form columns for large size.
+The number of columns for large size must not be smaller that the number of columns for medium size.
+&lt;b&gt;Note:&lt;/b&gt; This property is only used if a &lt;code&gt;ResponsiveGridLayout&lt;/code&gt; is used as a layout.</documentation>
+        </property>
+        <property since="1.16.3" group="Misc" defaultValue="1" type="sap.ui.core/int" name="columnsM">
+            <documentation>Form columns for medium size.
+&lt;b&gt;Note:&lt;/b&gt; This property is only used if a &lt;code&gt;ResponsiveGridLayout&lt;/code&gt; is used as a layout.</documentation>
+        </property>
+        <property since="1.16.3" group="Misc" defaultValue="1024" type="sap.ui.core/int" name="breakpointL">
+            <documentation>Breakpoint between Medium size and Large size.
+&lt;b&gt;Note:&lt;/b&gt; This property is only used if a &lt;code&gt;ResponsiveGridLayout&lt;/code&gt; is used as a layout.</documentation>
+        </property>
+        <property since="1.16.3" group="Misc" defaultValue="600" type="sap.ui.core/int" name="breakpointM">
+            <documentation>Breakpoint between Small size and Medium size.
+&lt;b&gt;Note:&lt;/b&gt; This property is only used if a &lt;code&gt;ResponsiveGridLayout&lt;/code&gt; is used as a layout.</documentation>
+        </property>
+    </properties>
+    <aggregations default="content">
+        <aggregation cardinality="0..n" type="sap.ui.core/Element" name="content">
+            <documentation>The content of the form is structured in the following way:
+&lt;ul&gt;
+&lt;li&gt;Add a &lt;code&gt;Title&lt;/code&gt; control to start a new group (&lt;code&gt;FormContainer&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;Add a &lt;code&gt;Label&lt;/code&gt; control to start a new row (&lt;code&gt;FormElement&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;Add controls as input fields, text fields or other as needed.&lt;/li&gt;
+&lt;li&gt;Use &lt;code&gt;LayoutData&lt;/code&gt; to influence the layout for special cases in the single controls.
+For example, if a &lt;code&gt;ResponsiveLayout&lt;/code&gt; is used as a layout the form content is weighted using weight 3 for the labels and weight 5 for the fields part. Per default the label column is 192 pixels wide.
+If your input controls should influence their width, you can add &lt;code&gt;sap.ui.layout.ResponsiveFlowLayoutData&lt;/code&gt; to them via &lt;code&gt;setLayoutData&lt;/code&gt; method.
+Ensure that the sum of the weights in the &lt;code&gt;ResponsiveFlowLayoutData&lt;/code&gt; is not more than 5, as this is the total width of the input control part of each form row.&lt;/li&gt;
+&lt;/ul&gt;
+Example for a row where the &lt;code&gt;TextField&lt;/code&gt; takes 4 and the &lt;code&gt;TextView&lt;/code&gt; takes 1 weight (using &lt;code&gt;ResponsiveLayout&lt;/code&gt;):
+&lt;pre&gt;
+new sap.ui.commons.Label({text:&quot;Label&quot;});
+new sap.ui.commons.TextField({value:&quot;Weight 4&quot;,
+layoutData:new sap.ui.layout.ResponsiveFlowLayoutData({weight:4})}),
+new sap.ui.commons.TextView({text:&quot;Weight 1&quot;,
+layoutData: new sap.ui.layout.ResponsiveFlowLayoutData({weight:1})}),
+&lt;/pre&gt;</documentation>
+        </aggregation>
+        <aggregation visibility="hidden" cardinality="0..1" type="sap.ui.layout/form/Form" name="form">
+            <documentation>Hidden, for internal use only.</documentation>
+        </aggregation>
+        <aggregation cardinality="0..1" since="1.16.3" type="sap.ui.core/Title" name="title">
+            <documentation>Title element of the &lt;code&gt;SimpleForm&lt;/code&gt;. Can either be a &lt;code&gt;Title&lt;/code&gt; control, or a string.</documentation>
+        </aggregation>
+    </aggregations>
+</control>

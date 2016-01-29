@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
-sap.ui.define(['jquery.sap.global', "sap/m/semantic/SemanticPage", "sap/m/semantic/SemanticConfiguration", "sap/m/semantic/SemanticPageRenderer", "sap/m/semantic/SegmentedContainer", "sap/m/semantic/ShareMenu", "sap/m/ActionSheet", "sap/m/Button"],
+sap.ui.define(['jquery.sap.global', "sap/m/semantic/SemanticPage", "sap/m/semantic/SemanticConfiguration", "sap/m/semantic/SemanticPageRenderer", "sap/m/semantic/SemanticPageSegmentedContainer", "sap/m/semantic/ShareMenu", "sap/m/ActionSheet", "sap/m/Button"],
 		function(jQuery, SemanticPage, SemanticConfiguration, SemanticPageRenderer, SegmentedContainer, ShareMenu, ActionSheet, Button) {
 	"use strict";
 
@@ -19,7 +19,7 @@ sap.ui.define(['jquery.sap.global', "sap/m/semantic/SemanticPage", "sap/m/semant
 	 * @extends sap.m.semantic.SemanticPage
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public

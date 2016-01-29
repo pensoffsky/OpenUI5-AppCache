@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * UI development toolkit for HTML5 (OpenUI5)
  * (c) Copyright 2009-2015 SAP SE or an SAP affiliate company.
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
@@ -22,14 +22,14 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 	 * @namespace
 	 * @name sap.m
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 * @public
 	 */
 
 	// delegate further initialization of this library to the Core
 	sap.ui.getCore().initLibrary({
 		name : "sap.m",
-		version: "1.32.10",
+		version: "1.30.8",
 		dependencies : ["sap.ui.core"],
 		types: [
 			"sap.m.BackgroundDesign",
@@ -37,7 +37,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 			"sap.m.ButtonType",
 			"sap.m.DateTimeInputType",
 			"sap.m.DialogType",
-			"sap.m.DraftIndicatorState",
 			"sap.m.FacetFilterListDataType",
 			"sap.m.FacetFilterType",
 			"sap.m.FlexAlignItems",
@@ -55,7 +54,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 			"sap.m.ListMode",
 			"sap.m.ListSeparators",
 			"sap.m.ListType",
-			"sap.m.OverflowToolbarPriority",
 			"sap.m.P13nPanelType",
 			"sap.m.PageBackgroundDesign",
 			"sap.m.PlacementType",
@@ -100,7 +98,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 			"sap.m.DateTimeInput",
 			"sap.m.Dialog",
 			"sap.m.DisplayListItem",
-			"sap.m.DraftIndicator",
 			"sap.m.FacetFilter",
 			"sap.m.FacetFilterItem",
 			"sap.m.FacetFilterList",
@@ -121,7 +118,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 			"sap.m.List",
 			"sap.m.ListBase",
 			"sap.m.ListItemBase",
-			"sap.m.MaskInput",
 			"sap.m.MessagePage",
 			"sap.m.MessagePopover",
 			"sap.m.MessageStrip",
@@ -177,7 +173,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 			"sap.m.TextArea",
 			"sap.m.Tile",
 			"sap.m.TileContainer",
-			"sap.m.TimePicker",
 			"sap.m.Title",
 			"sap.m.ToggleButton",
 			"sap.m.Token",
@@ -200,7 +195,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 			"sap.m.IconTabFilter",
 			"sap.m.IconTabSeparator",
 			"sap.m.OverflowToolbarLayoutData",
-			"sap.m.MaskInputRule",
 			"sap.m.MessagePopoverItem",
 			"sap.m.P13nFilterItem",
 			"sap.m.P13nItem",
@@ -351,7 +345,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 	 *
 	 * @enum {string}
 	 * @public
-	 * @deprecated Since version 1.32.8. Instead, use dedicated <code>sap.m.DatePicker</code> and/or <code>sap.m.TimePicker</code> controls.
 	 * @ui5-metamodel This enumeration also will be described in the UI5 (legacy) designtime metamodel
 	 */
 	sap.m.DateTimeInputType = {
@@ -359,21 +352,20 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 		/**
 		 * An input control for specifying a date value. The user can select a month, day of the month, and year.
 		 * @public
-		 * @deprecated Since version 1.22.0. Instead, use dedicated <code>sap.m.DatePicker</code> control.
+		 * @deprecated Since version 1.22.
+		 * Instead, use dedicated sap.m.DatePicker control.
 		 */
 		Date : "Date",
 
 		/**
 		 * An input control for specifying a date and time value. The user can select a month, day of the month, year, and time of day.
 		 * @public
-		 * @deprecated Since version 1.32.8. Instead, use dedicated <code>sap.m.DatePicker</code> and <code>sap.m.TimePicker</code> controls.
 		 */
 		DateTime : "DateTime",
 
 		/**
 		 * An input control for specifying a time value. The user can select the hour, minute, and optionally AM or PM.
 		 * @public
-		 * @deprecated Since version 1.32.8. Instead, use dedicated <code>sap.m.TimePicker</code> control.
 		 */
 		Time : "Time"
 
@@ -400,35 +392,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 		 * @public
 		 */
 		Message : "Message"
-
-	};
-
-	/**
-	 * Enum for the state of sap.m.DraftIndicator control.
-	 *
-	 * @enum {string}
-	 * @public
-	 * @ui5-metamodel This enumeration also will be described in the UI5 (legacy) designtime metamodel
-	 */
-	sap.m.DraftIndicatorState = {
-
-		/**
-		 * This is the default value for DraftIndicatorState type. This state has no visual information displayed.
-		 * @public
-		 */
-		Clear: "Clear",
-
-		/**
-		 * Indicates that the draft currently is being saved
-		 * @public
-		 */
-		Saving: "Saving",
-
-		/**
-		 * Indicates that the draft is already saved
-		 * @public
-		 */
-		Saved: "Saved"
 
 	};
 
@@ -691,7 +654,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 
 		/**
 		 * Box items are evenly distributed in the line, with half-size spaces on either end.
-		 * <b>Note:</b> This value behaves like SpaceBetween in Internet Explorer 10.
 		 * @public
 		 */
 		SpaceAround : "SpaceAround",
@@ -1066,7 +1028,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 
 
 	/**
-	 * Defines the mode of the list.
+	 * Different modes for the list selection (predefined modes)
 	 *
 	 * @enum {string}
 	 * @public
@@ -1075,40 +1037,40 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 	sap.m.ListMode = {
 
 		/**
-		 * Default mode (no selection).
+		 * default mode (no selection)
 		 * @public
 		 */
 		None : "None",
 
 		/**
-		 * Right-positioned single selection mode (only one list item can be selected).
+		 * right positioned single selection mode (only one list item can be selected)
 		 * @public
 		 */
 		SingleSelect : "SingleSelect",
 
 		/**
-		 * Left-positioned single selection mode (only one list item can be selected).
-		 * @public
-		 */
-		SingleSelectLeft : "SingleSelectLeft",
-
-		/**
-		 * Selected item is highlighted but no selection control is visible (only one list item can be selected).
-		 * @public
-		 */
-		SingleSelectMaster : "SingleSelectMaster",
-
-		/**
-		 * Multi selection mode (more than one list item can be selected).
+		 * multi selection mode (whole list item including checkbox will be selected)
 		 * @public
 		 */
 		MultiSelect : "MultiSelect",
 
 		/**
-		 * Delete mode (only one list item can be deleted via provided delete button)
+		 * delete mode (only one list item can be deleted)
 		 * @public
 		 */
-		Delete : "Delete"
+		Delete : "Delete",
+
+		/**
+		 * Single selection master mode (only one list item can be selected), selected item is highlighted but no radiobutton is visible.
+		 * @public
+		 */
+		SingleSelectMaster : "SingleSelectMaster",
+
+		/**
+		 * left positioned single selection mode (only one list item can be selected)
+		 * @public
+		 */
+		SingleSelectLeft : "SingleSelectLeft"
 
 	};
 
@@ -1123,14 +1085,13 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 	sap.m.ListSeparators = {
 
 		/**
-		 * Separators between the items including the last and the first one.
+		 * Separators around the items.
 		 * @public
 		 */
 		All : "All",
 
 		/**
-		 * Separators between the items.
-		 * <b>Note:</b> This enumeration depends on the theme.
+		 * Separators between the items when there is no footer. Note: This enumeration depends on the theme. Please check design documentation for more details.
 		 * @public
 		 */
 		Inner : "Inner",
@@ -1145,7 +1106,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 
 
 	/**
-	 * Defines the visual indication and behaviour of the list items.
+	 * List types
 	 *
 	 * @enum {string}
 	 * @public
@@ -1154,80 +1115,37 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 	sap.m.ListType = {
 
 		/**
-		 * Indicates the list item does not have any active feedback when item is pressed.
-		 * <b>Note:</b> <code>Inactive</code> type cannot be used to disable list items.
+		 * Inactive
 		 * @public
 		 */
 		Inactive : "Inactive",
 
 		/**
-		 * Enables detail button of the list item that fires <code>detailPress</code> event.
-		 * Also see {@link sap.m.ListBase#attachDetailPress}.
+		 * Detail
 		 * @public
 		 */
 		Detail : "Detail",
 
 		/**
-		 * Indicates the list item is navigable to show extra information about the item.
+		 * Navigation
 		 * @public
 		 */
 		Navigation : "Navigation",
 
 		/**
-		 * Indicates that the item is clickable via active feedback when item is pressed.
+		 * Active
 		 * @public
 		 */
 		Active : "Active",
 
 		/**
-		 * Enables {@link sap.m.ListType#Detail} and {@link sap.m.ListType#Active} enumerations together.
+		 * DetailAndActive
 		 * @public
 		 */
 		DetailAndActive : "DetailAndActive"
 
 	};
 
-	/**
-	 * Defines the priorities of the controls within sap.m.OverflowToolbar
-	 *
-	 * @enum {string}
-	 * @public
-	 * @since 1.32
-	 * @ui5-metamodel This enumeration also will be described in the UI5 (legacy) designtime metamodel
-	 */
-	sap.m.OverflowToolbarPriority = {
-
-		/**
-		 * NeverOverflow priority forces OverflowToolbar items to remain always in the toolbar
-		 * @public
-		 */
-		NeverOverflow : "Never",
-
-		/**
-		 * High priority OverflowToolbar items overflow after the items with lower priority
-		 * @public
-		 */
-		High : "High",
-
-		/**
-		 * Low priority  OverflowToolbar items overflow before the items with higher priority such as High priority items
-		 * @public
-		 */
-		Low : "Low",
-
-		/**
-		 * Disappear priority  OverflowToolbar items overflow before the items with higher priority such as Low and High priority items and remain hidden in the overflow area
-		 * @public
-		 */
-		Disappear : "Disappear",
-
-		/**
-		 * AlwaysOverflow priority forces OverflowToolbar items to remain always in the overflow area
-		 * @public
-		 */
-		AlwaysOverflow : "Always"
-
-	};
 
 	/**
 	 * Marker interface for controls which are suitable as items for the ObjectHeader.
@@ -2089,13 +2007,13 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 	/**
 	 * <pre>
 	 * URL(Uniform Resource Locator) Helper
-	 * This helper can be used to trigger a native application (e.g. email, sms, phone) from the browser.
+	 * This helper can be used to trigger a native application(e.g email, sms, tel) from Browser.
 	 * That means we are restricted of browser or application implementation. e.g.
-	 *  - Some browsers do not let you to pass more than 2022 characters in the URL
-	 *  - MAPI (Outlook) limit is 2083, max. path under Internet Explorer it is 2048
-	 *  - Different Internet Explorer versions have a different limitation (IE9 approximately 1000 characters)
+	 *  - Some browsers do not let you to pass more than 2022 characters in URL
+	 *  - MAPI (Outlook) limit is 2083, max. path under Internet Explorer is 2048
+	 *  - Different Internet Explorer versions have different limitation in IE9 approximately 1000 characters
 	 *  - MS mail app under Windows 8 cuts mail links after approximately 100 characters
-	 *  - Safari gets a confirmation from user before opening a native application and can block other triggers if the user cancels it
+	 *  - Safari gets a confirmation from user before opening a native application and can block rest triggers if user cancels it.
 	 *  - Some mail applications(Outlook) do not respect all encodings(e.g. Cyrillic texts are not encoded correctly)
 	 *
 	 * Note: all the given limitation lengths are for encoded text(e.g space character will be encoded to "%20")
@@ -2132,10 +2050,10 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 
 		return $.extend(new sap.ui.base.EventProvider(), {
 			/**
-			 * Sanitizes the given telephone number and returns a telephone URI scheme.
+			 * Sanitize the given telephone number and returns telephone URI scheme
 			 *
-			 * @param {String} [sTel] Telephone number
-			 * @return {String} Telephone URI scheme
+			 * @param {String} [sTel] telephone number.
+			 * @return {String} telephone URI scheme.
 			 * @public
 			 * @name sap.m.URLHelper#normalizeTel
 			 * @function
@@ -2145,10 +2063,10 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 			},
 
 			/**
-			 * Sanitizes the given telephone number and returns SMS URI scheme.
+			 * Sanitize the given telephone number and returns SMS URI scheme
 			 *
-			 * @param {String} [sTel] Telephone number
-			 * @return {String} SMS URI scheme
+			 * @param {String} [sTel] telephone number.
+			 * @return {String} SMS URI scheme.
 			 * @public
 			 * @name sap.m.URLHelper#normalizeSms
 			 * @function
@@ -2159,14 +2077,14 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 
 			/**
 			 * Builds Email URI from given parameter.
-			 * Trims spaces from email addresses.
+			 * Trims spaces from email addresses
 			 *
-			 * @param {String} [sEmail] Destination email address
-			 * @param {String} [sSubject] Subject of the email address
-			 * @param {String} [sBody] Default message text
-			 * @param {String} [sCC] Carbon Copy email address
-			 * @param {String} [sBCC] Blind carbon copy email address
-			 * @return {String} Email URI scheme
+			 * @param {String} [sEmail] Destination email address.
+			 * @param {String} [sSubject] Subject of the email address.
+			 * @param {String} [sBody] Default message text.
+			 * @param {String} [sCC] Carbon Copy email address.
+			 * @param {String} [sBCC] Blind carbon copy email address.
+			 * @return {String} Email URI scheme.
 			 * @public
 			 * @name sap.m.URLHelper#normalizeEmail
 			 * @function
@@ -2190,11 +2108,11 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 			},
 
 			/**
-			 * Redirects to the given URL.
+			 * Redirects to given URL.
 			 * This method fires "redirect" event before opening the URL.
 			 *
-			 * @param {String} sURL Uniform resource locator
-			 * @param {boolean} [bNewWindow] Opens URL in a new browser window or tab. Please note that, opening a new window/tab can be ignored by browsers(e.g. on Windows Phone) or by popup blockers.
+			 * @param {String} sURL Uniform resource locator.
+			 * @param {boolean} [bNewWindow] Opens URL in a new browser window or tab. Please note that, opening a new window/tab can be ignored by browsers(e.g. on Windows Phone) or popup blockers.
 			 * @public
 			 * @name sap.m.URLHelper#redirect
 			 * @function
@@ -2214,10 +2132,10 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 			},
 
 			/**
-			 * Adds an event registration for redirect.
+			 * Adds an event registration for redirect
 			 *
 			 * @param {Function} fnFunction The function to call, when the event occurs.
-			 * @param {Object} [oListener] The object, that wants to be notified, when the event occurs.
+			 * @param {Object} [oListener] The object, that wants to be notified, when the event occurs
 			 * @return {Object} sap.m.URLHelper instance
 			 * @public
 			 * @name sap.m.URLHelper#attachRedirect
@@ -2228,10 +2146,10 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 			},
 
 			/**
-			 * Detach already registered redirect event.
+			 * Detach already registered redirect event
 			 *
 			 * @param {Function} fnFunction The function to call, when the event occurs.
-			 * @param {Object} [oListener] The object, that wants to be notified, when the event occurs.
+			 * @param {Object} [oListener] The object, that wants to be notified, when the event occurs
 			 * @return {Object} sap.m.URLHelper instance
 			 * @public
 			 * @name sap.m.URLHelper#detachRedirect
@@ -2242,9 +2160,9 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 			},
 
 			/**
-			 * Trigger telephone to call given telephone number.
+			 * Trigger telephone to call given telephone number
 			 *
-			 * @param {String} [sTel] Telephone number
+			 * @param {String} [sTel] telephone number.
 			 * @public
 			 * @name sap.m.URLHelper#triggerTel
 			 * @function
@@ -2254,9 +2172,9 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 			},
 
 			/**
-			 * Trigger SMS application to send SMS to given telephone number.
+			 * Trigger SMS application to send SMS to given telephone number
 			 *
-			 * @param {String} [sTel] Telephone number
+			 * @param {String} [sTel] telephone number.
 			 * @public
 			 * @name sap.m.URLHelper#triggerSms
 			 * @function
@@ -2266,14 +2184,14 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 			},
 
 			/**
-			 * Trigger email application to send email.
-			 * Trims spaces from email addresses.
+			 * Trigger email application to send email
+			 * Trims spaces from email addresses
 			 *
-			 * @param {String} [sEmail] Destination email address
-			 * @param {String} [sSubject] Subject of the email address
-			 * @param {String} [sBody] Default message text
-			 * @param {String} [sCC] Carbon Copy email address
-			 * @param {String} [sBCC] Blind carbon copy email address
+			 * @param {String} [sEmail] Destination email address.
+			 * @param {String} [sSubject] Subject of the email address.
+			 * @param {String} [sBody] Default message text.
+			 * @param {String} [sCC] Carbon Copy email address.
+			 * @param {String} [sBCC] Blind carbon copy email address.
 			 * @public
 			 * @name sap.m.URLHelper#triggerEmail
 			 * @function
@@ -2314,14 +2232,14 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 			 * @function
 			 */
 			addBackgroundColorStyles: function(rm, sBgColor, sBgImgUrl, sCustomBGClass) {
-				rm.addClass(sCustomBGClass || "sapUiGlobalBackgroundColor");
+				rm.addClass(sCustomBGClass || "sapMGlobalBackgroundColor");
 
 				if (sBgColor || sBgImgUrl) { // when an image or color is configured, the gradient needs to be removed, so the color can be seen behind the image
 					rm.addStyle("background-image", "none");
 					rm.addStyle("filter", "none");
 				}
 				if (sBgColor) {
-					rm.addStyle("background-color", jQuery.sap.encodeHTML(sBgColor));
+					rm.addStyle("background-color", jQuery.sap.escapeHTML(sBgColor));
 				}
 			},
 
@@ -2350,7 +2268,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 			 *
 			 * @param rm the RenderManager
 			 * @param {sap.ui.core.Control} oControl the control within which the tag will be rendered; its ID will be used to generate the element ID
-			 * @param {String|String[]}  vCssClass a css class or an array of css classes to add to the element
+			 * @param {String}  sCssClass a css class to add to the element
 			 * @param {sap.ui.core.URI}  [sBgImgUrl] the image of a configured background image; if this is not given, the theme background will be used and also the other settings are ignored.
 			 * @param {boolean} [bRepeat] whether the background image should be repeated/tiled (or stretched)
 			 * @param {float}   [fOpacity] the background image opacity, if any
@@ -2359,18 +2277,10 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device',
 			 * @name sap.m.BackgroundHelper#renderBackgroundImageTag
 			 * @function
 			 */
-			renderBackgroundImageTag: function(rm, oControl, vCssClass, sBgImgUrl, bRepeat, fOpacity) {
+			renderBackgroundImageTag: function(rm, oControl, sCssClass, sBgImgUrl, bRepeat, fOpacity) {
 				rm.write("<div id='" + oControl.getId() + "-BG' ");
-
-				if (jQuery.isArray(vCssClass)) {
-					for (var i = 0; i < vCssClass.length; i++) {
-						rm.addClass(vCssClass[i]);
-					}
-				} else {
-					rm.addClass(vCssClass);
-				}
-
-				rm.addClass("sapUiGlobalBackgroundImage"); // this adds the background image from the theme
+				rm.addClass(sCssClass);
+				rm.addClass("sapMGlobalBackgroundImage"); // this adds the background image from the theme
 
 				if (sBgImgUrl) { // use the settings only if a background image is configured
 					rm.addStyle("display", "block"); // enforce visibility even if a parent has also a background image

@@ -22,7 +22,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -53,7 +53,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 			 * if true, token displays delete icon and fires events accordingly
 			 */
 			editable : {type : "boolean", group : "Misc", defaultValue : true},
-
+			
 			/**
 			 * This property specifies the text directionality with enumerated options. By default, the control inherits text direction from the DOM.
 			 * @since 1.28.0
@@ -98,17 +98,6 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 		}
 	}});
 
-	var oRb = sap.ui.getCore().getLibraryResourceBundle("sap.m");
-
-	// create an ARIA announcement and remember its ID for later use in the renderer:
-	Token.prototype._sAriaTokenLabelId = new sap.ui.core.InvisibleText({
-		text: oRb.getText("TOKEN_ARIA_LABEL")
-	}).toStatic().getId();
-
-	Token.prototype._sAriaTokenDeletableId = new sap.ui.core.InvisibleText({
-		text: oRb.getText("TOKEN_ARIA_DELETABLE")
-	}).toStatic().getId();
-
 	///**
 	// * This file defines behavior for the control,
 	// */
@@ -119,7 +108,6 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 
 		this._deleteIcon.addStyleClass("sapMTokenIcon");
 		this.setAggregation("deleteIcon", this._deleteIcon);
-		this._deleteIcon.setUseIconTooltip(false);
 	};
 
 	Token.prototype.setEditable = function(bEditable){
@@ -130,7 +118,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 		} else {
 			this.addStyleClass("sapMTokenReadOnly");
 			this.$().attr("aria-readonly", "false");
-
+			
 		}
 	};
 
@@ -145,7 +133,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 		this.$().toggleClass("sapMTokenActive", true);
 		if (sap.ui.Device.system.desktop && oEvent.originalEvent.button) {
 			/* there are two cases that should fire touch start event:
-				left button click in desktop, where value of button event is 0;
+				left button click in desktop, where value of button event is 0; 
 				touch event in combi device, where value of button event is undefined.*/
 			return;
 		}
@@ -336,9 +324,9 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	 * @private
 	 */
 	Token.prototype.onkeydown = function(oEvent) {
-
-		if ((oEvent.ctrlKey || oEvent.metaKey) && oEvent.which === jQuery.sap.KeyCodes.SPACE) {
-			//metaKey for MAC command
+		
+		if ((oEvent.ctrlKey || oEvent.metaKey) && oEvent.which === jQuery.sap.KeyCodes.SPACE) { 
+			//metaKey for MAC command		
 			this.onsapspace(oEvent);
 			oEvent.preventDefault();
 		}

@@ -5,16 +5,16 @@
  */
 
 // Provides class sap.ui.model.odata.TreeBindingAdapter
-sap.ui.define(['jquery.sap.global', 'sap/ui/model/TreeBinding', 'sap/ui/model/ClientTreeBinding', 'sap/ui/table/TreeAutoExpandMode', 'sap/ui/model/ChangeReason', 'sap/ui/model/TreeBindingUtils', 'sap/ui/model/odata/OperationMode'],
-	function(jQuery, TreeBinding, ClientTreeBinding, TreeAutoExpandMode, ChangeReason, TreeBindingUtils, OperationMode) {
+sap.ui.define(['jquery.sap.global', 'sap/ui/model/TreeBinding', 'sap/ui/model/ClientTreeBinding', 'sap/ui/table/TreeAutoExpandMode', 'sap/ui/model/ChangeReason', 'sap/ui/model/TreeBindingUtils'],
+	function(jQuery, TreeBinding, ClientTreeBinding, TreeAutoExpandMode, ChangeReason, TreeBindingUtils) {
 		"use strict";
 
 		/**
 		 * Adapter for TreeBindings to add the ListBinding functionality and use the
 		 * tree structure in list based controls.
 		 *
-		 * @alias sap.ui.model.TreeBindingAdapter
-		 * @class
+		 * @alias sap.ui.model.odata.TreeBindingAdapter
+		 * @function
 		 * @experimental This module is only for experimental and internal use!
 		 * @protected
 		 */
@@ -146,7 +146,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/TreeBinding', 'sap/ui/model/Cl
 
 		TreeBindingAdapter.prototype._createTreeState = function (bReset) {
 			if (!this._mTreeState || bReset) {
-				//general tree status information, the nodes are referenced by their groupID
+				//general tree status information, the nodes are referenced by their groupID 
 				this._mTreeState = {
 					expanded: {}, // a map of all expanded nodes
 					collapsed: {}, // a map of all collapsed nodes
@@ -235,8 +235,19 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/TreeBinding', 'sap/ui/model/Cl
 				if (!oNode) {
 					return;
 				}
-				var iMaxGroupSize = this._getMaxGroupSize(oNode);
-
+				var iMaxGroupSize = 0;
+				if (oNode.isArtificial) {
+					// when displaying the root node, the magnitude will always be at least 1,
+					// because we display the one node we request
+					// if the user requests the root node(s) by level and not by ID, we can retrieve a group-size
+					if (this.bDisplayRootNode && this.mParameters.rootNodeID && !this._bRootMissing) {
+						iMaxGroupSize = 1;
+					} else {
+						iMaxGroupSize = this._getGroupSize(oNode) || 0;
+					}
+				} else {
+					iMaxGroupSize = this.nodeHasChildren(oNode) ? this._getGroupSize(oNode) : 0;
+				}
 				// adapt node sections if the page size increased since the last getcontexts call
 				// and only if we do not already have a count for the group
 				var oNodeState = oNode.nodeState;
@@ -252,28 +263,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/TreeBinding', 'sap/ui/model/Cl
 			};
 
 			this._map(this._oRootNode, fnIncreaseSections);
-		};
-
-		/**
-		 * Calculates the maximum possible group-size for a given node.
-		 * Not the same as the direct number of children.
-		 */
-		TreeBindingAdapter.prototype._getMaxGroupSize = function (oNode) {
-			var iMaxGroupSize = 0;
-			if (oNode.isArtificial) {
-				// When displaying the root node, the magnitude will always be at least 1:
-				// Except: if we are bound to a list/collection (e.g. Employees), there will be no single root node
-				// so we retrieve the regular groupSize instead
-				var bIsList = this.oModel.isList(this.sPath, this.getContext());
-				if (this.bDisplayRootNode && !bIsList && !this._bRootMissing) {
-					iMaxGroupSize = 1;
-				} else {
-					iMaxGroupSize = this._getGroupSize(oNode) || 0;
-				}
-			} else {
-				iMaxGroupSize = this.nodeHasChildren(oNode) ? this._getGroupSize(oNode) : 0;
-			}
-			return iMaxGroupSize;
 		};
 
 		/**
@@ -465,21 +454,24 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/TreeBinding', 'sap/ui/model/Cl
 			var oNodeState = oNode.nodeState;
 
 			// calculate magnitude/groupsize of (artificial) root node seperately
-			var iMaxGroupSize = this._getMaxGroupSize(oNode);
-
+			var iMaxGroupSize = 0;
+			if (oNode.isArtificial) {
+				// when displaying the root node, the magnitude will always be at least 1,
+				// because we display the one node we request
+				// if the user requests the root node(s) by level and not by ID, we can retrieve a group-size
+				if (this.bDisplayRootNode && this.mParameters.rootNodeID && !this._bRootMissing) {
+					iMaxGroupSize = 1;
+				} else {
+					iMaxGroupSize = this._getGroupSize(oNode) || 0;
+				}
+			} else {
+				iMaxGroupSize = this.nodeHasChildren(oNode) ? this._getGroupSize(oNode) : 0;
+			}
 			// make sure the children array gets at least the requested length
 			if (iMaxGroupSize > 0) {
 				if (!oNode.children[iMaxGroupSize - 1]) {
 					oNode.children[iMaxGroupSize - 1] = undefined;
 				}
-			}
-
-			// if the binding is running in the OperationMode "Client", make sure the node sections are optimised to load everything
-			if (this.sOperationMode === OperationMode.Client) {
-				oNodeState.sections = [{
-					startIndex: 0,
-					length: iMaxGroupSize
-				}];
 			}
 
 			//iterate all loaded (known) sections
@@ -610,28 +602,52 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/TreeBinding', 'sap/ui/model/Cl
 		};
 
 		/**
-		 * Returns if the Binding is grouped, default is true.
-		 * AnalyticalBindings might differ.
+		 * @override
 		 */
 		TreeBindingAdapter.prototype.isGrouped = function () {
 			return true;
 		};
 
 		/**
-		 * Hook which needs to be implemented by subclasses
-		 * Calculates a unique group ID for a given node
-		 * @param {Object} oNode Node of which the group ID shall be calculated
-		 * @returns {string} Group ID for oNode
+		 * @override
 		 */
 		TreeBindingAdapter.prototype._calculateGroupID = function (oNode) {
-			jQuery.sap.log.error("TreeBindingAdapter#_calculateGroupID: Not implemented. Needs to be implemented in respective sub-classes.");
+
+			var sGroupIDBase = "";
+			var sGroupIDSuffix = "";
+
+			//artificial root has always "/" as groupID
+			if (oNode.context === null) {
+				return "/";
+			}
+
+			if (oNode.parent) {
+				//case 1: nested node, group id is the path along the parents
+				sGroupIDBase = oNode.parent.groupID;
+				sGroupIDBase = sGroupIDBase[sGroupIDBase.length - 1] !== "/" ? sGroupIDBase + "/" : sGroupIDBase;
+				if (this.bHasTreeAnnotations) {
+					sGroupIDSuffix = oNode.context.getProperty(this.oTreeProperties["hierarchy-node-for"]) + "/";
+				} else {
+					//odata navigation properties
+					sGroupIDSuffix = oNode.context.sPath.substring(1) + "/";
+				}
+			} else {
+				//case 2: node sits on root level
+				if (this.bHasTreeAnnotations) {
+					sGroupIDBase = "/";
+					sGroupIDSuffix = oNode.context.getProperty(this.oTreeProperties["hierarchy-node-for"]) + "/";
+				} else {
+					//odata nav properties case
+					sGroupIDBase = "/";
+					sGroupIDSuffix = oNode.context.sPath[0] === "/" ? oNode.context.sPath.substring(1) : oNode.context.sPath;
+				}
+			}
+
+			var sGroupID = sGroupIDBase + sGroupIDSuffix;
+
+			return sGroupID;
 		};
 
-		/**
-		 * Creates a new tree node with valid default values
-		 * @params {object} mParameters a set of parameters which might differ from the default values
-		 * @returns {object} a newly created tree node
-		 */
 		TreeBindingAdapter.prototype._createNode = function (mParameters) {
 			mParameters = mParameters || {};
 
@@ -1133,7 +1149,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/TreeBinding', 'sap/ui/model/Cl
 								aChangedIndices.push(iNodeCounter);
 							}
 
-							// remember the old lead selection index if we encounter it
+							// remember the old lead selection index if we encounter it 
 							// (might not happen if the lead selection is outside the newly set range)
 							if (oNode.groupID === this._sLeadSelectionGroupID) {
 								iOldLeadIndex = iNodeCounter;

@@ -9,6 +9,7 @@ sap.ui.define(function () {
 
 	var CLASSES = sap.m.WizardProgressNavigator.CLASSES,
 		ATTRIBUTES = sap.m.WizardProgressNavigator.ATTRIBUTES,
+		TEXT = sap.m.WizardProgressNavigator.TEXT,
 		WizardProgressNavigatorRenderer = {};
 
 	WizardProgressNavigatorRenderer.render = function (oRm, oControl) {
@@ -45,13 +46,12 @@ sap.ui.define(function () {
 	};
 
 	WizardProgressNavigatorRenderer.renderSteps = function (oRm, oControl) {
-		var iStepCount = oControl.getStepCount(),
-			aStepTitles = oControl.getStepTitles(),
-			aStepIcons = oControl.getStepIcons();
+		var sStepTitle = oControl._resourceBundle.getText(TEXT.STEP),
+			iStepCount = oControl.getStepCount();
 
 		for (var i = 1; i <= iStepCount; i++) {
 			this.startStep(oRm, i);
-			this.renderAnchor(oRm, i, aStepTitles[i - 1], aStepIcons[i - 1]);
+			this.renderAnchor(oRm, sStepTitle, i);
 			this.endStep(oRm);
 
 			if (i < iStepCount) {
@@ -67,18 +67,12 @@ sap.ui.define(function () {
 		oRm.write(">");
 	};
 
-	WizardProgressNavigatorRenderer.renderAnchor = function (oRm, iStepNumber, sStepTitle, sIconUri) {
+	WizardProgressNavigatorRenderer.renderAnchor = function (oRm, sStepTitle, iAnchorNumber) {
 		oRm.write("<a tabindex='-1' aria-disabled='true'");
 		oRm.writeAttribute("class", CLASSES.ANCHOR);
-		oRm.writeAttributeEscaped("title", sStepTitle);
+		oRm.writeAttribute("title", sStepTitle + " " + iAnchorNumber);
 		oRm.write(">");
-
-		if (sIconUri) {
-			oRm.writeIcon(sIconUri, [CLASSES.ICON], {title: null});
-		} else {
-			oRm.write(iStepNumber);
-		}
-
+		oRm.write(iAnchorNumber);
 		oRm.write("</a>");
 	};
 

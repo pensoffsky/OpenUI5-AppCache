@@ -14,13 +14,13 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	/**
 	 * Constructor for a new ObjectAttribute.
 	 *
-	 * @param {string} [sId] ID for the new control, generated automatically if no ID is given
-	 * @param {object} [mSettings] Initial settings for the new control
+	 * @param {string} [sId] id for the new control, generated automatically if no id is given
+	 * @param {object} [mSettings] initial settings for the new control
 	 *
 	 * @class
-	 * The ObjectAttribute control displays a text field that can be normal or active. The ObjectAttribute fires a press event when the user selects active text.
+	 * ObjectAttribute displays a text field that can be normal or active. Object attribute fires a press event when the user selects active text.
 	 * @extends sap.ui.core.Control
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -34,17 +34,17 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 		properties : {
 
 			/**
-			 * Defines the ObjectAttribute title.
+			 * The object attribute title.
 			 */
 			title : {type : "string", group : "Misc", defaultValue : null},
 
 			/**
-			 * Defines the ObjectAttribute text.
+			 * The object attribute text.
 			 */
 			text : {type : "string", group : "Misc", defaultValue : null},
 
 			/**
-			 * Indicates if the ObjectAttribute text is selectable for the user.
+			 * Indicates if the object attribute text is selectable by the user.
 			 */
 			active : {type : "boolean", group : "Misc", defaultValue : null},
 
@@ -57,25 +57,25 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 		aggregations : {
 
 			/**
-			 * When the aggregation is set, it replaces the text, active and textDirection properties. This also ignores the press event. The provided control is displayed as an active link.
+			 * When the aggregation is set it replaces the text, active and textDirection property. This also ignores the press event. The provided control is displayed as an active link.
 			 */
 			customContent : {type : "sap.ui.core.Control", multiple : false},
 
 			/**
-			 * Text control to display title and text property.
+			 * Text control to display title and text property
 			 */
 			_textControl : {type : "sap.ui.core.Control", multiple : false, visibility : "hidden"}
 		},
 		events : {
 
 			/**
-			 * Fires when the user clicks on active text.
+			 * Event is fired when the user clicks active text
 			 */
 			press : {
 				parameters : {
 
 					/**
-					 * DOM reference of the ObjectAttribute's text to be used for positioning.
+					 * Dom reference of the object attributes' text to be used for positioning.
 					 */
 					domRef : {type : "string"}
 				}
@@ -89,7 +89,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	};
 
 	/**
-	 *  Initializes member variables.
+	 *  Initialize member variables
 	 *
 	 * @private
 	 */
@@ -98,7 +98,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	};
 
 	/**
-	 * Delivers text control with updated title, text and maxLines properties.
+	 * Delivers text control with updated title, text and maxLines property
 	 *
 	 * @private
 	 */
@@ -137,7 +137,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	};
 
 	/**
-	 * Sets the appropriate property to the customContent aggregation.
+	 * Sets the appropriate property to the customContent aggregation
 	 *
 	 * @private
 	 */
@@ -181,22 +181,22 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	};
 
 	/**
-	 * Checks if ObjectAttribute is empty.
+	 * See 'return'.
 	 *
 	 * @private
-	 * @returns {boolean} true if ObjectAttribute's text is empty or only consists of whitespaces
+	 * @returns {boolean} true if attribute's text is empty or only consists of whitespaces.
 	 */
 	ObjectAttribute.prototype._isEmpty = function() {
 		if (this.getAggregation('customContent') && !(this.getAggregation('customContent') instanceof sap.m.Link || this.getAggregation('customContent') instanceof sap.m.Text)) {
 			jQuery.sap.log.warning("Only sap.m.Link or sap.m.Text are allowed in \"sap.m.ObjectAttribute.customContent\" aggregation");
 			return true;
-		}
-
+		} 
+		
 		return !(this.getText().trim() || this.getTitle().trim());
 	};
 
 	/**
-	 * Called when the control is touched.
+	 * Function is called when the control is touched.
 	 *
 	 * @private
 	 */
@@ -208,10 +208,10 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	};
 
 	/**
-	 * Defines to which DOM reference the Popup should be docked.
+	 * Defines to which DOM reference the Popup should be docked
 	 *
 	 * @protected
-	 * @return {DomNode} The DOM reference that Popup should dock to
+	 * @return {DomNode} the DOM reference that Popup should dock to
 	 */
 	ObjectAttribute.prototype.getPopupAnchorDomRef = function() {
 		return this.getDomRef("text");

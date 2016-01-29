@@ -5,8 +5,9 @@
 */
 
 // Provides control sap.m.MessageStrip.
-sap.ui.define(["jquery.sap.global", "./library", "sap/ui/core/Control", "./MessageStripUtilities",
-	"./Text", "./Link"], function (jQuery, library, Control, MSUtils, Text, Link) {
+sap.ui.define(["jquery.sap.global", "./library", "sap/ui/core/Control", "sap/m/MessageStripUtilities",
+				"sap/m/Text", "sap/m/Link"],
+	function (jQuery, library, Control, MSUtils, Text, Link) {
 	"use strict";
 
 	/**
@@ -21,7 +22,7 @@ sap.ui.define(["jquery.sap.global", "./library", "sap/ui/core/Control", "./Messa
 	 * Each message can have a close button, so that it can be removed from the UI if needed.
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -48,7 +49,8 @@ sap.ui.define(["jquery.sap.global", "./library", "sap/ui/core/Control", "./Messa
 
 				/**
 				 * Determines a custom icon which is displayed.
-				 * If none is set, the default icon for this message type is used.
+				 * Note: You can only set a custom icon for messages of type MessageType.Information.
+				 * All other message types use predefined icons.
 				 */
 				customIcon: { type: "sap.ui.core.URI", group: "Appearance", defaultValue: "" },
 
@@ -127,6 +129,10 @@ sap.ui.define(["jquery.sap.global", "./library", "sap/ui/core/Control", "./Messa
 		return this;
 	};
 
+	MessageStrip.prototype.onBeforeRendering = function () {
+		MSUtils.setIconIfVisible.call(this);
+	};
+
 	/**
 	 * Handles tap/click
 	 * @type void
@@ -170,11 +176,6 @@ sap.ui.define(["jquery.sap.global", "./library", "sap/ui/core/Control", "./Messa
 			this.fireClose();
 			this.setVisible(false);
 		}.bind(this);
-
-		if (!sap.ui.getCore().getConfiguration().getAnimation()) {
-			fnClosed();
-			return;
-		}
 
 		if (sap.ui.Device.browser.internet_explorer && sap.ui.Device.browser.version < 10) {
 			MSUtils.closeTransitionWithJavascript.call(this, fnClosed);

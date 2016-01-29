@@ -37,7 +37,7 @@ sap.ui.define(['sap/ui/model/odata/type/DateTimeBase'],
 	 * @extends sap.ui.model.odata.type.DateTimeBase
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @alias sap.ui.model.odata.type.DateTimeOffset
 	 * @param {object} [oFormatOptions]
@@ -50,7 +50,9 @@ sap.ui.define(['sap/ui/model/odata/type/DateTimeBase'],
 	 * @public
 	 * @since 1.27.0
 	 */
-	var DateTimeOffset = DateTimeBase.extend("sap.ui.model.odata.type.DateTimeOffset", {
+	var DateTimeOffset = DateTimeBase.extend("sap.ui.model.odata.type.DateTimeOffset",
+			/** @lends sap.ui.model.odata.type.DateTimeOffset.prototype */
+			{
 				constructor : function (oFormatOptions, oConstraints) {
 					DateTimeBase.call(this, oFormatOptions, adjustConstraints(this, oConstraints));
 				}

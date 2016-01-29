@@ -15,12 +15,12 @@ function(Element) {
 
 	/**
 	 * Class for Preloader.
-	 *
+	 * 
 	 * @class
 	 * Preloader for design time metadata.
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @private
 	 * @static
@@ -76,7 +76,7 @@ function(Element) {
 				if (mLib.hasOwnProperty(sClassName)) {
 					aControlsToLoad.push(sLibraryName + "." + sClassName);
 				}
-			}
+			}	
 		});
 		return this.load(aControlsToLoad);
 	};

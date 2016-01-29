@@ -24,7 +24,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -69,7 +69,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 
 
 	PullToRefresh.prototype.init = function(){
-		this._bTouchMode = sap.ui.Device.support.touch && !sap.ui.Device.system.combi || jQuery.sap.simulateMobileOnDesktop;
+		this._bTouchMode = sap.ui.Device.support.touch || jQuery.sap.simulateMobileOnDesktop; // FIXME: plus fakeOS mode
 
 		this._iState = 0; // 0 - normal; 1 - release to refresh; 2 - loading
 		this.oRb = sap.ui.getCore().getLibraryResourceBundle("sap.m"); // texts
@@ -207,19 +207,19 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 			case 0:
 				$this.toggleClass("sapMFlip", false).toggleClass("sapMLoading", false);
 				$text.html(this.oRb.getText(this._bTouchMode ? "PULL2REFRESH_PULLDOWN" : "PULL2REFRESH_REFRESH"));
-				$this.removeAttr("aria-live");
+				$text.removeAttr("aria-live");
 				$this.find(".sapMPullDownInfo").html(this.getDescription());
 				break;
 			case 1:
 				$this.toggleClass("sapMFlip", true);
 				$text.html(this.oRb.getText("PULL2REFRESH_RELEASE"));
-				$this.removeAttr("aria-live");
+				$text.removeAttr("aria-live");
 				break;
 			case 2:
 				$this.toggleClass("sapMFlip", false).toggleClass("sapMLoading", true);
 				this._oBusyIndicator.setVisible(true);
 				$text.html(this.oRb.getText("PULL2REFRESH_LOADING"));
-				$this.attr("aria-live", "assertive");
+				$text.attr("aria-live", "assertive");
 				$this.find(".sapMPullDownInfo").html(this._bTouchMode ? this.oRb.getText("PULL2REFRESH_LOADING_LONG") : "");
 				break;
 		}

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<control xmlns="http://www.sap.com/sap.ui.library.xsd">
+    <name>Wizard</name>
+    <derived/>
+    <author>SAP SE</author>
+    <documentation>The Wizard control enables users to accomplish a single goal which consists of multiple
+dependable sub-tasks.</documentation>
+    <since>1.30</since>
+    <baseType>sap.ui.core/Control</baseType>
+    <properties>
+        <property group="Appearance" defaultValue="auto" type="sap.ui.core/CSSSize" name="width">
+            <documentation>The Wizard width.</documentation>
+        </property>
+        <property group="Appearance" defaultValue="100%" type="sap.ui.core/CSSSize" name="height">
+            <documentation>The Wizard height.</documentation>
+        </property>
+        <property group="Behavior" defaultValue="true" type="sap.ui.core/boolean" name="showNextButton">
+            <documentation>Controls the visibility of the next button. The developers can choose to control the flow of the
+steps either through the API (with nextStep and previousStep methods) or let the user click
+the next button, and control it with validateStep() or invalidateStep()</documentation>
+        </property>
+    </properties>
+    <events>
+        <event allowPreventDefault="false" name="stepActivate">
+            <documentation>The StepActivated event is fired every time a new step is being activated</documentation>
+            <parameters>
+                <parameter type="sap.ui.core/int" name="index">
+                    <documentation>The index of the activated step as a parameter</documentation>
+                </parameter>
+            </parameters>
+        </event>
+        <event allowPreventDefault="false" name="complete">
+            <documentation>The complete event is fired when the user clicks the next button on the last step</documentation>
+        </event>
+    </events>
+    <aggregations default="steps">
+        <aggregation cardinality="0..n" type="sap.m/WizardStep" name="steps">
+            <documentation>The wizard steps to be included in the content of the control</documentation>
+        </aggregation>
+        <aggregation visibility="hidden" cardinality="0..1" type="sap.m/Page" name="_page">
+            <documentation>The internal container for the wizard</documentation>
+        </aggregation>
+        <aggregation visibility="hidden" cardinality="0..1" type="sap.m/Button" name="_nextButton">
+            <documentation>The next button for the wizard</documentation>
+        </aggregation>
+    </aggregations>
+</control>

@@ -10,21 +10,20 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Element'],
 	"use strict";
 
 
-
+	
 	/**
 	 * Constructor for a new IconTabSeparator.
 	 *
-	 * @param {string} [sId] ID for the new control, generated automatically if no ID is given
-	 * @param {object} [mSettings] Initial settings for the new control
+	 * @param {string} [sId] id for the new control, generated automatically if no id is given 
+	 * @param {object} [mSettings] initial settings for the new control
 	 *
 	 * @class
-	 * Represents an Icon used to separate 2 tab filters.
-	 *
+	 * A tab separator item class
 	 * @extends sap.ui.core.Element
 	 * @implements sap.m.IconTab
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -32,34 +31,32 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Element'],
 	 * @ui5-metamodel This control/element also will be described in the UI5 (legacy) designtime metamodel
 	 */
 	var IconTabSeparator = Element.extend("sap.m.IconTabSeparator", /** @lends sap.m.IconTabSeparator.prototype */ { metadata : {
-
+	
 		interfaces : [
 			"sap.m.IconTab"
 		],
 		library : "sap.m",
 		properties : {
-
+	
 			/**
-			 * The icon to display for this separator. If no icon is given, a separator line is used instead.
+			 * The icon to display for this separator. If no icon is given, a separator line will be used instead.
 			 */
 			icon : {type : "sap.ui.core.URI", group : "Misc", defaultValue : ''},
-
+	
 			/**
-			 * If set to true, it sends one or more requests,
-			 * trying to get the density perfect version of the image if this version of
-			 * the image doesn't exist on the server. Default value is set to true.
-			 *
-			 * If bandwidth is key for the application, set this value to false.
+			 * By default, this is set to true but then one or more requests are sent trying to get the density perfect version of image if this version of image doesn't exist on the server.
+			 * 
+			 * If bandwidth is the key for the application, set this value to false.
 			 */
 			iconDensityAware : {type : "boolean", group : "Appearance", defaultValue : true}
 		}
 	}});
-
+	
 	/**
 	 * Lazy load feed icon image.
 	 *
-	 * @param {Array} aCssClasses Array of CSS classes, which will be added if the image needs to be created.
-	 * @param {sap.ui.core.Control} oParent This element's parent.
+	 * @param {Array} aCssClasses array of css classes which will be added if the image needs to be created.
+	 * @param {sap.ui.core.Control} oParent this element's parent.
 	 * @private
 	 */
 	IconTabSeparator.prototype._getImageControl = function(aCssClasses, oParent) {
@@ -68,28 +65,28 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Element'],
 			densityAware : this.getIconDensityAware(),
 			useIconTooltip : false
 		};
-
+		
 		this._oImageControl = sap.m.ImageHelper.getImageControl(this.getId() + "-icon", this._oImageControl, oParent, mProperties, aCssClasses);
-
+		
 		return this._oImageControl;
 	};
-
+	
 	/**
 	 * Function is called when exiting the element.
-	 *
+	 * 
 	 * @private
 	 */
 	IconTabSeparator.prototype.exit = function(oEvent) {
-
+		
 		if (this._oImageControl) {
 			this._oImageControl.destroy();
 		}
-
+		
 		if (sap.ui.core.Item.prototype.exit) {
 			sap.ui.core.Item.prototype.exit.call(this, oEvent);
 		}
 	};
-
+	
 	return IconTabSeparator;
 
 }, /* bExport= */ true);

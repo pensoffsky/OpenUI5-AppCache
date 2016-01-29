@@ -12,15 +12,15 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Item', 'sap/ui/cor
 			/**
 			 * Constructor for a new ViewSettingsCustomTab.
 			 *
-			 * @param {string} [sId] ID for the new control, generated automatically if no ID is given
-			 * @param {object} [mSettings] Initial settings for the new control
+			 * @param {string} [sId] id for the new control, generated automatically if no id is given
+			 * @param {object} [mSettings] initial settings for the new control
 			 *
 			 * @class
-			 * The ViewSettingsCustomTab control is used for adding custom tabs in the ViewSettingsDialog.
+			 * ViewSettingsCustomTab is used for adding custom tabs in the ViewSettingsDialog.
 			 * @extends sap.ui.core.Item
 			 *
 			 * @author SAP SE
-			 * @version 1.32.10
+			 * @version 1.30.8
 			 *
 			 * @constructor
 			 * @public
@@ -73,7 +73,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Item', 'sap/ui/cor
 
 
 			/**
-			 * Gets or creates the sap.m.Button instance for the custom tab.
+			 * Get or create the sap.m.Button instance for the custom tab.
 			 * @public
 			 * @param   {object} oOptions
 			 * @returns {sap.m.Button}

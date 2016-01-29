@@ -83,7 +83,7 @@ sap.ui.define(['sap/ui/core/format/NumberFormat', 'sap/ui/model/FormatException'
 	 * @extends sap.ui.model.odata.type.ODataType
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @alias sap.ui.model.odata.type.Double
 	 * @param {object} [oFormatOptions]
@@ -98,7 +98,9 @@ sap.ui.define(['sap/ui/core/format/NumberFormat', 'sap/ui/model/FormatException'
 	 * @public
 	 * @since 1.27.0
 	 */
-	var Double = ODataType.extend("sap.ui.model.odata.type.Double", {
+	var Double = ODataType.extend("sap.ui.model.odata.type.Double",
+			/** @lends sap.ui.model.odata.type.Double.prototype */
+			{
 				constructor : function (oFormatOptions, oConstraints) {
 					ODataType.apply(this, arguments);
 					this.oFormatOptions = oFormatOptions;

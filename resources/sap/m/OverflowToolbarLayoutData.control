@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<control xmlns="http://www.sap.com/sap.ui.library.xsd">
+    <name>OverflowToolbarLayoutData</name>
+    <derived/>
+    <author>SAP SE</author>
+    <documentation>Holds layout data for the OverflowToolbar items.</documentation>
+    <since>1.28</since>
+    <baseType>sap.m/ToolbarLayoutData</baseType>
+    <properties>
+        <property defaultValue="true" type="sap.ui.core/boolean" name="moveToOverflow">
+            <documentation>The toolbar item can/cannot move to the action sheet</documentation>
+        </property>
+        <property defaultValue="false" type="sap.ui.core/boolean" name="stayInOverflow">
+            <documentation>The toolbar item can/cannot stay in the action sheet</documentation>
+        </property>
+    </properties>
+</control>

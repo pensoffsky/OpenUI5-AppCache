@@ -118,17 +118,13 @@ sap.ui.define(['jquery.sap.global'],
 
 	FormLayoutRenderer.renderElement = function(rm, oLayout, oElement){
 
-		var oLabel = oElement.getLabelControl();
-
 		rm.write("<div");
 		rm.writeElementData(oElement);
 		rm.addClass("sapUiFormElement");
-		if (oLabel) {
-			rm.addClass("sapUiFormElementLbl");
-		}
 		rm.writeClasses();
 		rm.write(">");
 
+		var oLabel = oElement.getLabelControl();
 		if (oLabel) {
 			rm.renderControl(oLabel);
 		}
@@ -191,9 +187,7 @@ sap.ui.define(['jquery.sap.global'],
 
 				if (sIcon) {
 					var aClasses = [];
-					var mAttributes = {
-						"title": null // prevent default icon tooltip
-					};
+					var mAttributes = {};
 
 					mAttributes["id"] = oTitle.getId() + "-ico";
 					rm.writeIcon(sIcon, aClasses, mAttributes);

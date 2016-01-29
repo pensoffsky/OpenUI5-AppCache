@@ -12,12 +12,12 @@ sap.ui.define([
 
 	/**
 	 * Constructor for a new P13nFilterItem.
-	 *
+	 * 
 	 * @param {string} [sId] id for the new control, generated automatically if no id is given
 	 * @param {object} [mSettings] initial settings for the new control
 	 * @class Type for <code>filterItems</code> aggregation in P13nFilterPanel control.
 	 * @extends sap.ui.core.Item
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 * @constructor
 	 * @public
 	 * @alias sap.m.P13nFilterItem
@@ -32,7 +32,7 @@ sap.ui.define([
 
 				/**
 				 * sap.m.P13nConditionOperation
-				 * @since 1.26.0
+				 * @since 1.26.0 
 				 */
 				operation: {
 					type: "string",
@@ -41,8 +41,8 @@ sap.ui.define([
 				},
 
 				/**
-				 * value of the filter
-				 * @since 1.26.0
+				 * value of the filter  
+				 * @since 1.26.0 
 				 */
 				value1: {
 					type: "string",
@@ -52,7 +52,7 @@ sap.ui.define([
 
 				/**
 				 * to value of the between filter
-				 * @since 1.26.0
+				 * @since 1.26.0 
 				 */
 				value2: {
 					type: "string",
@@ -62,7 +62,7 @@ sap.ui.define([
 
 				/**
 				 * key of the column
-				 * @since 1.26.0
+				 * @since 1.26.0 
 				 */
 				columnKey: {
 					type: "string",
@@ -72,7 +72,7 @@ sap.ui.define([
 
 				/**
 				 * defines if the filter is an include or exclude filter item
-				 * @since 1.26.0
+				 * @since 1.26.0 
 				 */
 				exclude: {
 					type: "boolean",
@@ -82,15 +82,6 @@ sap.ui.define([
 			}
 		}
 	});
-
-
-//	P13nFilterItem.prototype.setOperation = function(sOperation) {
-//		return this.setProperty("operation", sOperation, true);
-//	};
-//
-//	P13nFilterItem.prototype.setColumnKey = function(sKey) {
-//		return this.setProperty("columnKey", sKey, true);
-//	};
 
 	return P13nFilterItem;
 

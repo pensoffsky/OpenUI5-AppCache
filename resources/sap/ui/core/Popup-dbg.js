@@ -753,6 +753,7 @@ sap.ui.define([
 					if (control) {
 						domRefToFocus = control.getFocusDomRef();
 					}
+
 					domRefToFocus = domRefToFocus || jQuery.sap.domById(that._sInitialFocusId);
 				}
 
@@ -796,12 +797,6 @@ sap.ui.define([
 		$Ref.toggleClass("sapUiShd", this._bShadow).hide().css("visibility", "visible");
 		if (iRealDuration == 0) { // do not animate if there is a duration == 0
 			fnOpened.apply(); // otherwise call after-opening functions directly
-			// fnOpened is called synchronously above, and the Popup could have been already closed after fnOpened (from one of the "opened" event handlers).
-			// If the state isn't OPEN after fnOpened, it's needed to directly return from here. Otherwise the later registered listener and modified flag can't
-			// be cleared.
-			if (this.eOpenState !== sap.ui.core.OpenState.OPEN) {
-				return;
-			}
 		} else if (this._animations.open) { // if custom animation is defined, call it
 			this._animations.open.call(null, $Ref, iRealDuration, fnOpened);
 		} else { // otherwise play the default animation
@@ -980,6 +975,7 @@ sap.ui.define([
 			if (arguments.length > 1) {
 				// arguments[0] = iDuration
 				var sAutoclose = arguments[1];
+
 				/*
 				 * If coming from the delayedCall from the autoclose mechanism
 				 * but the active element is still in the Popup -> events messed up somehow.
@@ -1172,37 +1168,23 @@ sap.ui.define([
 	};
 
 	/**
-	 * Returns an object containing as much information about the current focus as
-	 * possible, or null if no focus is present or no focus information can be gathered.
-	 *
-	 * @returns {object} oPreviousFocus with the information which control/element
-	 *                                  was focused before the Popup has been opened.
-	 *                                  If a control was focused the control will add
-	 *                                  additional information if the control
-	 *                                  implemented 'getFocusInfo'.
+	 * Returns an object containing as much information about the current focus as possible, or null if no focus is present or no focus information can be gathered.
 	 */
 	Popup.getCurrentFocusInfo = function() {
 		var _oPreviousFocus = null;
 		var focusedControlId = sap.ui.getCore().getCurrentFocusedControlId();
 		if (focusedControlId) {
+
 			// a SAPUI5 control was focused before
-			var oFocusedControl = sap.ui.getCore().byId(focusedControlId);
-			_oPreviousFocus = {
-				'sFocusId' : focusedControlId,
-				// add empty oFocusInfo to avoid the need for all recipients to check
-				'oFocusInfo' : oFocusedControl ? oFocusedControl.getFocusInfo() : {}
-			};
+			var oFocusedControl = sap.ui.getCore().getControl(focusedControlId);
+			_oPreviousFocus = {'sFocusId':focusedControlId,'oFocusInfo': oFocusedControl ? oFocusedControl.getFocusInfo() : {}}; // add empty oFocusInfo to avoid the need for all recipients to check
 		} else {
-			// not a SAPUI5 control... but if something has focus, save as much information about it as available
 			try {
+
+				// not a SAPUI5 control... but if something has focus, save as much information about it as available
 				var oElement = document.activeElement;
 				if (oElement) {
-					_oPreviousFocus = {
-						'sFocusId' : oElement.id,
-						'oFocusedElement' : oElement,
-						// add empty oFocusInfo to avoid the need for all recipients to check
-						'oFocusInfo': {}
-					};
+					_oPreviousFocus = {'sFocusId':oElement.id,'oFocusedElement':oElement,'oFocusInfo':{}}; // add empty oFocusInfo to avoid the need for all recipients to check
 				}
 			} catch (ex) {
 
@@ -1212,31 +1194,15 @@ sap.ui.define([
 				_oPreviousFocus = null;
 			}
 		}
-
-		if (_oPreviousFocus) {
-			// Storing the information that this focusInfo is processed by the Popup.
-			// There are two different scenarios using the FocusInfo:
-			// - Keep the value inside an input field if the renderer re-renders the
-			// input
-			// - The Popup focuses the previous focused control/element and uses
-			// the FocusInfo mechanism as well.
-			_oPreviousFocus.popup = this;
-		}
 		return _oPreviousFocus;
 	};
 
 	/**
-	 * Applies the stored FocusInfo to the control/element where the focus
-	 * was before the Popup was opened.
-	 * When the FocusInfo has been applied the corresponding control/element
-	 * will be focused.
 	 *
-	 * @param {object} oPreviousFocus is the stored focusInfo that was fetched
-	 *                                from the control (if available)
 	 */
 	Popup.applyFocusInfo = function(oPreviousFocus) {
 		if (oPreviousFocus) {
-			var oFocusedControl = sap.ui.getCore().byId(oPreviousFocus.sFocusId);
+			var oFocusedControl = sap.ui.getCore().getControl(oPreviousFocus.sFocusId);
 			if (oFocusedControl) {
 
 				// if a SAPUI5 control had been focused, just re-focus it

@@ -8,15 +8,13 @@
 // helper module for sap.ui.model.odata.AnnotationHelper.
 sap.ui.define([
 	'jquery.sap.global', './_AnnotationHelperBasics', 'sap/ui/base/BindingParser',
-	'sap/ui/base/ManagedObject', 'sap/ui/core/format/DateFormat', 'sap/ui/model/odata/ODataUtils'
-], function(jQuery, Basics, BindingParser, ManagedObject, DateFormat, ODataUtils) {
+	'sap/ui/core/format/DateFormat'
+], function(jQuery, Basics, BindingParser, DateFormat) {
 	'use strict';
 
 	// see http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/abnf/odata-abnf-construction-rules.txt
 	var sDateValue = "\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])",
 		sDecimalValue = "[-+]?\\d+(?:\\.\\d+)?",
-		sMaxSafeInteger = "9007199254740991",
-		sMinSafeInteger = "-" + sMaxSafeInteger,
 		sTimeOfDayValue = "(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(\\.\\d{1,12})?)?",
 		mEdmType2RegExp = {
 			Bool : /^true$|^false$/i,
@@ -30,10 +28,9 @@ sap.ui.define([
 			Int : /^[-+]?\d{1,19}$/,
 			TimeOfDay : new RegExp("^" + sTimeOfDayValue + "$")
 		},
+		// path to entity type ("/dataServices/schema/<i>/entityType/<j>")
+		rEntityTypePath = /^(\/dataServices\/schema\/\d+\/entityType\/\d+)(?:\/|$)/,
 		Expression,
-		// a simple binding (see sap.ui.base.BindingParser.simpleParser) to "@i18n" model
-		// w/o bad chars (see _AnnotationHelperBasics: rBadChars) inside path!
-		rI18n = /^\{@i18n>[^\\\{\}:]+\}$/,
 		rInteger = /^\d+$/,
 		mOData2JSOperators = { // mapping of OData operator to JavaScript operator
 			And: "&&",
@@ -107,7 +104,8 @@ sap.ui.define([
 	 */
 	Expression = {
 		/**
-		 * Adjusts the second operand so that both have the same category, if possible.
+		 * Adjusts the second operand so that both have the same category, if possible. The type is
+		 * not changed because it doesn't interest any more.
 		 *
 		 * @param {object} oOperand1
 		 *   the operand 1 (as a result object with category)
@@ -117,19 +115,13 @@ sap.ui.define([
 		adjustOperands: function (oOperand1, oOperand2) {
 			if (oOperand1.result !== "constant" && oOperand1.category === "number"
 					&& oOperand2.result === "constant" && oOperand2.type === "Edm.Int64") {
-				// adjust an integer constant of type "Edm.Int64" to the number
-				oOperand2.category = "number";
-			}
-			if (oOperand1.result !== "constant" && oOperand1.category === "decimal"
-				&& oOperand2.result === "constant" && oOperand2.type === "Edm.Int32") {
-				// adjust an integer constant of type "Edm.Int32" to the decimal
-				oOperand2.category = "decimal";
-				oOperand2.type = oOperand1.type;
+				// adjust a integer constant (which is always "Edm.Int64") to the number
+				oOperand2.category = oOperand1.category;
 			}
 			if (oOperand1.result === "constant" && oOperand1.category === "date"
 					&& oOperand2.result !== "constant" && oOperand2.category === "datetime") {
 				// adjust a datetime parameter to the date constant
-				oOperand2.category = "date";
+				oOperand2.category = oOperand1.category;
 			}
 		},
 
@@ -268,14 +260,7 @@ sap.ui.define([
 			Basics.expectType(oPathValue, "string");
 
 			if (sEdmType === "String") {
-				if (rI18n.test(sValue)) { // a simple binding to "@i18n" model
-					return {
-						ignoreTypeInPath: true,
-						result : "binding",
-						type: "Edm.String",
-						value : sValue.slice(1, -1) // cut off "{" and "}"
-					};
-				} else if (oInterface.getSetting && oInterface.getSetting("bindTexts")) {
+				if (oInterface.getSetting && oInterface.getSetting("bindTexts")) {
 					// We want a model binding to the path in the metamodel (which is
 					// oPathValue.path)
 					// "/##" is prepended because it leads from model to metamodel
@@ -287,22 +272,14 @@ sap.ui.define([
 							oPathValue.path)
 					};
 				}
-				sEdmType = "Edm.String";
 			} else if (!mEdmType2RegExp[sEdmType].test(sValue)) {
 				Basics.error(oPathValue,
 					"Expected " + sEdmType + " value but instead saw '" + sValue + "'");
-			} else {
-				sEdmType = mType2Type[sEdmType];
-				if (sEdmType === "Edm.Int64"
-						&& ODataUtils.compare(sValue, sMinSafeInteger, true) >= 0
-						&& ODataUtils.compare(sValue, sMaxSafeInteger, true) <= 0) {
-					sEdmType = "Edm.Int32";
-				}
 			}
 
 			return {
 				result : "constant",
-				type : sEdmType,
+				type : mType2Type[sEdmType],
 				value : sValue
 			};
 		},
@@ -447,22 +424,10 @@ sap.ui.define([
 		 * @param {boolean} bWithType
 		 *   if <code>true</code>, embedded bindings contain type information
 		 * @returns {string}
-		 *   the expression value or "Unsupported: oRawValue" in case of an error or
-		 *   <code>undefined</code> in case the raw value is undefined.
+		 *   the expression value or "Unsupported: oRawValue" in case of an error.
 		 */
 		getExpression: function (oInterface, oRawValue, bWithType) {
 			var oResult;
-
-			if (oRawValue === undefined) {
-				return undefined;
-			}
-
-			if ( !Expression.simpleParserWarningLogged &&
-					ManagedObject.bindingParser === BindingParser.simpleParser) {
-				jQuery.sap.log.warning("Complex binding syntax not active", null,
-					"sap.ui.model.odata.AnnotationHelper");
-				Expression.simpleParserWarningLogged = true;
-			}
 
 			try {
 				oResult = Expression.expression(oInterface, {
@@ -673,8 +638,7 @@ sap.ui.define([
 		},
 
 		/**
-		 * Handling of "14.5.12 Expression edm:Path" and "14.5.13 Expression edm:PropertyPath";
-		 * embedded within an entity set or entity type (see {@link Basics.followPath}).
+		 * Handling of "14.5.12 Expression edm:Path" and "14.5.13 Expression edm:PropertyPath".
 		 *
 		 * @param {sap.ui.core.util.XMLPreprocessor.IContext|sap.ui.model.Context} oInterface
 		 *   the callback interface related to the current formatter call
@@ -686,44 +650,49 @@ sap.ui.define([
 		path: function (oInterface, oPathValue) {
 			var sBindingPath = oPathValue.value,
 				oConstraints = {},
+				oEntityType,
 				oModel = oInterface.getModel(),
-				oPathValueInterface = {
-					getModel : function () { return oModel; },
-					getPath : function () { return oPathValue.path; }
-				},
+				aMatches = rEntityTypePath.exec(oPathValue.path),
+				aParts,
 				oProperty,
-				oResult = {result: "binding", value: sBindingPath},
-				oTarget;
+				oResult = {result: "binding", value: sBindingPath};
 
 			Basics.expectType(oPathValue, "string");
 
-			// Note: "PropertyPath" is treated the same...
-			oTarget = Basics.followPath(oPathValueInterface, {"Path" : sBindingPath});
+			if (aMatches) {
+				// go up to "/dataServices/schema/<i>/entityType/<j>/"
+				oEntityType = oModel.getProperty(aMatches[1]);
 
-			if (oTarget && oTarget.resolvedPath) {
-				oProperty = oModel.getProperty(oTarget.resolvedPath);
-				oResult.type = oProperty.type;
-				switch (oProperty.type) {
-				case "Edm.DateTime":
-					oConstraints.displayFormat = oProperty["sap:display-format"];
-					break;
-				case "Edm.Decimal":
-					oConstraints.precision = oProperty.precision;
-					oConstraints.scale = oProperty.scale;
-					break;
-				case "Edm.String":
-					oConstraints.maxLength = oProperty.maxLength;
-					break;
-				// no default
+				// determine the property given by sBindingPath
+				aParts = sBindingPath.split('/');
+				oProperty = oModel.getODataProperty(oEntityType, aParts);
+
+				if (oProperty && !aParts.length) {
+					oResult.type = oProperty.type;
+					switch (oProperty.type) {
+					case "Edm.DateTime":
+						oConstraints.displayFormat = oProperty["sap:display-format"];
+						break;
+					case "Edm.Decimal":
+						oConstraints.precision = oProperty.precision;
+						oConstraints.scale = oProperty.scale;
+						break;
+					case "Edm.String":
+						oConstraints.maxLength = oProperty.maxLength;
+						break;
+					// no default
+					}
+					if (oProperty.nullable === "false") {
+						oConstraints.nullable = oProperty.nullable;
+					}
+					oResult.constraints = oConstraints;
 				}
-				if (oProperty.nullable === "false") {
-					oConstraints.nullable = oProperty.nullable;
+
+				if (!oResult.type) {
+					jQuery.sap.log.warning("Could not determine type for property '" + sBindingPath
+						+ "' of entity type '" + oEntityType.name + "'", null,
+						"sap.ui.model.odata.AnnotationHelper");
 				}
-				oResult.constraints = oConstraints;
-			} else {
-				jQuery.sap.log.warning("Could not find property '" + sBindingPath
-					+ "' starting from '" + oPathValue.path + "'", null,
-					"sap.ui.model.odata.AnnotationHelper");
 			}
 
 			return oResult;
@@ -799,13 +768,6 @@ sap.ui.define([
 			}
 			return aParts.join('/');
 		},
-
-		/**
-		 * Flag indicating that warning for missing complex binding parser has already been logged.
-		 *
-		 * @type {boolean}
-		*/
-		simpleParserWarningLogged : false,
 
 		/**
 		 * Handling of "14.5.3.1.3 Function odata.uriEncode".

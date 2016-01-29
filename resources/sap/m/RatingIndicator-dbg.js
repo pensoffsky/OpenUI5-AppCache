@@ -23,7 +23,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -158,7 +158,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 		this._iIconCounter = 0;
 		this._fHoverValue = 0;
 
-		this._oResourceBundle = sap.ui.getCore().getLibraryResourceBundle('sap.m');
+		this._oResourceBundle = sap.ui.getCore().getLibraryResourceBundle('sap.m');
 
 		if (RatingIndicator._pxCalculations === undefined) {
 			RatingIndicator._pxCalculations = [];
@@ -512,8 +512,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control', 'sap/ui/
 		if (sURI) {
 			oImage = IconPool.createControlByURI({
 				id: this.getId() + "__icon" + this._iIconCounter++,
-				src: sURI,
-				useIconTooltip: false
+				src: sURI
 			}, sap.m.Image);
 
 			// store the icons in the corresponding internal aggregation

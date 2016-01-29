@@ -14,11 +14,11 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 	 * @namespace
 	 */
 	var DisplayListItemRenderer = Renderer.extend(ListItemBaseRenderer);
-
+	
 	/**
 	 * Renders the HTML for the given control, using the provided
 	 * {@link sap.ui.core.RenderManager}.
-	 *
+	 * 
 	 * @param {sap.ui.core.RenderManager}
 	 *          oRenderManager the RenderManager that can be used for writing to the
 	 *          Render-Output-Buffer
@@ -29,18 +29,18 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 	DisplayListItemRenderer.renderLIAttributes = function(rm, oLI) {
 		rm.addClass("sapMDLI");
 	};
-
+	
 	DisplayListItemRenderer.renderLIContent = function(rm, oLI) {
-
+	
 		var isLabel = oLI.getLabel();
-
+	
 		// List item label
 		if (isLabel) {
 			rm.write("<label for='" + oLI.getId() + "-value' class='sapMDLILabel'>");
 			rm.writeEscaped(oLI.getLabel());
 			rm.write("</label>");
 		}
-
+		
 		var isValue = oLI.getValue();
 		var sValueTextDir = oLI.getValueTextDirection();
 
@@ -57,7 +57,7 @@ sap.ui.define(['jquery.sap.global', './ListItemBaseRenderer', 'sap/ui/core/Rende
 			rm.write("</div>");
 		}
 	};
-
+	
 
 	return DisplayListItemRenderer;
 

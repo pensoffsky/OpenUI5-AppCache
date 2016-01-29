@@ -20,7 +20,7 @@ sap.ui.define(['sap/m/semantic/SemanticControl', 'sap/m/Button', 'sap/m/Overflow
 	 * @abstract
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -66,11 +66,8 @@ sap.ui.define(['sap/m/semantic/SemanticControl', 'sap/m/Button', 'sap/m/Overflow
 			var oNewInstance = this._createInstance(oClass);
 
 			oNewInstance.applySettings(this._getConfiguration().getSettings());
-			if (typeof this._getConfiguration().getEventDelegates === "function") {
-				oNewInstance.addEventDelegate(this._getConfiguration().getEventDelegates(oNewInstance));
-			}
 
-			this.setAggregation('_control', oNewInstance, true); // don't invalidate - this is only called before/during rendering, where invalidation would lead to double rendering,  or when invalidation anyway happens
+			this.setAggregation('_control', oNewInstance, true); //TODO: check bSuppressInvalidate needed?
 
 			oControl = this.getAggregation('_control');
 		}

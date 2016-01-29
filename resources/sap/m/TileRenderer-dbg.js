@@ -11,7 +11,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Renderer'],
 
 
 	/**
-	 * Text renderer.
+	 * Text renderer
 	 * @author SAP SE
 	 * @namespace
 	 */
@@ -19,8 +19,8 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Renderer'],
 
 	/**
 	 * Renders the HTML for the given control, using the provided {@link sap.ui.core.RenderManager}.
-	 * @param {sap.ui.core.RenderManager} oRenderManager The RenderManager that can be used for writing to the render output buffer
-	 * @param {sap.ui.core.Control} oControl An object representation of the control that should be rendered
+	 * @param {sap.ui.core.RenderManager} oRenderManager The RenderManager that can be used for writing to the render output buffer.
+	 * @param {sap.ui.core.Control} oControl An object representation of the control that should be rendered.
 	 */
 	TileRenderer.render = function(rm, oControl) {
 		rm.write("<div tabindex=\"0\"");

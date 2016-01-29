@@ -5,8 +5,8 @@
  */
 
 // Provides control sap.m._overflowToolbarHelpers.OverflowToolbarAssociativePopover.
-sap.ui.define(['./Popover', './PopoverRenderer', './OverflowToolbarAssociativePopoverControls', './OverflowToolbarLayoutData'],
-	function(Popover, PopoverRenderer, OverflowToolbarAssociativePopoverControls, OverflowToolbarLayoutData) {
+sap.ui.define(['./Popover', './PopoverRenderer', './OverflowToolbarAssociativePopoverControls'],
+	function(Popover, PopoverRenderer, OverflowToolbarAssociativePopoverControls) {
 	"use strict";
 
 
@@ -22,7 +22,7 @@ sap.ui.define(['./Popover', './PopoverRenderer', './OverflowToolbarAssociativePo
 	 * @extends sap.ui.core.Popover
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @private
@@ -44,6 +44,11 @@ sap.ui.define(['./Popover', './PopoverRenderer', './OverflowToolbarAssociativePo
 	OverflowToolbarAssociativePopover.prototype.init = function() {
 		Popover.prototype.init.apply(this, arguments);
 
+		// Workaround - no arrow when on mobile so that the popover can snap to the opening button
+		if (sap.ui.Device.system.phone) {
+			this._removeOffsetTakenByTheArrow();
+		}
+
 		// Instantiate the helper that will manage controls entering/leaving the popover
 		this.oControlsManager = new OverflowToolbarAssociativePopoverControls();
 	};
@@ -61,6 +66,22 @@ sap.ui.define(['./Popover', './PopoverRenderer', './OverflowToolbarAssociativePo
 		} else {
 			this.removeStyleClass("sapMOTAPButtonsWithIcons");
 		}
+	};
+
+	/**
+	 * Removes the offset taken by the arrow (should be only used on mobile devices where the arrow is hidden)
+	 * @returns {*}
+	 * @private
+	 */
+	OverflowToolbarAssociativePopover.prototype._removeOffsetTakenByTheArrow = function () {
+		this._marginTop = 0;
+		this._marginLeft = 0;
+		this._marginRight = 0;
+		this._marginBottom = 0;
+		this._arrowOffset = 0;
+		this._offsets = ["0 0", "0 0", "0 0", "0 0"];
+		this._myPositions = ["begin bottom", "begin center", "begin top", "end center"];
+		this._atPositions = ["begin top", "end center", "begin bottom", "begin center"];
 	};
 
 	/* Override API methods */
@@ -104,12 +125,6 @@ sap.ui.define(['./Popover', './PopoverRenderer', './OverflowToolbarAssociativePo
 			this.oControlsManager[sPreProcessFnName](oControl);
 		}
 
-		var oLayoutData = oControl.getLayoutData();
-
-		if (oLayoutData instanceof OverflowToolbarLayoutData && oLayoutData.getPriority() === sap.m.OverflowToolbarPriority.Disappear) {
-			oControl.addStyleClass("sapMOTAPHidden");
-		}
-
 		return this;
 	};
 
@@ -135,8 +150,6 @@ sap.ui.define(['./Popover', './PopoverRenderer', './OverflowToolbarAssociativePo
 		if (typeof this.oControlsManager[sPostProcessFnName] === "function") {
 			this.oControlsManager[sPostProcessFnName](oControl);
 		}
-
-		oControl.removeStyleClass("sapMOTAPHidden");
 
 		// It is important to explicitly destroy the control from the popover's DOM when using associations, because the toolbar will render it again and there will be a DOM duplication side effect
 		oControl.$().remove();

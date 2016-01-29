@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<control xmlns="http://www.sap.com/sap.ui.library.xsd">
+    <name>semantic/SemanticPage</name>
+    <derived/>
+    <author>SAP SE</author>
+    <documentation>A semantic page is an enhanced {@link sap.m.Page}, that can contain controls with semantic meaning @see sap.m.semantic.SemanticControl.&lt;br&gt;
+
+Content specified in the {@link sap.m.semantic.SemanticPage#semanticControls} aggregations will be automatically positioned in dedicated sections of the footer or the header of the page, depending on the control's semantics.&lt;br&gt;
+For example, a semantic button of type {@link sap.m.semantic.PositiveAction} will be positioned in the right side of the footer, and in logically correct sequence order with respect to any other included semantic controls.&lt;br&gt;
+
+In addition to the predefined semantic controls, the SemanticPage can host also custom controls. It preserves most of the API of {@link sap.m.Page} for specifying page content.&lt;br&gt;</documentation>
+    <since>1.30.0</since>
+    <baseType>sap.ui.core/Control</baseType>
+    <properties>
+        <property group="Misc" type="sap.ui.core/string" name="title">
+            <documentation>See {@link sap.m.Page#title}</documentation>
+        </property>
+        <property group="Appearance" defaultValue="Auto" type="sap.ui.core/TitleLevel" name="titleLevel">
+            <documentation>See {@link sap.m.Page#titleLevel}</documentation>
+        </property>
+        <property group="Appearance" defaultValue="false" type="sap.ui.core/boolean" name="showNavButton">
+            <documentation>See {@link sap.m.Page#showNavButton}</documentation>
+        </property>
+        <property group="Appearance" defaultValue="true" type="sap.ui.core/boolean" name="showSubHeader">
+            <documentation>See {@link sap.m.Page#showSubHeader}</documentation>
+        </property>
+        <property group="Behavior" defaultValue="true" type="sap.ui.core/boolean" name="enableScrolling">
+            <documentation>See {@link sap.m.Page#enableScrolling}</documentation>
+        </property>
+    </properties>
+    <events>
+        <event allowPreventDefault="false" name="navButtonPress">
+            <documentation>See {@link sap.m.Page#navButtonPress}</documentation>
+        </event>
+    </events>
+    <aggregations default="content">
+        <aggregation cardinality="0..1" type="sap.m/IBar" name="subHeader">
+            <documentation>See {@link sap.m.Page#subHeader}</documentation>
+        </aggregation>
+        <aggregation cardinality="0..n" type="sap.ui.core/Control" name="content">
+            <documentation>See {@link sap.m.Page#content}</documentation>
+        </aggregation>
+        <aggregation cardinality="0..n" type="sap.m/Button" name="customHeaderContent">
+            <documentation>Custom header buttons</documentation>
+        </aggregation>
+        <aggregation cardinality="0..n" type="sap.m/Button" name="customFooterContent">
+            <documentation>Custom footer buttons</documentation>
+        </aggregation>
+        <aggregation visibility="hidden" cardinality="0..1" type="sap.m/Page" name="_page">
+            <documentation>Wrapped instance of {@link sap.m.Page}</documentation>
+        </aggregation>
+    </aggregations>
+</control>

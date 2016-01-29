@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<control xmlns="http://www.sap.com/sap.ui.library.xsd">
+    <name>ComboBoxBase</name>
+    <derived/>
+    <author>SAP SE</author>
+    <documentation>An abstract class for combo boxes.</documentation>
+    <since>1.22.0</since>
+    <abstract/>
+    <baseType>sap.m/InputBase</baseType>
+    <properties>
+        <property group="Dimension" defaultValue="100%" type="sap.ui.core/CSSSize" name="maxWidth">
+            <documentation>Sets the maximum width of the text field.</documentation>
+        </property>
+    </properties>
+    <aggregations default="items">
+        <aggregation bindable="bindable" cardinality="0..n" type="sap.ui.core/Item" name="items">
+            <documentation>Defines the items contained within this control.</documentation>
+        </aggregation>
+        <aggregation visibility="hidden" cardinality="0..1" type="sap.ui.core/Control" name="picker">
+            <documentation>Internal aggregation to hold the inner picker popup.</documentation>
+        </aggregation>
+    </aggregations>
+</control>

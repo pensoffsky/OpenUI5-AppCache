@@ -11,32 +11,27 @@ sap.ui.define([
 		"use strict";
 
 		/**
-		* Constructor for a new QuickViewGroup.
-		*
-		* @param {string} [sId] ID for the new control, generated automatically if no ID is given
-		* @param {object} [mSettings] Initial settings for the new control
-		*
-		* @class QuickViewGroup consists of a title (optional) and an entity of group elements.
-		*
-		* @extends sap.ui.core.Element
-		*
-		* @author SAP SE
-		* @version 1.32.10
-		*
-		* @constructor
-		* @public
-		* @since 1.28.11
-		* @alias sap.m.QuickViewGroup
-		* @ui5-metamodel This control/element also will be described in the UI5 (legacy) designtime metamodel
-		*/
-		var Group = Element.extend("sap.m.QuickViewGroup", /** @lends sap.m.QuickViewGroup.prototype */ {
+		 * Constructor for a new QuickViewGroup.
+		 *
+		 * @param {string} [sId] id for the new control, generated automatically if no id is given
+		 * @param {object} [mSettings] initial settings for the new control
+		 * @class QuickViewGroup consists of a title (optional) and an entity of group elements.
+		 * @extends sap.ui.core.Element
+		 * @author SAP SE
+		 * @constructor
+		 * @public
+		 * @alias sap.m.QuickViewGroup
+		 * @ui5-metamodel This control/element also will be described in the UI5 (legacy) designtime metamodel
+		 */
+		var Group = Element.extend("sap.m.QuickViewGroup",
+			{
 				metadata: {
 
 					library: "sap.m",
 					properties: {
 
 						/**
-						 * Determines whether the group is visible on the screen.
+						 * Whether the group should be visible on the screen.
 						 */
 						visible : {
 							type: "boolean",

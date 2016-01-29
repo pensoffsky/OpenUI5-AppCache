@@ -22,7 +22,7 @@ sap.ui.define(['./AnnotationParser', 'jquery.sap.global', 'sap/ui/Device', 'sap/
 	 *
 	 * @author SAP SE
 	 * @version
-	 * 1.32.10
+	 * 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -35,21 +35,18 @@ sap.ui.define(['./AnnotationParser', 'jquery.sap.global', 'sap/ui/Device', 'sap/
 		// constructor : function(aAnnotationURI, oMetadata, mParams) {
 		constructor : function(mOptions) {
 			EventProvider.apply(this, arguments);
-
+			
 			if (arguments.length !== 1) {
 				// Old constructor argument syntax
 				if (typeof arguments[2] === "object") {
 					mOptions = arguments[2];
 				}
-
+				
 				mOptions.urls = arguments[0];
 				mOptions.metadata = arguments[1];
 			}
-
-			this.oMetadata = {
-				metadata: mOptions.metadata,
-				references: null
-			};
+			
+			this.oMetadata = mOptions.metadata;
 			this.oAnnotations = mOptions.annotationData ? mOptions.annotationData : {};
 			this.bLoaded = false;
 			this.bAsync = mOptions && mOptions.async;
@@ -59,7 +56,6 @@ sap.ui.define(['./AnnotationParser', 'jquery.sap.global', 'sap/ui/Device', 'sap/
 			this.oRequestHandles = [];
 			this.oLoadEvent = null;
 			this.oFailedEvent = null;
-			this.mCustomHeaders = mOptions.headers ? jQuery.extend({}, mOptions.headers) : {};
 
 			if (mOptions.urls) {
 				this.addUrl(mOptions.urls);
@@ -67,7 +63,7 @@ sap.ui.define(['./AnnotationParser', 'jquery.sap.global', 'sap/ui/Device', 'sap/
 				if (!this.bAsync) {
 					// Synchronous loading, we can directly check for errors
 					jQuery.sap.assert(
-						!jQuery.isEmptyObject(this.oMetadata.metadata),
+						!jQuery.isEmptyObject(this.oMetadata),
 						"Metadata must be available for synchronous annotation loading"
 					);
 					if (this.oError) {
@@ -83,10 +79,10 @@ sap.ui.define(['./AnnotationParser', 'jquery.sap.global', 'sap/ui/Device', 'sap/
 		}
 
 	});
-
-
+	
+	
 	///////////////////////////////////////////////// Prototype Members ////////////////////////////////////////////////
-
+	
 	/**
 	 * returns the raw annotation data
 	 *
@@ -224,23 +220,8 @@ sap.ui.define(['./AnnotationParser', 'jquery.sap.global', 'sap/ui/Device', 'sap/
 	};
 
 	/**
-	 * Set custom headers which are provided in a key/value map. These headers are used for all requests.
-	 * The Accept-Language header cannot be modified and is set using the Core's language setting.
-	 *
-	 * To remove these headers simply set the mHeaders parameter to {}. Please also note that when calling this method
-	 * again all previous custom headers are removed unless they are specified again in the mCustomHeaders parameter.
-	 *
-	 * @param {map} mHeaders the header name/value map.
-	 * @public
-	 */
-	ODataAnnotations.prototype.setHeaders = function(mHeaders) {
-		// Copy headers (dont use reference to mHeaders map)
-		this.mCustomHeaders = jQuery.extend({}, mHeaders);
-	};
-
-	/**
 	 * Creates an XML document that can be used by this parser from the given XML content.
-	 *
+	 * 
 	 * @param {object|string} vXML - Either an XML Document to be used for parsing or a string that should be parsed as an XML document. In case the first parameter is an object, the second parameter must be set to ensure browser compatibility
 	 * @param {string} [sXMLContent] - Fallback XML content as string in case the first parameter was an object and could not be used
 	 * @returns {object} The compatible XML document object
@@ -252,7 +233,7 @@ sap.ui.define(['./AnnotationParser', 'jquery.sap.global', 'sap/ui/Device', 'sap/
 			sXMLContent = vXML;
 			vXML = null;
 		}
-
+		
 		if (sap.ui.Device.browser.internet_explorer) {
 			// IE creates an XML Document, but we cannot use it since it does not support the
 			// evaluate-method. So we have to create a new document from the XML string every time.
@@ -277,11 +258,11 @@ sap.ui.define(['./AnnotationParser', 'jquery.sap.global', 'sap/ui/Device', 'sap/
 		} else {
 			jQuery.sap.log.fatal("The browser does not support XML parsing. Annotations are not available.");
 		}
-
+		
 
 		return oXMLDoc;
 	};
-
+	
 	/**
 	 * Checks the given XML document for parse errors
 	 *
@@ -296,79 +277,23 @@ sap.ui.define(['./AnnotationParser', 'jquery.sap.global', 'sap/ui/Device', 'sap/
 			|| (oXMLDoc.parseError && oXMLDoc.parseError.errorCode !== 0)
 		);
 	};
-
-	/**
-	 * Merges the newly parsed annotation data into the already existing one.
-	 * The merge operates on Terms and overwrites existing annotations on that level.
-	 *
-	 * @param {map} mAnnotations - The new annotations that should be merged into the ones in this instance
-	 * @param {boolean} [bSuppressEvents] - if set to true, the "loaded"-event is not fired
-	 * @returns {void}
-	 */
+	
 	ODataAnnotations.prototype._mergeAnnotationData = function(mAnnotations, bSuppressEvents) {
 		if (!this.oAnnotations) {
 			this.oAnnotations = {};
 		}
-
-		// Merge must be done on Term level, this is why the original line does not suffice any more:
-		//     jQuery.extend(true, this.oAnnotations, mAnnotations);
-		// Terms are defined on different levels, the main one is below the target level, which is directly
-		// added as property to the annotations object and then in the same way inside two special properties
-		// named "propertyAnnotations" and "EntityContainer"
-
-		function mergeAnnotation(sName, mSource, mTarget) {
-			// Everythin in here must be on Term level, so we overwrite the target with the data from the source
-
-			if (Array.isArray(mSource[sName])) {
-				// This is a collection - make sure it stays one
-				mTarget[sName] = mSource[sName].slice(0);
-			} else {
-				// Make sure the map exists in the target
-				mTarget[sName] = mTarget[sName] || {};
-
-				for (var sKey in mSource[sName]) {
-					mTarget[sName][sKey] = mSource[sName][sKey];
-				}
-			}
-		}
-
-		var sTarget, sTerm;
-		var aSpecialCases = ["propertyAnnotations", "EntityContainer", "annotationReferences"];
-
-		// First merge standard annotations
-		for (sTarget in mAnnotations) {
-			if (aSpecialCases.indexOf(sTarget) !== -1) {
-				// Skip these as they are special properties that contain Target level definitions
-				continue;
-			}
-
-			// ...all others contain Term level definitions
-			mergeAnnotation(sTarget, mAnnotations, this.oAnnotations);
-		}
-
-		// Now merge special cases
-		for (var i = 0; i < aSpecialCases.length; ++i) {
-			var sSpecialCase = aSpecialCases[i];
-
-			this.oAnnotations[sSpecialCase] = this.oAnnotations[sSpecialCase] || {}; // Make sure the the target namespace exists
-			for (sTarget in mAnnotations[sSpecialCase]) {
-				for (sTerm in mAnnotations[sSpecialCase][sTarget]) {
-					// Now merge every term
-					this.oAnnotations[sSpecialCase][sTarget] = this.oAnnotations[sSpecialCase][sTarget] || {};
-					mergeAnnotation(sTerm, mAnnotations[sSpecialCase][sTarget], this.oAnnotations[sSpecialCase][sTarget]);
-				}
-			}
-		}
+		jQuery.extend(true, this.oAnnotations, mAnnotations);
+		var mResult = {
+			annotations: mAnnotations
+		};
 
 		this.bLoaded = true;
-
+		
 		if (!bSuppressEvents) {
-			this.fireLoaded({
-				annotations: mAnnotations
-			});
+			this.fireLoaded(mResult);
 		}
-	};
-
+	};	
+	
 	/**
 	 * Sets an XML document
 	 *
@@ -409,7 +334,7 @@ sap.ui.define(['./AnnotationParser', 'jquery.sap.global', 'sap/ui/Device', 'sap/
 				mOptions.success(mResult);
 				this._mergeAnnotationData(oAnnotations, !mOptions.fireEvents);
 			} else {
-
+				
 				mOptions.error(mResult);
 				if (mOptions.fireEvents) {
 					this.fireFailed(mResult);
@@ -432,10 +357,10 @@ sap.ui.define(['./AnnotationParser', 'jquery.sap.global', 'sap/ui/Device', 'sap/
 		} else {
 			// Check if Metadata is loaded on the model. We need the Metadata to parse the annotations
 
-			var oMetadata = this.oMetadata.metadata.getServiceMetadata();
+			var oMetadata = this.oMetadata.getServiceMetadata();
 			if (!oMetadata || jQuery.isEmptyObject(oMetadata)) {
 				// Metadata is not loaded, wait for it before trying to parse
-				this.oMetadata.metadata.attachLoaded(fnParseDocument);
+				this.oMetadata.attachLoaded(fnParseDocument);
 			} else {
 				fnParseDocument();
 			}
@@ -510,21 +435,8 @@ sap.ui.define(['./AnnotationParser', 'jquery.sap.global', 'sap/ui/Device', 'sap/
 				}
 			};
 
-			var i = 0;
-			if (that.bAsync) {
-				var promiseChain = Promise.resolve();
-
-				for (i = 0; i < aUris.length; ++i) {
-					var fnLoadNext = that._loadFromUrl.bind(that, aUris[i]);
-					promiseChain = promiseChain
-						.then(fnLoadNext, fnLoadNext)
-						.then(fnRequestCompleted, fnRequestCompleted);
-				}
-
-			} else {
-				for (i = 0; i < aUris.length; ++i) {
-					that._loadFromUrl(aUris[i]).then(fnRequestCompleted, fnRequestCompleted);
-				}
+			for (var i = 0; i < aUris.length; ++i) {
+				that._loadFromUrl(aUris[i]).then(fnRequestCompleted, fnRequestCompleted);
 			}
 		});
 	};
@@ -540,11 +452,8 @@ sap.ui.define(['./AnnotationParser', 'jquery.sap.global', 'sap/ui/Device', 'sap/
 		var that = this;
 		return new Promise(function(fnResolve, fnReject) {
 			var mAjaxOptions = {
-				url: sUrl,
-				async: that.bAsync,
-				headers: jQuery.extend({}, that.mCustomHeaders, {
-					"Accept-Language": sap.ui.getCore().getConfiguration().getLanguage() // Always overwrite
-				})
+				url : sUrl,
+				async : that.bAsync
 			};
 
 			var oRequestHandle;
@@ -594,7 +503,6 @@ sap.ui.define(['./AnnotationParser', 'jquery.sap.global', 'sap/ui/Device', 'sap/
 			jQuery.ajax(mAjaxOptions).done(fnSuccess).fail(fnFail);
 		});
 	};
-
 
 	ODataAnnotations.prototype.destroy = function() {
 		// Abort pending xml request

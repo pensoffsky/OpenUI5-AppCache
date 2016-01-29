@@ -14,15 +14,15 @@ sap.ui.define(['jquery.sap.global', './Tile', './library', 'sap/ui/core/IconPool
 	/**
 	 * Constructor for a new StandardTile.
 	 *
-	 * @param {string} [sId] ID for the new control, generated automatically if no ID is given
-	 * @param {object} [mSettings] Initial settings for the new control
+	 * @param {string} [sId] id for the new control, generated automatically if no id is given
+	 * @param {object} [mSettings] initial settings for the new control
 	 *
 	 * @class
-	 * The StandardTile control is displayed in the tile container.
+	 * The StandardTile
 	 * @extends sap.m.Tile
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -36,60 +36,65 @@ sap.ui.define(['jquery.sap.global', './Tile', './library', 'sap/ui/core/IconPool
 		properties : {
 
 			/**
-			 * Defines the title of the StandardTile.
+			 * Tile title
 			 */
 			title : {type : "string", group : "Misc", defaultValue : null},
 
 			/**
-			 * Defines the description of the StandardTile.
+			 * Tile description
 			 */
 			info : {type : "string", group : "Misc", defaultValue : null},
 
 			/**
-			 * Defines the icon of the StandardTile.
+			 * Tile icon
 			 */
 			icon : {type : "sap.ui.core.URI", group : "Misc", defaultValue : null},
 
 			/**
-			 * Defines the active icon of the StandardTile.
+			 * Tile active icon
 			 */
 			activeIcon : {type : "sap.ui.core.URI", group : "Misc", defaultValue : null},
 
 			/**
-			 * Defines the number field of the StandardTile.
+			 * Number field
 			 */
 			number : {type : "string", group : "Misc", defaultValue : null},
 
 			/**
-			 * Defines the number units qualifier of the StandardTile.
+			 * Number units qualifier
 			 */
 			numberUnit : {type : "string", group : "Misc", defaultValue : null},
 
 			/**
-			 * Defines the color of the info text. Possible values are Error, Warning, Success and so on.
+			 * Info state defines the color of the info text. E.g. Error, Warning, Success...
 			 */
 			infoState : {type : "sap.ui.core.ValueState", group : "Misc", defaultValue : sap.ui.core.ValueState.None},
 
 			/**
-			 * Defines the type of the StandardTile.
+			 * Tile type.
 			 */
 			type : {type : "sap.m.StandardTileType", group : "Misc", defaultValue : sap.m.StandardTileType.None},
 
 			/**
 			 * By default, this is set to true but then one or more requests are sent trying to get the density perfect version of image if this version of image doesn't exist on the server.
 			 *
-			 * If bandwidth is key for the application, set this value to false.
+			 * If bandwidth is the key for the application, set this value to false.
 			 */
 			iconDensityAware : {type : "boolean", group : "Appearance", defaultValue : true}
 		},
 		associations : {
 
 			/**
-			 * Association to controls / IDs, which describe this control (see WAI-ARIA attribute aria-describedby).
+			 * Association to controls / ids which describe this control (see WAI-ARIA attribute aria-describedby).
 			 */
 			ariaDescribedBy : {type : "sap.ui.core.Control", multiple : true, singularName : "ariaDescribedBy"}
 		}
 	}});
+
+	///**
+	// * This file defines behavior for the control,
+	// */
+
 
 	/**
 	 * Called when the control is destroyed.
@@ -103,10 +108,8 @@ sap.ui.define(['jquery.sap.global', './Tile', './library', 'sap/ui/core/IconPool
 		}
 	};
 
-	/**
-	 * Overrides the icon property of the StandardTile control.
-	 *
-	 * @private
+	/*
+	 * Overrides the icon property of the Tile Control
 	 */
 	StandardTile.prototype.getIcon = function() {
 		if (!this.getProperty("icon") && this.getType() === "Create") {
@@ -118,8 +121,7 @@ sap.ui.define(['jquery.sap.global', './Tile', './library', 'sap/ui/core/IconPool
 
 
 	/**
-	 * Lazy loads StandardTile icon image.
-	 *
+	 * Lazy load tile icon image.
 	 * @private
 	 */
 	StandardTile.prototype._getImage = function() {

@@ -1,6 +1,8 @@
 CACHE MANIFEST
 indexOffline.html
 resources/sap-ui-core.js
+resources/sap/m/library-preload.json
+resources/sap/ui/core/library-preload.json
 resources/sap/ui/thirdparty/jquery-mobile-custom.js
 resources/sap/ui/core/themes/sap_bluecrystal/library.css
 resources/sap/m/themes/sap_bluecrystal/library.css

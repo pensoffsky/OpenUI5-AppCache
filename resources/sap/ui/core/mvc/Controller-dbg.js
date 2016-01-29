@@ -54,8 +54,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/EventProvider', 'sap/ui/base/Ma
 
 		});
 
-		// define call order of lifecycle methods for extensions
-		// "true" means original before, "false" means original afterwards
 		var mControllerLifecycleMethods = {
 			"onInit": true,
 			"onExit": false,
@@ -66,76 +64,57 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/base/EventProvider', 'sap/ui/base/Ma
 		function extendIfRequired(oController, sName) {
 			var oCustomControllerDef;
 
-			var CustomizingConfiguration = sap.ui.require('sap/ui/core/CustomizingConfiguration');
-			if (CustomizingConfiguration) {
-				var controllerExtensionConfig = CustomizingConfiguration.getControllerExtension(sName, ManagedObject._sOwnerId);
+			if (sap.ui.core.CustomizingConfiguration) {
+				var controllerExtensionConfig = sap.ui.core.CustomizingConfiguration.getControllerExtension(sName, ManagedObject._sOwnerId);
 				if (controllerExtensionConfig) {
-					var sExtControllerName = controllerExtensionConfig.controllerName;
+					var sControllerName = controllerExtensionConfig.controllerName;
+					jQuery.sap.log.info("Customizing: Controller '" + sName + "' is now extended by '" + sControllerName + "'");
 
-					// create a list of controller names which will be used to extend this controller
-					var aControllerNames = controllerExtensionConfig.controllerNames || [];
-					if (sExtControllerName) {
-						sExtControllerName && aControllerNames.unshift(sExtControllerName);
+					// load controller definition if required; first check whether already available...
+					if ( !mRegistry[sControllerName] && !jQuery.sap.getObject(sControllerName) ) {
+						// ...if not, try to load an external controller definition module
+						jQuery.sap.require({modName: sControllerName, type: "controller"});
+					}
+					if ( !mRegistry[sControllerName] && !jQuery.sap.getObject(sControllerName) ) {
+						// still not defined? this means there was not the correct controller in the file
+						jQuery.sap.log.error("Attempt to load Extension Controller " + sControllerName + " was not successful - is the Controller correctly defined in its file?");
 					}
 
-					for (var i = 0, l = aControllerNames.length; i < l; i++) {
-						var sControllerName = aControllerNames[i];
+					if ((oCustomControllerDef = mRegistry[sControllerName]) !== undefined) { //variable init, not comparison!
+						/*eslint-disable no-loop-func */
+						for (var memberName in oCustomControllerDef) { // TODO: check whether it is a function? This does not happen until now, so rather not.
 
-						// avoid null values for controllers to be handled here!
-						if (typeof sControllerName === "string") {
-
-							jQuery.sap.log.info("Customizing: Controller '" + sName + "' is now extended by '" + sControllerName + "'");
-
-							// load controller definition if required; first check whether already available...
-							if ( !mRegistry[sControllerName] && !jQuery.sap.getObject(sControllerName) ) {
-								// ...if not, try to load an external controller definition module
-								jQuery.sap.require({modName: sControllerName, type: "controller"});
-							}
-							if ( !mRegistry[sControllerName] && !jQuery.sap.getObject(sControllerName) ) {
-								// still not defined? this means there was not the correct controller in the file
-								jQuery.sap.log.error("Attempt to load Extension Controller " + sControllerName + " was not successful - is the Controller correctly defined in its file?");
-							}
-
-							if ((oCustomControllerDef = mRegistry[sControllerName]) !== undefined) { //variable init, not comparison!
-								/*eslint-disable no-loop-func */
-								for (var memberName in oCustomControllerDef) { // TODO: check whether it is a function? This does not happen until now, so rather not.
-
-									if (mControllerLifecycleMethods[memberName] !== undefined) {
-										// special handling for lifecycle methods
-										var fnOri = oController[memberName];
-										if (fnOri && typeof fnOri === "function") {
-											// use closure to keep correct values inside overridden function
-											(function(fnCust, fnOri, bOriBefore){
-												oController[memberName] = function() {
-													// call original function before or after the custom one
-													// depending on the lifecycle method (see mControllerLifecycleMethods object above)
-													if (bOriBefore) {
-														fnOri.apply(oController, arguments);
-														fnCust.apply(oController, arguments);
-													} else {
-														fnCust.apply(oController, arguments);
-														fnOri.apply(oController, arguments);
-													}
-												};
-											})(oCustomControllerDef[memberName], fnOri, mControllerLifecycleMethods[memberName]);
-										} else {
-											oController[memberName] = oCustomControllerDef[memberName];
-										}
-
-									} else {
-										// other methods just override the original implementation
-										oController[memberName] = oCustomControllerDef[memberName];
-									}
+							if (mControllerLifecycleMethods[memberName] !== undefined) {
+								// special handling for lifecycle methods
+								var fnOri = oController[memberName];
+								if (fnOri && typeof fnOri === "function") {
+									(function(memberName, fnOri){
+										oController[memberName] = function() {
+											if (mControllerLifecycleMethods[memberName]) {
+												fnOri.apply(oController, arguments);
+												oCustomControllerDef[memberName].apply(oController, arguments);
+											} else {
+												oCustomControllerDef[memberName].apply(oController, arguments);
+												fnOri.apply(oController, arguments);
+											}
+										};
+									})(memberName, fnOri);
+								} else {
+									oController[memberName] = oCustomControllerDef[memberName];
 								}
-								/*eslint-enable no-loop-func */
-							}// else {
-								// FIXME: what to do for typed controllers?
-							//}
 
+							} else {
+								// other methods just override the original implementation
+								oController[memberName] = oCustomControllerDef[memberName];
+							}
 						}
+						/*eslint-enable no-loop-func */
 
-					}
+						return oController;
 
+					}// else {
+						// FIXME: what to do for typed controllers?
+					//}
 				} else {
 					jQuery.sap.log.debug("Customizing: no Controller extension found for Controller '" + sName + "'.");
 				}

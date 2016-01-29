@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<control xmlns="http://www.sap.com/sap.ui.library.xsd">
+    <name>ListItemBase</name>
+    <derived/>
+    <author>SAP SE</author>
+    <documentation>ListItemBase contains the core features of all specific list items.</documentation>
+    <baseType>sap.ui.core/Control</baseType>
+    <properties>
+        <property group="Misc" defaultValue="Inactive" type="sap.m/ListType" name="type">
+            <documentation>Type of the list item, defines the behaviour</documentation>
+        </property>
+        <property group="Appearance" defaultValue="true" type="sap.ui.core/boolean" name="visible">
+            <documentation>Invisible list items are not rendered</documentation>
+        </property>
+        <property group="Misc" defaultValue="false" type="sap.ui.core/boolean" name="unread">
+            <documentation>If the unread indicator is set on the list, this boolean defines if it will be shown on this list item. Default is false.</documentation>
+        </property>
+        <property defaultValue="false" type="sap.ui.core/boolean" name="selected">
+            <documentation>This property defines the select state of the list item when using Single/Multi-Selection.
+
+Note: Binding the &quot;selected&quot; property in single selection mode, may cause unwanted results, if you have more than one selected item in your binding</documentation>
+        </property>
+        <property group="Misc" type="sap.ui.core/int" name="counter">
+            <documentation>Property sets a counter bubble with the integer given.</documentation>
+        </property>
+    </properties>
+    <events>
+        <event allowPreventDefault="false" name="tap">
+            <documentation>Event is fired when the user taps on the control.</documentation>
+            <deprecation since="1.20.0">This event is deprecated, use the press event instead.</deprecation>
+        </event>
+        <event allowPreventDefault="false" name="detailTap">
+            <documentation>Event is fired when the user taps on the detail button of the control.</documentation>
+            <deprecation since="1.20.0">This event is deprecated, use the detailPress event instead.</deprecation>
+        </event>
+        <event allowPreventDefault="false" name="press">
+            <documentation>Event is fired when the user clicks on the control.
+
+Note: When the parent mode is SingleSelectMaster or includeItemInSelection is true then this event is not fired but the parent fires a selectionChange event instead.
+Also if there is an interactive element that handles the press event then the list item's press is not fired.
+
+If mode detection is not necessary for the press event then the itemPress event of the parent can be used. 
+{@link sap.m.ListBase#attachItemPress}</documentation>
+        </event>
+        <event allowPreventDefault="false" name="detailPress">
+            <documentation>Event is fired when the user clicks on the detail button of the control.</documentation>
+        </event>
+    </events>
+    <associations>
+        <association since="1.28.0" cardinality="0..n" type="sap.ui.core/Control" name="ariaLabelledBy">
+            <documentation>Association to controls / ids which label this control (see WAI-ARIA attribute aria-labelledby).</documentation>
+        </association>
+    </associations>
+</control>

@@ -133,7 +133,7 @@ sap.ui.define(['jquery.sap.global'],
 			'flex-flow': null,
 			'order': {
 				'<number>': {
-					'flex-order': '<number>'
+					'flex-order': '<integer>'
 				}
 			},
 			'flex-grow': {
@@ -170,9 +170,7 @@ sap.ui.define(['jquery.sap.global'],
 				'space-between': {
 					'flex-pack': 'justify'
 				},
-				'space-around': {
-					'flex-pack': 'justify'
-				}
+				'space-around': null
 			},
 			'align-items': {
 				'flex-start': {
@@ -191,40 +189,8 @@ sap.ui.define(['jquery.sap.global'],
 					'flex-align': 'stretch'
 				}
 			},
-			'align-self': {
-				'flex-start': {
-					'flex-item-align': 'start'
-				},
-				'flex-end':{
-					'flex-item-align': 'end'
-				},
-				'center': {
-					'flex-item-align': 'center'
-				},
-				'baseline': {
-					'flex-item-align': 'baseline'
-				},
-				'stretch': {
-					'flex-item-align': 'stretch'
-				}
-			},
-			'align-content': {
-				'flex-start': {
-					'flex-line-pack': 'start'
-				},
-				'flex-end':{
-					'flex-line-pack': 'end'
-				},
-				'center': {
-					'flex-line-pack': 'center'
-				},
-				'space-between': {
-					'flex-line-pack': 'justify'
-				},
-				'space-around': {
-					'flex-line-pack': 'justify'
-				}
-			}
+			'align-self': null,
+			'align-content': null
 		}
 	};
 

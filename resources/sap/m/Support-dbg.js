@@ -5,51 +5,51 @@
  */
 
 sap.ui.define(['jquery.sap.global'],
-	function (jQuery) {
-		"use strict";
+	function(jQuery) {
+	"use strict";
 
 
-		/**
-		 * <pre>
-		 * <code>sap.m.Support</code> shows the technical information for SAPUI5 Mobile Applications.
-		 * This technical information includes
-		 *    * SAPUI5 Version
-		 *    * User Agent
-		 *    * Configurations (Bootstrap and Computed)
-		 *    * URI parameters
-		 *    * All loaded module names
-		 *
-		 * In order to show the device information, the user must follow the following gestures.
-		 *    1 - Hold two finger for 3 seconds minimum.
-		 *    2 - Tab with a third finger while holding the first two fingers.
-		 *
-		 * NOTE: This class is internal and all its functions must not be used by an application
-		 *
-		 * As <code>sap.m.Support</code> is a static class, a <code>jQuery.sap.require("sap.m.Support");</code>
-		 * statement must be implicitly executed before the class is used.
-		 *
-		 *
-		 * Enable Support:
-		 * --------------------------------------------------
-		 * //import library
-		 * jQuery.sap.require("sap.m.Support");
-		 *
-		 * //By default after require, support is enabled but implicitly we can call
-		 * sap.m.Support.on();
-		 *
-		 * Disable Support:
-		 * --------------------------------------------------
-		 * sap.m.Support.off();
-		 * </pre>
-		 *
-		 * @author SAP SE
-		 * @since 1.11.0
-		 *
-		 * @static
-		 * @protected
-		 * @name sap.m.Support
-		 */
-		var Support = (function ($, document) {
+	/**
+	 * <pre>
+	 * <code>sap.m.Support</code> shows the technical information for SAPUI5 Mobile Applications.
+	 * This technical information includes
+	 * 	* SAPUI5 Version
+	 * 	* User Agent
+	 * 	* Configurations (Bootstrap and Computed)
+	 * 	* URI parameters
+	 * 	* All loaded module names
+	 *
+	 * In order to show the device information, the user must follow the following gestures.
+	 * 	1 - Hold two finger for 3 seconds minimum.
+	 * 	2 - Tab with a third finger while holding the first two fingers.
+	 *
+	 * NOTE: This class is internal and all its functions must not be used by an application
+	 *
+	 * As <code>sap.m.Support</code> is a static class, a <code>jQuery.sap.require("sap.m.Support");</code>
+	 * statement must be implicitly executed before the class is used.
+	 *
+	 *
+	 * Enable Support:
+	 * --------------------------------------------------
+	 * //import library
+	 * jQuery.sap.require("sap.m.Support");
+	 *
+	 * //By default after require, support is enabled but implicitly we can call
+	 * sap.m.Support.on();
+	 *
+	 * Disable Support:
+	 * --------------------------------------------------
+	 * sap.m.Support.off();
+	 * </pre>
+	 *
+	 * @author SAP SE
+	 * @since 1.11.0
+	 *
+	 * @static
+	 * @protected
+	 * @name sap.m.Support
+	 */
+	var Support = (function($, document) {
 
 		var dialog, startTime, isEventRegistered, lastTouchUID;
 		var timeDiff = 0;
@@ -74,12 +74,12 @@ sap.ui.define(['jquery.sap.global'],
 
 		// copied from core
 		function line(buffer, right, border, label, content) {
-			buffer.push("<tr class='sapUiSelectable'><td class='sapUiSupportTechInfoBorder sapUiSelectable'><label class='sapUiSupportLabel sapUiSelectable'>", jQuery.sap.encodeHTML(label), "</label><br>");
+			buffer.push("<tr class='sapUiSelectable'><td class='sapUiSupportTechInfoBorder sapUiSelectable'><label class='sapUiSupportLabel sapUiSelectable'>", jQuery.sap.escapeHTML(label), "</label><br>");
 			var ctnt = content;
 			if ($.isFunction(content)) {
 				ctnt = content(buffer) || "";
 			}
-			buffer.push($.sap.encodeHTML(ctnt));
+			buffer.push($.sap.escapeHTML(ctnt));
 			buffer.push("</td></tr>");
 		}
 
@@ -89,7 +89,7 @@ sap.ui.define(['jquery.sap.global'],
 				buffer.push("<table class='sapMSupportTable' border='0' cellspacing='5' cellpadding='5' width='100%'><tbody>");
 				$.each(content, function(i, v) {
 					var val = "";
-					if (v !== undefined && v !== null) {
+					if (v) {
 						if (typeof (v) == "string" || typeof (v) == "boolean" || ($.isArray(v) && v.length == 1)) {
 							val = v;
 						} else if (($.isArray(v) || $.isPlainObject(v)) && window.JSON) {
@@ -102,24 +102,41 @@ sap.ui.define(['jquery.sap.global'],
 			});
 		}
 
-			// copied from core
-			function getTechnicalContent(oFrameworkInformation) {
-				oData = {
-					version: oFrameworkInformation.commonInformation.version,
-					build: oFrameworkInformation.commonInformation.buildTime,
-					change: oFrameworkInformation.commonInformation.lastChange,
-					useragent: oFrameworkInformation.commonInformation.userAgent,
-					docmode: oFrameworkInformation.commonInformation.documentMode,
-					debug: oFrameworkInformation.commonInformation.debugMode,
-					bootconfig: oFrameworkInformation.configurationBootstrap,
-					config: oFrameworkInformation.configurationComputed,
-					loadedlibs: oFrameworkInformation.loadedLibraries,
-					modules: oFrameworkInformation.loadedModules,
-					uriparams: oFrameworkInformation.URLParameters,
-					appurl: oFrameworkInformation.commonInformation.applicationHREF
-				};
+		// copied from core
+		function getTechnicalContent() {
+			var html,
+				oConfig = sap.ui.getCore().getConfiguration();
+			var oLoadedLibs = {};
+			jQuery.each(sap.ui.getCore().getLoadedLibraries(), function(sName, oLibInfo) {
+				oLoadedLibs[sName] = oLibInfo.version;
+			});
+			oData = {
+					version: sap.ui.version,
+					build: sap.ui.buildinfo.buildtime,
+					change: sap.ui.buildinfo.lastchange,
+					useragent: navigator.userAgent,
+					docmode: document.documentMode ||  "",
+					debug: $.sap.debug(),
+					bootconfig: window["sap-ui-config"] || {},
+					modules: $.sap.getAllDeclaredModules(),
+					loadedlibs: oLoadedLibs,
+					uriparams: $.sap.getUriParameters().mParams,
+					appurl: window.location.href,
+					config: {
+						theme: oConfig.getTheme(),
+						language: oConfig.getLanguage(),
+						formatLocale: oConfig.getFormatLocale(),
+						accessibility: "" + oConfig.getAccessibility(),
+						animation: "" + oConfig.getAnimation(),
+						rtl: "" + oConfig.getRTL(),
+						debug: "" + oConfig.getDebug(),
+						inspect: "" + oConfig.getInspect(),
+						originInfo: "" + oConfig.getOriginInfo(),
+						noDuplicateIds: "" + oConfig.getNoDuplicateIds()
+					}
+			};
 
-			var html = ["<table class='sapUiSelectable' border='0' cellspacing='5' cellpadding='5' width='100%'><tbody class='sapUiSelectable'>"];
+			html = ["<table class='sapUiSelectable' border='0' cellspacing='5' cellpadding='5' width='100%'><tbody class='sapUiSelectable'>"];
 			line(html, true, true, "SAPUI5 Version", function(buffer) {
 				buffer.push(oData.version, " (built at ", oData.build, ", last change ", oData.change, ")");
 			});
@@ -313,16 +330,13 @@ sap.ui.define(['jquery.sap.global'],
 			}
 		}
 
-			function show() {
-				sap.ui.require(['sap/ui/core/support/ToolsAPI'], function (ToolsAPI) {
-					var container = getDialog();
-					container.removeAllAggregation("content");
-					container.addAggregation("content", getTechnicalContent(ToolsAPI.getFrameworkInformation()));
-
-					dialog.open();
-					setupDialog();
-				});
-			}
+		function show() {
+			var container = getDialog();
+			container.removeAllAggregation("content");
+			container.addAggregation("content", getTechnicalContent());
+			dialog.open();
+			setupDialog();
+		}
 
 		return ({
 			/**

@@ -8,7 +8,7 @@
  * Initialization Code and shared classes of library sap.ui.dt.
  */
 sap.ui.define([
-    'jquery.sap.global',
+    'jquery.sap.global', 
 	'sap/ui/core/library'
 ], // library dependency
 function(jQuery) {
@@ -21,14 +21,14 @@ function(jQuery) {
 	 * @namespace
 	 * @name sap.ui.dt
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 * @private
 	 */
-
+	
 	// delegate further initialization of this library to the Core
 	sap.ui.getCore().initLibrary({
 		name : "sap.ui.dt",
-		version: "1.32.10",
+		version: "1.30.8",
 		dependencies : ["sap.ui.core"],
 		types: [
 			"sap.ui.dt.SelectionMode"
@@ -46,19 +46,19 @@ function(jQuery) {
 	 * @ui5-metamodel This enumeration also will be described in the UI5 (legacy) designtime metamodel
 	 */
 	sap.ui.dt.SelectionMode = {
-
+	
 		/**
 		 * Select multiple overlays at a time.
 		 * @public
 		 */
 		Multi : "Multi",
-
+	
 		/**
 		 * Select one overlay at a time.
 		 * @public
 		 */
 		Single : "Single"
-
+	
 	};
 
 	return sap.ui.dt;

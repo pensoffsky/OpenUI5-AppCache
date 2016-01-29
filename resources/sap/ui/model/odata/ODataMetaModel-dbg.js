@@ -41,6 +41,9 @@ sap.ui.define([
 			}
 		});
 
+	/**
+	 * @inheritdoc
+	 */
 	ODataMetaListBinding.prototype.applyFilter = function () {
 		var that = this;
 
@@ -166,13 +169,15 @@ sap.ui.define([
 	 * {@link #loaded loaded} has been resolved!
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 * @alias sap.ui.model.odata.ODataMetaModel
 	 * @extends sap.ui.model.MetaModel
 	 * @public
 	 * @since 1.27.0
 	 */
-	var ODataMetaModel = MetaModel.extend("sap.ui.model.odata.ODataMetaModel", {
+	var ODataMetaModel = MetaModel.extend("sap.ui.model.odata.ODataMetaModel",
+			/** @lends sap.ui.model.odata.ODataMetaModel.prototype */ {
+
 			constructor : function (oMetadata, oAnnotations, oODataModelInterface) {
 				var that = this;
 
@@ -194,10 +199,7 @@ sap.ui.define([
 				this.oLoadedPromise
 					= oODataModelInterface.annotationsLoadedPromise
 					? oODataModelInterface.annotationsLoadedPromise.then(load)
-					: new Promise(function (fnResolve, fnReject) {
-							load();
-							fnResolve();
-						}); // call load() synchronously!
+					: Promise.resolve(load()); // call load() synchronously!
 				this.oMetadata = oMetadata;
 				this.oODataModelInterface = oODataModelInterface;
 				this.mQueryCache = {};
@@ -205,6 +207,10 @@ sap.ui.define([
 				this.mQName2PendingRequest = {};
 				this.oResolver = undefined;
 				this.mSupportedBindingModes = {"OneTime" : true};
+			},
+
+			metadata : {
+				publicMethods : ["loaded"]
 			}
 		});
 
@@ -284,7 +290,8 @@ sap.ui.define([
 				if (jQuery.sap.log.isLoggable(jQuery.sap.log.Level.WARNING)) {
 					jQuery.sap.log.warning("Invalid part: " + vPart,
 						"path: " + sPath + ", context: "
-							+ (oContext instanceof Context ? oContext.getPath() : oContext),
+						+ (oContext instanceof Context ?
+							oContext.getPath() : oContext),
 						"sap.ui.model.odata.ODataMetaModel");
 				}
 				break;
@@ -308,17 +315,12 @@ sap.ui.define([
 					// Set the resolver on the internal JSON model, so that resolving does not use
 					// this._getObject itself.
 					this.oResolver = this.oResolver || new Resolver({models: this.oModel});
+					this.oResolver.bindProperty("any", oBinding);
 					for (i = 0; i < oNode.length; i++) {
 						this.oResolver.bindObject(sProcessedPath + i);
-						this.oResolver.bindProperty("any", oBinding);
-						try {
-							if (this.oResolver.getAny()) {
-								this.mQueryCache[sCacheKey] = vPart = i;
-								break;
-							}
-						} finally {
-							this.oResolver.unbindProperty("any");
-							this.oResolver.unbindObject();
+						if (this.oResolver.getAny()) {
+							this.mQueryCache[sCacheKey] = vPart = i;
+							break;
 						}
 					}
 				}
@@ -420,23 +422,38 @@ sap.ui.define([
 			);
 	};
 
+	/**
+	 * @inheritdoc
+	 */
 	ODataMetaModel.prototype.bindContext = function (sPath, oContext, mParameters) {
 		return new ClientContextBinding(this, sPath, oContext, mParameters);
 	};
 
+	/**
+	 * @inheritdoc
+	 */
 	ODataMetaModel.prototype.bindList = function (sPath, oContext, aSorters, aFilters,
 		mParameters) {
 		return new ODataMetaListBinding(this, sPath, oContext, aSorters, aFilters, mParameters);
 	};
 
+	/**
+	 * @inheritdoc
+	 */
 	ODataMetaModel.prototype.bindProperty = function (sPath, oContext, mParameters) {
 		return new JSONPropertyBinding(this, sPath, oContext, mParameters);
 	};
 
+	/**
+	 * @inheritdoc
+	 */
 	ODataMetaModel.prototype.bindTree = function (sPath, oContext, aFilters, mParameters) {
 		return new JSONTreeBinding(this, sPath, oContext, aFilters, mParameters);
 	};
 
+	/**
+	 * @inheritdoc
+	 */
 	ODataMetaModel.prototype.destroy = function () {
 		MetaModel.prototype.destroy.apply(this, arguments);
 		return this.oModel.destroy.apply(this.oModel, arguments);
@@ -843,10 +860,16 @@ sap.ui.define([
 		return oPromise;
 	};
 
+	/**
+	 * @inheritdoc
+	 */
 	ODataMetaModel.prototype.getProperty = function () {
 		return this._getObject.apply(this, arguments);
 	};
 
+	/**
+	 * @inheritdoc
+	 */
 	ODataMetaModel.prototype.isList = function () {
 		return this.oModel.isList.apply(this.oModel, arguments);
 	};

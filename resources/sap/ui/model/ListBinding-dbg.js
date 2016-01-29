@@ -26,7 +26,6 @@ sap.ui.define(['jquery.sap.global', './Binding', './Filter', './Sorter'],
 	 *
 	 * @public
 	 * @alias sap.ui.model.ListBinding
-	 * @extends sap.ui.model.Binding
 	 */
 	var ListBinding = Binding.extend("sap.ui.model.ListBinding", /** @lends sap.ui.model.ListBinding.prototype */ {
 
@@ -79,6 +78,33 @@ sap.ui.define(['jquery.sap.global', './Binding', './Filter', './Sorter'],
 	 */
 
 	/**
+	 * Returns an array of currently used binding contexts of the bound control
+	 *
+	 * This method does not trigger any data requests from the backend or delta calculation, but just returns the context
+	 * array as last requested by the control. This can be used by the application to get access to the data currently
+	 * displayed by a list control.
+	 *
+	 * @function
+	 * @name sap.ui.model.ListBinding.prototype.getCurrentContexts
+	 * @return {sap.ui.model.Context[]} the array of contexts for each row of the bound list
+	 * @since 1.28
+	 * @public
+	 */
+	ListBinding.prototype.getCurrentContexts = function() {
+		return this.getContexts();
+	};
+
+	/**
+	 * Returns the current value of the bound target
+	 *
+	 * @function
+	 * @name sap.ui.model.ListBinding.prototype.getContexts
+	 * @return {sap.ui.model.Context[]} the array of contexts for each row of the bound list
+	 *
+	 * @public
+	 */
+
+	/**
 	 * Filters the list according to the filter definitions
 	 *
 	 * @function
@@ -99,21 +125,6 @@ sap.ui.define(['jquery.sap.global', './Binding', './Filter', './Sorter'],
 	 * @return {sap.ui.model.ListBinding} returns <code>this</code> to facilitate method chaining
 	 * @public
 	 */
-
-	/**
-	 * Returns an array of currently used binding contexts of the bound control
-	 *
-	 * This method does not trigger any data requests from the backend or delta calculation, but just returns the context
-	 * array as last requested by the control. This can be used by the application to get access to the data currently
-	 * displayed by a list control.
-	 *
-	 * @return {sap.ui.model.Context[]} the array of contexts for each row of the bound list
-	 * @since 1.28
-	 * @public
-	 */
-	ListBinding.prototype.getCurrentContexts = function() {
-		return this.getContexts();
-	};
 
 	/**
 	 * Returns the number of entries in the list. This might be an estimated or preliminary length, in case
@@ -230,7 +241,7 @@ sap.ui.define(['jquery.sap.global', './Binding', './Filter', './Sorter'],
 
 	/**
 	 * Gets the group for the given context.
-	 * Must only be called if isGrouped() returns that grouping is enabled for this binding. The grouping will be
+	 * Must only be called if isGrouped() returns that grouping is enabled for this binding. The grouping will be 
 	 * performed using the first sorter (in case multiple sorters are defined).
 	 * @param {sap.ui.model.Context} oContext the binding context
 	 * @public

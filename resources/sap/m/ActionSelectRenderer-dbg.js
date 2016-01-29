@@ -14,7 +14,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Renderer', './SelectRenderer'],
 		 *
 		 * @type {string}
 		 */
-		ActionSelectRenderer.ACTION_SELECT_CSS_CLASS = "sapMActionSelect";
+		ActionSelectRenderer.CSS_CLASS = "sapMActionSelect";
 
 		/**
 		 * Apply a CSS class to the HTML root element of the ActionSelect control.
@@ -25,7 +25,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Renderer', './SelectRenderer'],
 		 * @protected
 		 */
 		ActionSelectRenderer.addStyleClass = function(oRm, oActionSelect) {
-			oRm.addClass(ActionSelectRenderer.ACTION_SELECT_CSS_CLASS);
+			oRm.addClass(ActionSelectRenderer.CSS_CLASS);
 		};
 
 		return ActionSelectRenderer;

@@ -5,26 +5,26 @@
  */
 
 sap.ui.define([
-		"jquery.sap.global", "./library", "sap/ui/core/Control", "sap/ui/core/delegate/ScrollEnablement",
-		"./WizardStep", "./WizardProgressNavigator", "./Button"],
-	function (jQuery, library, Control, ScrollEnablement, WizardStep, WizardProgressNavigator, Button) {
+		"jquery.sap.global", "./library", "sap/ui/core/Control",
+		"./Page", "./WizardStep", "./WizardProgressNavigator",
+		"./Toolbar", "./ToolbarSpacer", "./Button"],
+	function (jQuery, library, Control, Page, WizardStep, WizardProgressNavigator, Toolbar, ToolbarSpacer, Button) {
 
 		"use strict";
 
 		/**
 		 * Constructor for a new Wizard.
 		 *
-		 * @param {string} [sId] ID for the new control, generated automatically if no ID is given
-		 * @param {object} [mSettings] Initial settings for the new control
+		 * @param {string} [sId] id for the new control, generated automatically if no id is given
+		 * @param {object} [mSettings] initial settings for the new control
 		 *
 		 * @class
-		 * The Wizard control enables users to accomplish a single goal
-		 * which consists of multiple dependable sub-tasks.
-		 * Each sub-task is provided in the form of a WizardStep.
+		 * The Wizard control enables users to accomplish a single goal which consists of multiple
+		 * dependable sub-tasks.
 		 * @extends sap.ui.core.Control
 		 *
 		 * @author SAP SE
-		 * @version 1.32.10
+		 * @version 1.30.8
 		 *
 		 * @constructor
 		 * @public
@@ -32,71 +32,54 @@ sap.ui.define([
 		 * @alias sap.m.Wizard
 		 * @ui5-metamodel This control/element also will be described in the UI5 (legacy) designtime metamodel
 		 */
-		var Wizard = Control.extend("sap.m.Wizard", /** @lends sap.m.Wizard.prototype */ {
+		var Wizard = Control.extend("sap.m.Wizard", /** @lends sap.m.Wizard.prototype */ {
 			metadata: {
 				library: "sap.m",
 				properties: {
 					/**
-					 * Determines the width of the Wizard.
+					 * The Wizard width.
 					 */
 					width : {type : "sap.ui.core.CSSSize", group : "Appearance", defaultValue : "auto"},
 					/**
-					 * Determines the height of the Wizard.
+					 * The Wizard height.
 					 */
 					height : {type : "sap.ui.core.CSSSize", group : "Appearance", defaultValue : "100%"},
 					/**
 					 * Controls the visibility of the next button. The developers can choose to control the flow of the
-					 * steps either through the API (with <code>nextStep</code> and <code>previousStep</code> methods) or let the user click
-					 * the next button, and control it with <code>validateStep</code> or <code>invalidateStep</code> methods.
+					 * steps either through the API (with nextStep and previousStep methods) or let the user click
+					 * the next button, and control it with validateStep() or invalidateStep()
 					 */
-					showNextButton : {type : "boolean", group : "Behavior", defaultValue : true},
-					/**
-					 * Changes the text of the finish button for the last step.
-					 * This property can be used only if <code>showNextButton</code> is set to true.
-					 * By default the text of the button is "Review".
-					 */
-					finishButtonText: {type: "string", group: "Appearance", defaultValue: "Review"},
-					/**
-					 * Enables the branching functionality of the Wizard.
-					 * Branching gives the developer the ability to define multiple routes a user
-					 * is able to take based on the input in the current step.
-					 * It is up to the developer to programatically check for what is the input in the
-					 * current step and set a concrete next step amongs the available subsequent steps.
-					 * Note: If this property is set to false, <code>next</code> and <code>subSequentSteps</code>
-					 * associations of the WizardStep control are ignored.
-					 */
-					enableBranching : {type: "boolean", group: "Behavior", defaultValue : false}
+					showNextButton : {type : "boolean", group : "Behavior", defaultValue : true}
 				},
 				defaultAggregation: "steps",
 				aggregations: {
 					/**
-					 * The wizard steps to be included in the content of the control.
+					 * The wizard steps to be included in the content of the control
 					 */
 					steps: {type: "sap.m.WizardStep", multiple: true, singularName: "step"},
 					/**
-					 * The progress navigator for the wizard.
+					 * The internal container for the wizard
 					 */
-					_progressNavigator: {type: "sap.ui.core.Control", multiple: false, visibility: "hidden"},
+					_page: {type: "sap.m.Page", multiple: false, visibility: "hidden"},
 					/**
-					 * The next button for the wizard.
+					 * The next button for the wizard
 					 */
 					_nextButton: {type: "sap.m.Button", multiple: false, visibility: "hidden"}
 				},
 				events: {
 					/**
-					 * The StepActivated event is fired every time a new step is activated.
+					 * The StepActivated event is fired every time a new step is being activated
 					 */
 					stepActivate: {
 						parameters: {
 							/**
-							 * The index of the activated step as a parameter. One-based.
+							 * The index of the activated step as a parameter
 							 */
 							index: {type: "int"}
 						}
 					},
 					/**
-					 * The complete event is fired when the user clicks the finish button of the Wizard.
-					 * The finish button is only available on the last step of the Wizard.
+					 * The complete event is fired when the user clicks the next button on the last step
 					 */
 					complete: {
 						parameters: {}
@@ -109,19 +92,17 @@ sap.ui.define([
 			MINIMUM_STEPS: 3,
 			MAXIMUM_STEPS: 8,
 			ANIMATION_TIME: 300,
-			LOCK_TIME: 450,
-			SCROLL_OFFSET: 65
+			LOCK_TIME: 450
 		};
 
 		/************************************** LIFE CYCLE METHODS ***************************************/
 
 		Wizard.prototype.init = function () {
 			this._stepCount = 0;
-			this._stepPath = [];
 			this._scrollLocked = false;
-			this._scroller = this._initScrollEnablement();
-			this._resourceBundle = sap.ui.getCore().getLibraryResourceBundle("sap.m");
-			this._initProgressNavigator();
+			this._autoStepLock = false;
+			this._oResourceBundle = sap.ui.getCore().getLibraryResourceBundle("sap.m");
+			this._initPage();
 		};
 
 		Wizard.prototype.onBeforeRendering = function () {
@@ -129,39 +110,32 @@ sap.ui.define([
 				jQuery.sap.log.error("The Wizard is supposed to handle from 3 to 8 steps.");
 			}
 
-			this._initNextButton();
 			this._saveInitialValidatedState();
-
-			var step = this._getStartingStep();
-			if (this._stepPath.indexOf(step) < 0) {
-				this._activateStep(step);
-				this._updateProgressNavigator();
-				this._setNextButtonPosition();
-			}
+			this._initNextButton();
 		};
 
 		Wizard.prototype.onAfterRendering = function () {
-			this._attachScrollHandler();
+			var step = this._getWizardStep(0);
+			if (step) {
+				step._activate();
+			}
 		};
 
 		/**
 		 * Destroy all content on wizard destroy
 		 */
 		Wizard.prototype.exit = function () {
-			this._scroller.destroy();
-			this._scroller = null;
-			this._stepPath = null;
 			this._stepCount = null;
 			this._scrollLocked = null;
-			this._resourceBundle = null;
+			this._oResourceBundle = null;
 		};
 
 		/**************************************** PUBLIC METHODS ***************************************/
 
 		/**
-		 * Validates the given step.
-		 * @param {sap.m.WizardStep} step The step to be validated.
-		 * @returns {sap.m.Wizard} Pointer to the control instance for chaining.
+		 * Validates the step
+		 * @param {sap.m.WizardStep} step - The step to be validated.
+		 * @returns {sap.m.Wizard} Pointer to the control instance for chaining
 		 * @public
 		 */
 		Wizard.prototype.validateStep = function (step) {
@@ -176,9 +150,9 @@ sap.ui.define([
 		};
 
 		/**
-		 * Invalidates the given step.
-		 * @param {sap.m.WizardStep} step The step to be invalidated.
-		 * @returns {sap.m.Wizard} Pointer to the control instance for chaining.
+		 * Invalidates the step
+		 * @param {sap.m.WizardStep} step - The step to be invalidated.
+		 * @returns {sap.m.Wizard} Pointer to the control instance for chaining
 		 * @public
 		 */
 		Wizard.prototype.invalidateStep = function (step) {
@@ -193,36 +167,34 @@ sap.ui.define([
 		};
 
 		/**
-		 * Validates the current step, and moves one step further.
-		 * @returns {sap.m.Wizard} Pointer to the control instance for chaining.
+		 * Validates the current step, and moves 1 step further
+		 * @returns {sap.m.Wizard} Pointer to the control instance for chaining
 		 * @public
 		 */
 		Wizard.prototype.nextStep = function () {
-			var currentStepIndex = this._getProgressNavigator().getProgress() - 1;
-			var currentStep = this._stepPath[currentStepIndex];
-			this.validateStep(currentStep);
+			this.validateStep(this.getSteps()[this._getProgressNavigator().getProgress() - 1]);
 			this._handleNextButtonPress();
 			return this;
 		};
 
 		/**
-		 * Discards the current step and goes one step back.
-		 * @returns {sap.m.Wizard} Pointer to the control instance for chaining.
+		 * Discards the current step and rolls 1 step back
+		 * @returns {sap.m.Wizard} Pointer to the control instance for chaining
 		 * @public
 		 */
 		Wizard.prototype.previousStep = function () {
-			var previousStepIndex  = this._getProgressNavigator().getProgress() - 2;
+			var currentStepIndex  = this._getProgressNavigator().getProgress() - 2;
 
-			if (previousStepIndex >= 0) {
-				this.discardProgress(this._stepPath[previousStepIndex]);
+			if (currentStepIndex > 0) {
+				this.discardProgress(this.getSteps()[currentStepIndex]);
 			}
 
 			return this;
 		};
 
 		/**
-		 * Returns the number of the last activated step in the Wizard.
-		 * @returns {number} The last activated step.
+		 * Returns the number of the last activated step in the Wizard
+		 * @returns {number} The last activated step
 		 * @public
 		 */
 		Wizard.prototype.getProgress = function () {
@@ -230,25 +202,24 @@ sap.ui.define([
 		};
 
 		/**
-		 * Returns the last activated step in the Wizard.
-		 * @returns {sap.m.WizardStep} Pointer to the control instance for chaining.
+		 * Returns the last activated step in the Wizard
+		 * @returns {sap.m.WizardStep} Pointer to the control instance for chaining
 		 * @public
 		 */
 		Wizard.prototype.getProgressStep = function () {
-			return this._stepPath[this.getProgress() - 1];
+			return this._getWizardStep(this.getProgress() - 1);
 		};
 
 		/**
-		 * Goes to the given step.
-		 * @param {sap.m.WizardStep} step The step to go to.
-		 * @param {boolean} focusFirstStepElement Defines whether the focus should be changed to the first element.
-		 * @returns {sap.m.Wizard} Pointer to the control instance for chaining.
+		 * Goes to the given step
+		 * @param {sap.m.WizardStep} step - The step to go to.
+		 * @param {boolean} focusFirstStepElement - Defines whether the focus should be changed to the first element
+		 * @returns {sap.m.Wizard} Pointer to the control instance for chaining
 		 * @public
 		 */
 		Wizard.prototype.goToStep = function (step, focusFirstStepElement) {
 			this._scrollLocked = true;
-			this._scroller.scrollTo(0, this._getStepScrollOffset(step), Wizard.CONSTANTS.ANIMATION_TIME);
-
+			this._getPage().scrollToElement(step, Wizard.CONSTANTS.ANIMATION_TIME);
 			jQuery.sap.delayedCall(Wizard.CONSTANTS.LOCK_TIME, this, function () {
 				var progressNavigator = this._getProgressNavigator();
 
@@ -257,27 +228,27 @@ sap.ui.define([
 					return;
 				}
 
-				progressNavigator._updateCurrentStep(this._stepPath.indexOf(step) + 1);
+				progressNavigator._updateCurrentStep(this._getStepIndex(step) + 1);
 				this._scrollLocked = false;
 				if (focusFirstStepElement || focusFirstStepElement === undefined) {
 					this._focusFirstStepElement(step);
 				}
 			});
-
 			return this;
 		};
 
 		/**
 		 * Discards all progress done from the given step(incl.) to the end of the wizard.
 		 * The verified state of the steps is returned to the initial provided.
-		 * @param {sap.m.WizardStep} step The step after which the progress is discarded.
-		 * @returns {sap.m.Wizard} Pointer to the control instance for chaining.
+		 * @param {step} The step after which the progress is discarded.
+		 * @returns {sap.m.Wizard} Pointer to the control instance for chaining
 		 * @public
 		 */
 		Wizard.prototype.discardProgress = function (step) {
 			var progressAchieved = this.getProgress(),
-				steps = this._stepPath,
-				index = this._stepPath.indexOf(step) + 1;
+				stepCount = this._getStepCount(),
+				steps = this.getSteps(),
+				index = this._getStepIndex(step) + 1;
 
 			if (index > progressAchieved || index <= 0) {
 				jQuery.sap.log.warning("The given step is either not yet reached, or is not present in the wizard control.");
@@ -285,25 +256,18 @@ sap.ui.define([
 			}
 
 			this._getProgressNavigator().discardProgress(index);
-
 			this._updateNextButtonState();
 			this._setNextButtonPosition();
 			this._restoreInitialValidatedState(index);
-			this._stepPath[index - 1]._markAsLast();
+			this._getWizardStep(index - 1)._markAsLast();
 
-			for (var i = index; i < steps.length; i++) {
-				steps[i]._deactivate();
-				if (steps[i].getSubsequentSteps().length > 1) {
-					steps[i].setNextStep(null);
-				}
+			for (var i = index; i < stepCount; i++) {
+				steps[i]._deactivate(this._getAutoStepLock());
 			}
 
-			if (step.getSubsequentSteps().length > 1) {
-				step.setNextStep(null);
+			if (this._getAutoStepLock()) {
+				step._unlockContent();
 			}
-
-			steps.splice(index);
-			this._updateProgressNavigator();
 
 			return this;
 		};
@@ -311,9 +275,9 @@ sap.ui.define([
 		/**************************************** PROXY METHODS ***************************************/
 
 		/**
-		 * Sets the visiblity of the next button.
-		 * @param {boolean} value True to show the button or false to hide it.
-		 * @returns {sap.m.Wizard} Reference to the control instance for chaining.
+		 * Sets the visiblity of the next button
+		 * @param {boolean} value - The new value to be set
+		 * @returns {sap.m.Wizard} Pointer to the control instance for chaining
 		 * @public
 		 */
 		Wizard.prototype.setShowNextButton = function (value) {
@@ -325,33 +289,19 @@ sap.ui.define([
 		};
 
 		/**
-		 * Sets the text for the finish button. By default it is "Review".
-		 * @param {string} value The text of the finish button.
-		 * @returns {sap.m.Wizard} Reference to the control instance for chaining.
+		 * Returns all the steps in the wizard
+		 * @returns {Array} Array of sap.m.wizardStep
 		 * @public
 		 */
-		Wizard.prototype.setFinishButtonText = function (value) {
-			this.setProperty("finishButtonText", value, true);
-			this._updateNextButtonState();
-			return this;
+		Wizard.prototype.getSteps = function () {
+			return this._getPage().getContent().filter(function (control) {
+				return control instanceof WizardStep;
+			});
 		};
 
 		/**
-		 * Returns the finish button text which will be rendered.
-		 * @returns {string} The text which will be rendered in the finish button.
-		 * @public
-		 */
-		Wizard.prototype.getFinishButtonText = function ()  {
-			if (this.getProperty("finishButtonText") === "Review") {
-				return this._resourceBundle.getText("WIZARD_FINISH");
-			} else {
-				return this.getProperty("finishButtonText");
-			}
-		};
-
-		/**
-		 * Adds a new step to the Wizard.
-		 * @param {sap.m.WizardStep} wizardStep New WizardStep to add to the Wizard
+		 * Adds a new step to the Wizard
+		 * @param {sap.m.WizardStep} wizardStep - New WizardStep to add to the Wizard
 		 * @returns {sap.m.Wizard} Pointer to the control instance for chaining
 		 * @public
 		 */
@@ -362,12 +312,13 @@ sap.ui.define([
 			}
 
 			this._incrementStepCount();
-			return this.addAggregation("steps", wizardStep);
+			this._getPage().addContent(wizardStep);
+
+			return this;
 		};
 
 		/**
-		 * Dynamic step insertion is not yet supported.
-		 * @experimental
+		 * Dynamic step insertion is not yet supported
 		 * @public
 		 */
 		Wizard.prototype.insertStep = function (wizardStep, index) {
@@ -375,8 +326,7 @@ sap.ui.define([
 		};
 
 		/**
-		 * Dynamic step removal is not yet supported.
-		 * @experimental
+		 * Dynamic step removal is not yet supported
 		 * @public
 		 */
 		Wizard.prototype.removeStep = function (wizardStep) {
@@ -384,42 +334,73 @@ sap.ui.define([
 		};
 
 		/**
-		 * Removes all steps from the Wizard.
-		 * @returns {sap.m.Control} Pointer to the Steps that were removed.
+		 * Removes all steps from the Wizard
+		 * @returns {sap.m.Control} Pointer to the Steps that were removed
 		 * @public
 		 */
 		Wizard.prototype.removeAllSteps = function () {
 			this._resetStepCount();
-			return this.removeAllAggregation("steps");
+			return this._getPage().removeAllContent();
 		};
 
 		/**
-		 * Destroys all aggregated steps in the Wizard.
-		 * @returns {sap.m.Wizard} Pointer to the control instance for chaining.
+		 * Destroys all steps in the Wizard
+		 * @returns {sap.m.Wizard} Pointer to the control instance for chaining
 		 * @public
 		 */
 		Wizard.prototype.destroySteps = function () {
 			this._resetStepCount();
 			this._getProgressNavigator().setStepCount(this._getStepCount());
-			return this.destroyAggregations("steps");
+			this._getPage().destroyContent();
+
+			return this;
 		};
 
 		/**************************************** PRIVATE METHODS ***************************************/
 
-		Wizard.prototype._initScrollEnablement = function () {
-			return new ScrollEnablement(this, null, {
-				scrollContainerId: this.getId() + "-step-container",
-				horizontal: false,
-				vertical: true
+		/**
+		 * Creates the internal page aggregation of the Wizard
+		 * @private
+		 */
+		Wizard.prototype._initPage = function () {
+			var page = new Page({
+				showHeader: false,
+				subHeader: this._createSubHeader()
 			});
+
+			page.addEventDelegate({
+				onAfterRendering: this._attachScrollHandler.bind(this)
+			});
+
+			this.setAggregation("_page", page);
 		};
 
 		/**
-		 * Creates the internal WizardProgressNavigator aggregation of the Wizard
-		 * @returns {void}
+		 * Auto step locking is an experimental feature of the Wizard control
+		 * it is supposed to lock the step after its completion (press of next button)
+		 * It still hasn't been approved by the designers
+		 * @param {boolean} enabled - enables the locking mechanism
 		 * @private
 		 */
-		Wizard.prototype._initProgressNavigator = function () {
+		Wizard.prototype._setAutoStepLock = function (enabled)  {
+			this._autoStepLock = enabled;
+		};
+
+		/**
+		 * Returns the status of the step locking mechanism
+		 * @returns {boolean}
+		 * @private
+		 */
+		Wizard.prototype._getAutoStepLock = function () {
+			return this._autoStepLock;
+		};
+
+		/**
+		 * Creates the page subheader, and places a WizardProgressNavigator inside it
+		 * @returns {Toolbar}
+		 * @private
+		 */
+		Wizard.prototype._createSubHeader = function () {
 			var that = this,
 				progressNavigator = new WizardProgressNavigator({
 					stepChanged: this._handleStepChanged.bind(this),
@@ -427,121 +408,16 @@ sap.ui.define([
 				});
 
 			progressNavigator._setOnEnter(function (event, stepIndex) {
-				var step = that._stepPath[stepIndex];
-				jQuery.sap.delayedCall(Wizard.CONSTANTS.ANIMATION_TIME, that, function () {
+				var step = that._getWizardStep(stepIndex);
+				jQuery.sap.delayedCall(Wizard.CONSTANTS.ANIMATION_TIME, this, function () {
 					this._focusFirstStepElement(step);
 				});
 			});
 
-			this.setAggregation("_progressNavigator", progressNavigator);
-		};
-
-		/**
-		 * Initializes the next button
-		 * @private
-		 */
-		Wizard.prototype._initNextButton = function () {
-			if (this._getNextButton()) {
-				return;
-			}
-
-			this.setAggregation("_nextButton", this._createNextButton());
-			this._setNextButtonPosition();
-		};
-
-		/**
-		 * Creates the next button, and adds onAfterRendering delegate
-		 * @returns {Button}
-		 * @private
-		 */
-		Wizard.prototype._createNextButton = function () {
-			var firstStep = this._getStartingStep(),
-				isStepValidated = (firstStep) ? firstStep.getValidated() : true,
-				nextButton = new Button({
-					text: this._resourceBundle.getText("WIZARD_STEP") + " " + 2,
-					type: sap.m.ButtonType.Emphasized,
-					enabled: isStepValidated,
-					press: this._handleNextButtonPress.bind(this),
-					visible: this.getShowNextButton()
-				});
-
-			nextButton.addStyleClass("sapMWizardNextButton");
-			nextButton.addEventDelegate({
-				onAfterRendering: this._toggleNextButtonVisibility
-			}, this);
-			this._nextButton = nextButton;
-
-			return nextButton;
-		};
-
-		/**
-		 * Handler for the next button press, and updates the button state
-		 * @private
-		 */
-		Wizard.prototype._handleNextButtonPress = function () {
-			var isStepFinal,
-				progressNavigator = this._getProgressNavigator(),
-				lastStepInPath = this._stepPath[this._stepPath.length - 1],
-				progressAchieved = progressNavigator.getProgress(),
-				stepCount = progressNavigator.getStepCount();
-
-			if (this.getEnableBranching()) {
-				isStepFinal = lastStepInPath._isLeaf();
-			} else {
-				isStepFinal = progressAchieved === stepCount;
-			}
-
-			if (isStepFinal) {
-				this.fireComplete();
-			} else {
-				if (progressAchieved === stepCount) {
-					progressNavigator.setStepCount(stepCount + 1);
-					progressNavigator.rerender();
-				}
-				progressNavigator.incrementProgress();
-			}
-
-			this._updateNextButtonState();
-		};
-
-		/**
-		 * Toggles the next button visibility
-		 * @private
-		 */
-		Wizard.prototype._toggleNextButtonVisibility = function () {
-			jQuery.sap.delayedCall(0, this, function () {
-				if (this._getNextButton().getEnabled()) {
-					this._getNextButton().addStyleClass("sapMWizardNextButtonVisible");
-				} else {
-					this._getNextButton().removeStyleClass("sapMWizardNextButtonVisible");
-				}
+			return new Toolbar({
+				height: "4rem",
+				content: progressNavigator
 			});
-		};
-
-		/**
-		 * Gets the distance between the step heading, and the top of the container
-		 * @param {sap.m.WizardStep} step - The step whose distance is going to be calculcated
-		 * @returns {number}
-		 * @private
-		 */
-		Wizard.prototype._getStepScrollOffset = function (step) {
-			var stepTop = step.$().position().top,
-				scrollerTop = this._scroller.getScrollTop(),
-				progressStep = this._stepPath[this.getProgress() - 1],
-				additionalOffset = 0;
-
-			/**
-			 * Additional Offset is added in case of new step activation.
-			 * Because the rendering from step.addContent(button) happens with delay,
-			 * we can't properly detect the offset of the step, that's why
-			 * additionalOffset is added like this.
-			 */
-			if (!sap.ui.Device.system.phone &&
-				!jQuery.sap.containsOrEquals(progressStep.getDomRef(), this._nextButton.getDomRef())) {
-				additionalOffset = this._nextButton.$().outerHeight();
-			}
-
-			return (scrollerTop + stepTop) - (Wizard.CONSTANTS.SCROLL_OFFSET + additionalOffset);
 		};
 
 		/**
@@ -566,10 +442,9 @@ sap.ui.define([
 				return;
 			}
 
-			var previousStepIndex = event.getParameter("current") - 2;
-			var previousStep = this._stepPath[previousStepIndex];
-			var subsequentStep = this._getNextStep(previousStep, previousStepIndex);
-			this.goToStep(subsequentStep, true);
+			var currentStepIndex = event.getParameter("current");
+			var currentStep = this._getWizardStep(currentStepIndex - 1);
+			this.goToStep(currentStep, false);
 		};
 
 		/**
@@ -579,17 +454,20 @@ sap.ui.define([
 		 */
 		Wizard.prototype._handleStepActivated = function (event) {
 			var index = event.getParameter("index"),
-				previousStepIndex = index - 2,
-				previousStep = this._stepPath[previousStepIndex];
+				steps = this.getSteps();
 
-			previousStep._complete();
-
-			var nextStep = this._getNextStep(previousStep, previousStepIndex);
-
-			this._activateStep(nextStep);
-			this._updateProgressNavigator();
+			steps[index - 2]._complete(this._getAutoStepLock());
+			steps[index - 1]._activate();
 			this.fireStepActivate({index: index});
 			this._setNextButtonPosition();
+		};
+
+		/**
+		 * @returns The internal Page aggregation
+		 * @private
+		 */
+		Wizard.prototype._getPage = function () {
+			return this.getAggregation("_page");
 		};
 
 		/**
@@ -598,11 +476,8 @@ sap.ui.define([
 		 * @private
 		 */
 		Wizard.prototype._isMaxStepCountExceeded = function () {
-			if (this.getEnableBranching()) {
-				return false;
-			}
-
 			var stepCount = this._getStepCount();
+
 			return stepCount >= Wizard.CONSTANTS.MAXIMUM_STEPS;
 		};
 
@@ -659,21 +534,29 @@ sap.ui.define([
 		 * @private
 		 */
 		Wizard.prototype._getProgressNavigator = function () {
-			return this.getAggregation("_progressNavigator");
+			var page = this._getPage();
+			if (!page) {
+				return null;
+			}
+
+			return page.getSubHeader().getContent()[0];
 		};
 
 		/**
 		 * Saves the initial valdiated state of the steps
 		 * @private
 		 */
-		Wizard.prototype._saveInitialValidatedState = function () {
+		Wizard.prototype._saveInitialValidatedState = function ()  {
+			var steps = this.getSteps();
+
 			if (this._initialValidatedState) {
 				return;
 			}
 
-			this._initialValidatedState = this.getSteps().map(function (step) {
-				return step.getValidated();
-			});
+			this._initialValidatedState = [];
+			for (var i = 0; i < steps.length; i++) {
+				this._initialValidatedState[i] = steps[i].getValidated();
+			}
 		};
 
 		/**
@@ -682,52 +565,81 @@ sap.ui.define([
 		 * @private
 		 */
 		Wizard.prototype._restoreInitialValidatedState = function (index) {
-			var steps = this._stepPath,
-				aggregationSteps = this.getSteps();
-
+			var steps = this.getSteps();
 			for (var i = index; i < steps.length; i++) {
-				var step = steps[i];
-				var stepIndexInAggregation = aggregationSteps.indexOf(step);
-				var initialState = this._initialValidatedState[stepIndexInAggregation];
-
-				step.setValidated(initialState);
+				var initialState = this._initialValidatedState[i];
+				steps[i].setValidated(initialState);
 			}
 		};
 
 		/**
-		 * Returns a reference to the subsequent step of the provided step
-		 * @param {sap.m.WizardStep} step - The parent step
-		 * @param {number} progress - The current progress of the Wizard, used in non branching mode.
-		 * @returns {sap.m.WizardStep}
+		 * Initializes the next button
 		 * @private
 		 */
-		Wizard.prototype._getNextStep = function (step, progress) {
-			if (!this.getEnableBranching()) {
-				return this.getSteps()[progress + 1];
+		Wizard.prototype._initNextButton = function () {
+			if (this._getNextButton()) {
+				return;
 			}
 
-			if (progress < 0) {
-				return this._getStartingStep();
+			this.setAggregation("_nextButton", this._createNextButton());
+			this._setNextButtonPosition();
+		};
+
+		/**
+		 * Creates the next button, and adds onAfterRendering delegate
+		 * @returns {Button}
+		 * @private
+		 */
+		Wizard.prototype._createNextButton = function () {
+			var firstStep = this._getWizardStep(0),
+				isStepValidated = (firstStep) ? firstStep.getValidated() : true,
+				nextButton = new Button({
+					text: this._oResourceBundle.getText("WIZARD_NEXT"),
+					type: sap.m.ButtonType.Emphasized,
+					enabled: isStepValidated,
+					press: this._handleNextButtonPress.bind(this),
+					visible: this.getShowNextButton()
+				});
+
+			nextButton.addStyleClass("sapMWizardNextButton");
+			nextButton.addEventDelegate({
+				onAfterRendering: this._toggleNextButtonVisibility
+			}, this);
+			this._nextButton = nextButton;
+
+			return nextButton;
+		};
+
+		/**
+		 * Handler for the next button press, and updates the button state
+		 * @private
+		 */
+		Wizard.prototype._handleNextButtonPress = function () {
+			var progressNavigator = this._getProgressNavigator(),
+				progressAchieved = progressNavigator.getProgress(),
+				stepCount = progressNavigator.getStepCount();
+
+			if (progressAchieved === stepCount) {
+				this.fireComplete();
+			} else {
+				progressNavigator.incrementProgress();
 			}
 
-			var nextStep = step._getNextStepReference();
-			if (nextStep === null) {
-				throw new Error("The wizard is in branching mode, and no next step is defined for " +
-				"the current step, please set one.");
-			}
+			this._updateNextButtonState();
+		};
 
-			if (!this._containsStep(nextStep)) {
-				throw new Error("The next step that you have defined is not part of the wizard steps aggregation." +
-				"Please add it to the wizard control.");
-			}
-
-			var subsequentSteps = step.getSubsequentSteps();
-			if (subsequentSteps.length > 0 && !step._containsSubsequentStep(nextStep.getId())) {
-				throw new Error("The next step that you have defined is not contained inside the subsequentSteps" +
-				" association of the current step.");
-			}
-
-			return nextStep;
+		/**
+		 * Toggles the next button visibility
+		 * @private
+		 */
+		Wizard.prototype._toggleNextButtonVisibility = function () {
+			jQuery.sap.delayedCall(0, this, function () {
+				if (this._getNextButton().getEnabled()) {
+					this._getNextButton().addStyleClass("sapMWizardNextButtonVisible");
+				} else {
+					this._getNextButton().removeStyleClass("sapMWizardNextButtonVisible");
+				}
+			});
 		};
 
 		/**
@@ -741,7 +653,7 @@ sap.ui.define([
 
 			var button = this._getNextButton(),
 				progress = this._getProgressNavigator().getProgress(),
-				progressStep = this._stepPath[progress - 1];
+				progressStep = this._getWizardStep(progress - 1);
 
 			if (progressStep) {
 				progressStep.addContent(button);
@@ -754,27 +666,16 @@ sap.ui.define([
 		 * @private
 		 */
 		Wizard.prototype._updateNextButtonState = function () {
-			if (!this._getNextButton()) {
-				return;
-			}
-
-			var isStepFinal,
-				stepCount = this._getStepCount(),
+			var stepCount = this._getStepCount(),
 				nextButton = this._getNextButton(),
 				progressAchieved = this.getProgress(),
-				isStepValidated = this._stepPath[progressAchieved - 1].getValidated();
-
-			if (this.getEnableBranching()) {
-				isStepFinal = this._stepPath[progressAchieved - 1]._isLeaf();
-			} else {
-				isStepFinal = progressAchieved === stepCount;
-			}
+				isStepValidated = this._getWizardStep(progressAchieved - 1).getValidated();
 
 			nextButton.setEnabled(isStepValidated);
-			if (isStepFinal) {
-				nextButton.setText(this.getFinishButtonText());
+			if (progressAchieved === stepCount) {
+				nextButton.setText(this._oResourceBundle.getText("WIZARD_FINISH"));
 			} else {
-				nextButton.setText(this._resourceBundle.getText("WIZARD_STEP" ) + " " + (progressAchieved + 1));
+				nextButton.setText(this._oResourceBundle.getText("WIZARD_NEXT"));
 			}
 		};
 
@@ -788,59 +689,27 @@ sap.ui.define([
 		};
 
 		/**
-		 * This method updates the visual style of the navigator.
-		 * If the wizard is in branching mode, the progress navigator has different visualization, compared
-		 * to normal mode.
+		 * Returns a reference to the step at the given index
+		 * @param index - the index of the step
+		 * @returns {sap.m.WizardStep} Pointer to the control *instance for chaining
 		 * @private
 		 */
-		Wizard.prototype._updateProgressNavigator = function () {
-			var progressNavigator = this._getProgressNavigator(),
-				currentStep = this._getStartingStep(),
-				allSteps = this.getSteps(),
-				stepTitles = [currentStep.getTitle()],
-				stepIcons = [currentStep.getIcon()],
-				stepCount = 1;
-
-			if (this.getEnableBranching()) {
-				// Find branched, or leaf step
-				while (!currentStep._isLeaf() && currentStep._getNextStepReference() !== null) {
-					stepCount++;
-					currentStep = currentStep._getNextStepReference();
-					stepTitles.push(currentStep.getTitle());
-					stepIcons.push(currentStep.getIcon());
-				}
-
-				progressNavigator.setVaryingStepCount(currentStep._isBranched());
-				progressNavigator.setStepCount(stepCount);
-			} else {
-				stepTitles = allSteps.map(function (step) { return step.getTitle(); });
-				stepIcons = allSteps.map(function (step) { return step.getIcon(); });
-			}
-
-			progressNavigator.setStepTitles(stepTitles);
-			progressNavigator.setStepIcons(stepIcons);
+		Wizard.prototype._getWizardStep = function (index) {
+			return this.getSteps()[index];
 		};
 
 		/**
-		 * Returns the entry point for the wizard.
-		 * @returns {sap.m.WizardStep} - Reference to the starting step
-		 * @private
-		 */
-		Wizard.prototype._getStartingStep = function () {
-			return this.getSteps()[0];
-		};
-
-		/**
-		 * Attaches the wizard scroll handler directly to the steps container element
+		 * Attaches the wizard scroll handler directly to the container element of the page aggregation
 		 * @private
 		 */
 		Wizard.prototype._attachScrollHandler = function () {
-			var contentDOM = this.getDomRef("step-container");
+			var page = this._getPage(),
+				contentDOM = page.getDomRef("cont");
 			contentDOM.onscroll = this._scrollHandler.bind(this);
 		};
 
 		/**
-		 * Handles the scroll event of the steps container element
+		 * Handles the scroll event of the page container
 		 * @param {jQuery.Event} event
 		 * @private
 		 */
@@ -851,7 +720,7 @@ sap.ui.define([
 
 			var scrollTop = event.target.scrollTop,
 				progressNavigator = this._getProgressNavigator(),
-				currentStepDOM = this._stepPath[progressNavigator.getCurrentStep() - 1].getDomRef(),
+				currentStepDOM = this._getWizardStep(progressNavigator.getCurrentStep() - 1).getDomRef(),
 				stepHeight = currentStepDOM.clientHeight,
 				stepOffset = currentStepDOM.offsetTop,
 				stepChangeThreshold = 100;
@@ -873,19 +742,14 @@ sap.ui.define([
 			return this.getSteps().some(function (ourStep) { return ourStep === step; });
 		};
 
-		/**
-		 * Activates the current step, adding it to the stepPath, and checks if the current step hasn't already
-		 * been visited. If visited - an Error is thrown.
-		 * @param {sap.m.WizardStep} step - the step to be activated
-		 * @private
-		 */
-		Wizard.prototype._activateStep = function (step) {
-			if (this._stepPath.indexOf(step) >= 0) {
-				throw new Error("The step that you are trying to activate has already been visited. You are creating " +
-				"a loop inside the wizard.");
+		Wizard.prototype._getStepIndex = function (step){
+			var steps = this.getSteps();
+			for (var i = 0; i < steps.length; i++) {
+				if (steps[i] == step) {
+					return i;
+				}
 			}
-			step._activate();
-			this._stepPath.push(step);
+			return -1;
 		};
 
 		return Wizard;

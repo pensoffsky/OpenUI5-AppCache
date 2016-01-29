@@ -12,12 +12,12 @@ sap.ui.define([
 
 	/**
 	 * Constructor for a new P13nSortItem.
-	 *
+	 * 
 	 * @param {string} [sId] id for the new control, generated automatically if no id is given
 	 * @param {object} [mSettings] initial settings for the new control
 	 * @class Type for <code>sortItems</code> aggregation in P13nSortPanel control.
 	 * @extends sap.ui.core.Item
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 * @constructor
 	 * @public
 	 * @alias sap.m.P13nSortItem

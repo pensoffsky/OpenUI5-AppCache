@@ -50,7 +50,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 	 * @extends sap.ui.model.Model
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -120,7 +120,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 			this.oMetadataLoadEvent = null;
 			this.oMetadataFailedEvent = null;
 			this.bSkipMetadataAnnotationParsing = bSkipMetadataAnnotationParsing;
-
+			
 
 			// prepare variables for request headers, data and metadata
 			this.oHeaders = {};
@@ -170,7 +170,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 
 			if (!this.oServiceData.oMetadata) {
 				//create Metadata object
-				this.oServiceData.oMetadata = new sap.ui.model.odata.ODataMetadata(sMetadataUrl, {
+				this.oServiceData.oMetadata = new sap.ui.model.odata.ODataMetadata(sMetadataUrl, { 
 					async: this.bLoadMetadataAsync,
 					user: this.sUser,
 					password: this.sPassword,
@@ -180,17 +180,17 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 				});
 			}
 			this.oMetadata = this.oServiceData.oMetadata;
-
+			
 			this.pAnnotationsLoaded = this.oMetadata.loaded();
-
+			
 			if (this.sAnnotationURI || !this.bSkipMetadataAnnotationParsing) {
 				// Make sure the annotation parser object is already created and can be used by the MetaModel
 				var oAnnotations = this._getAnnotationParser();
-
+				
 				if (!this.bSkipMetadataAnnotationParsing) {
 					if (!this.bLoadMetadataAsync) {
 						//Synchronous metadata load --> metadata should already be available, try to stay synchronous
-						// Don't fire additional events for automatic metadata annotations parsing, but if no annotation URL exists, fire the event
+						//Don't fire additional events for automatic metadata annotations parsing, but if no annotation URL exists, fire the event
 						this.addAnnotationXML(this.oMetadata.sMetadataBody, !!this.sAnnotationURI);
 					} else {
 						this.pAnnotationsLoaded = this.oMetadata.loaded().then(function(bSuppressEvents, mParams) {
@@ -202,17 +202,12 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 						}.bind(this, !!this.sAnnotationURI));
 					}
 				}
-
+				
 				if (this.sAnnotationURI) {
-					if (this.bLoadMetadataAsync) {
-						this.pAnnotationsLoaded = this.pAnnotationsLoaded
-							.then(oAnnotations.addUrl.bind(oAnnotations, this.sAnnotationURI));
-					} else {
-						this.pAnnotationsLoaded = Promise.all([
-							this.pAnnotationsLoaded,
-							oAnnotations.addUrl(this.sAnnotationURI)
-						]);
-					}
+					this.pAnnotationsLoaded = Promise.all([
+						this.pAnnotationsLoaded,
+						oAnnotations.addUrl(this.sAnnotationURI)
+					]);
 				}
 			}
 
@@ -222,7 +217,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 				this.aUrlParams = this.aUrlParams.concat(ODataUtils._createUrlParamsArray(mServiceUrlParams));
 			}
 
-
+			
 			this.onMetadataLoaded = function(oEvent){
 				that._initializeMetadata();
 				that.initialize();
@@ -230,7 +225,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 			this.onMetadataFailed = function(oEvent) {
 				that.fireMetadataFailed(oEvent.getParameters());
 			};
-
+			
 			if (!this.oMetadata.isLoaded()) {
 				this.oMetadata.attachLoaded(this.onMetadataLoaded);
 				this.oMetadata.attachFailed(this.onMetadataFailed);
@@ -673,7 +668,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 					info: "Accept headers:" + that.oHeaders["Accept"], infoObject : {acceptHeaders: that.oHeaders["Accept"]}, success: true});
 				return;
 			}
-
+			
 			// no data available
 			if (!oResultData) {
 				jQuery.sap.log.fatal("The following problem occurred: No data was retrieved by service: " + oResponse.requestUri);
@@ -966,11 +961,10 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 	 * @param {boolean} bForceUpdate
 	 * @param {boolean} bAsync
 	 * @param {object} mChangedEntities
-	 * @param {boolean} bMetaModelOnly update metamodel bindings only
 	 *
 	 * @private
 	 */
-	ODataModel.prototype.checkUpdate = function(bForceUpdate, bAsync, mChangedEntities, bMetaModelOnly) {
+	ODataModel.prototype.checkUpdate = function(bForceUpdate, bAsync, mChangedEntities) {
 		if (bAsync) {
 			if (!this.sUpdateTimer) {
 				this.sUpdateTimer = jQuery.sap.delayedCall(0, this, function() {
@@ -985,11 +979,10 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 		}
 		var aBindings = this.aBindings.slice(0);
 		jQuery.each(aBindings, function(iIndex, oBinding) {
-			if (!bMetaModelOnly || this.isMetaModelPath(oBinding.getPath())) {
-				oBinding.checkUpdate(bForceUpdate, mChangedEntities);
-			}
-		}.bind(this));
+			oBinding.checkUpdate(bForceUpdate, mChangedEntities);
+		});
 	};
+
 
 	/**
 	 * @see sap.ui.model.Model.prototype.bindProperty
@@ -1035,7 +1028,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 			fnCallBack = mParameters;
 			mParameters = null;
 		}
-
+		
 		// if path cannot be resolved, call the callback function and return null
 		if (!sFullPath) {
 			if (fnCallBack) {
@@ -1043,7 +1036,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 			}
 			return null;
 		}
-
+		
 		// try to resolve path, send a request to the server if data is not available yet
 		// if we have set forceUpdate in mParameters we send the request even if the data is available
 		var oData = this._getObject(sPath, oContext),
@@ -1106,7 +1099,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 		if (!sFullPath) {
 			return false;
 		}
-
+		
 		// no data --> reload needed
 		if (!oData) {
 			return true;
@@ -1379,11 +1372,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 	};
 
 	/**
-	 * Returns the value for the property with the given <code>sPath</code>.
-	 * If the path points to a navigation property which has been loaded via $expand then the <code>bIncludeExpandEntries</code>
-	 * parameter determines if the navigation property should be included in the returned value or not.
-	 * Please note that this currently works for 1..1 navigation properties only.
-	 *
+	 * Returns the value for the property with the given <code>sPath</code>
 	 *
 	 * @param {string} sPath the path/name of the property
 	 * @param {object} [oContext] the context if available to access the property value
@@ -1427,15 +1416,15 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 	 * @returns {any}
 	 */
 	ODataModel.prototype._getObject = function(sPath, oContext) {
-		var oNode = this.isLegacySyntax() ? this.oData : null,
+		var oNode = this.isLegacySyntax() ? this.oData : null, 
 			sResolvedPath = this.resolve(sPath, oContext),
 			iSeparator, sDataPath, sMetaPath, oMetaContext, sKey, oMetaModel;
 
 		//check for metadata path
 		if (this.oMetadata && sResolvedPath && sResolvedPath.indexOf('/#') > -1)  {
-			if (this.isMetaModelPath(sResolvedPath)) {
+			iSeparator = sResolvedPath.indexOf('/##');
+			if (iSeparator >= 0) {
 				// Metadata binding resolved by ODataMetaModel
-				iSeparator = sResolvedPath.indexOf('/##');
 				oMetaModel = this.getMetaModel();
 				if (!this.bMetaModelLoaded) {
 					return null;
@@ -2935,15 +2924,10 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 				}
 			});
 			this.mCustomHeaders = mCheckedHeaders;
-
 		} else {
 			this.mCustomHeaders = {};
 		}
 
-		// Custom set headers should also be used when requesting annotations, but do not instantiate annotations just for this
-		if (this.oAnnotations) {
-			this.oAnnotations.setHeaders(this.mCustomHeaders);
-		}
 	};
 
 	/**
@@ -3094,9 +3078,10 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 			for (var i = 0; i < oEntityMetadata.property.length; i++) {
 				var oPropertyMetadata = oEntityMetadata.property[i];
 
+				var aType = oPropertyMetadata.type.split('.');
 				var bPropertyInArray = jQuery.inArray(oPropertyMetadata.name,vProperties) > -1;
 				if (!vProperties || bPropertyInArray)  {
-					oEntity[oPropertyMetadata.name] = this._createPropertyValue(oPropertyMetadata.type);
+					oEntity[oPropertyMetadata.name] = this._createPropertyValue(aType);
 					if (bPropertyInArray) {
 						vProperties.splice(vProperties.indexOf(oPropertyMetadata.name),1);
 					}
@@ -3130,21 +3115,20 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 
 	/**
 	 * Return value for a property. This can also be a ComplexType property
-	 * @param {string} full qualified Type name
-	 * @returns {any} vValue The property value
+	 * @param {array} aType Type splitted by dot and passed as array
 	 * @private
 	 */
-	ODataModel.prototype._createPropertyValue = function(sType) {
-		var aTypeName = this.oMetadata._splitName(sType); // name, namespace
-		var sNamespace = aTypeName[1];
-		var sTypeName = aTypeName[0];
+	ODataModel.prototype._createPropertyValue = function(aType) {
+		var sNamespace = aType[0];
+		var sTypeName = aType[1];
 		if (sNamespace.toUpperCase() !== 'EDM') {
 			var oComplexType = {};
 			var oComplexTypeMetadata = this.oMetadata._getObjectMetadata("complexType",sTypeName,sNamespace);
-			jQuery.sap.assert(oComplexTypeMetadata, "Complex type " + sType + " not found in the metadata !");
+			jQuery.sap.assert(oComplexTypeMetadata, "Compley type " + sTypeName + " not found in the metadata !");
 			for (var i = 0; i < oComplexTypeMetadata.property.length; i++) {
 				var oPropertyMetadata = oComplexTypeMetadata.property[i];
-				oComplexType[oPropertyMetadata.name] = this._createPropertyValue(oPropertyMetadata.type);
+				var aType = oPropertyMetadata.type.split('.');
+				oComplexType[oPropertyMetadata.name] = this._createPropertyValue(aType);
 			}
 			return oComplexType;
 		} else {
@@ -3194,16 +3178,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 	ODataModel.prototype.isList = function(sPath, oContext) {
 		var sPath = this.resolve(sPath, oContext);
 		return sPath && sPath.substr(sPath.lastIndexOf("/")).indexOf("(") === -1;
-	};
-
-	/**
-	 * Checks if path points to a metamodel property
-	 * @param {string} sPath The binding path
-	 * @returns {boolean}
-	 * @private
-	 */
-	ODataModel.prototype.isMetaModelPath = function(sPath) {
-		return sPath.indexOf("##") == 0 || sPath.indexOf("/##") > -1;
 	};
 
 	/**
@@ -3301,7 +3275,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 
 		Model.prototype.destroy.apply(this, arguments);
 	};
-
+	
 	/**
 	 * Singleton Lazy loading of the annotation parser on demand
 	 *
@@ -3314,8 +3288,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 				annotationData: mAnnotationData,
 				url: null,
 				metadata: this.oMetadata,
-				async: this.bLoadMetadataAsync,
-				headers: this.mCustomHeaders
+				async: this.bLoadMetadataAsync
 			});
 			this.oAnnotations.attachFailed(this.onAnnotationsFailed, this);
 			this.oAnnotations.attachLoaded(this.onAnnotationsLoaded, this);
@@ -3323,28 +3296,28 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 
 		return this.oAnnotations;
 	};
-
+	
 	ODataModel.prototype.onAnnotationsFailed = function(oEvent) {
 		this.fireAnnotationsFailed(oEvent.getParameters());
 	};
-
+	
 	ODataModel.prototype.onAnnotationsLoaded = function(oEvent) {
 		this.fireAnnotationsLoaded(oEvent.getParameters());
 	};
-
+	
 	/**
 	 * Adds (a) new URL(s) to the be parsed for OData annotations, which are then merged into the annotations object
-	 * which can be retrieved by calling the getServiceAnnotations()-method. If a $metadata url is passed the data will
+	 * which can be retrieved by calling the getServiceAnnotations()-method. If a $metadata url is passed the data will 
 	 * also be merged into the metadata object, which can be reached by calling the getServiceMetadata() method.
 	 *
 	 * @param {string|sting[]} vUrl - Either one URL as string or an array or URL strings
-	 * @return {Promise} The Promise to load the given URL(s), resolved if all URLs have been loaded, rejected if at least one fails to load.
+	 * @return {Promise} The Promise to load the given URL(s), resolved if all URLs have been loaded, rejected if at least one fails to load. 
 	 * 					 If this promise resolves it returns the following parameters:
 	 * 					 annotations: The annotation object
-	 * 					 entitySets: An array of EntitySet objects containing the newly merged EntitySets from a $metadata requests.
+	 * 					 entitySets: An array of EntitySet objects containing the newly merged EntitySets from a $metadata requests. 
 	 * 								 the structure is the same as in the metadata object reached by the getServiceMetadata() method.
 	 * 								 For non $metadata requests the array will be empty.
-	 *
+	 * 					
 	 * @protected
 	 */
 	ODataModel.prototype.addAnnotationUrl = function(vUrl) {
@@ -3381,7 +3354,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 			};
 		});
 	};
-
+	
 	/**
 	 * Adds new xml content to be parsed for OData annotations, which are then merged into the annotations object which
 	 * can be retrieved by calling the getServiceAnnotations()-method.
@@ -3427,7 +3400,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 			// Call checkUpdate when metamodel has been loaded to update metamodel bindings
 			this.oMetaModel.loaded().then(function() {
 				that.bMetaModelLoaded = true;
-				that.checkUpdate(false, false, null, true);
+				that.checkUpdate();
 			});
 		}
 		return this.oMetaModel;
@@ -3436,3 +3409,4 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/Model', './ODataUtils', './Cou
 	return ODataModel;
 
 });
+

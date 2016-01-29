@@ -5,69 +5,72 @@
  */
 
 // Provides control sap.m.MessagePopover.
-sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolbar", "./ToolbarSpacer", "./Bar", "./List",
-		"./StandardListItem", "./library", "sap/ui/core/Control", "./PlacementType", "sap/ui/core/IconPool",
-		"sap/ui/core/HTML", "./Text", "sap/ui/core/Icon", "./SegmentedButton", "./Page", "./NavContainer",
-		"./semantic/SemanticPage", "./Popover", "jquery.sap.dom"],
-	function (jQuery, ResponsivePopover, Button, Toolbar, ToolbarSpacer, Bar, List,
+sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "sap/m/Button", "sap/m/Toolbar", "sap/m/ToolbarSpacer", "./List",
+		"./StandardListItem", "./library", "sap/ui/core/Control", "sap/m/PlacementType", "sap/ui/core/IconPool",
+		"sap/ui/core/HTML", "sap/m/Text", "sap/ui/core/Icon", "sap/m/SegmentedButton", "sap/m/Page", "sap/m/NavContainer",
+		"sap/m/semantic/SemanticPage"],
+	function (jQuery, ResponsivePopover, Button, Toolbar, ToolbarSpacer, List,
 			  StandardListItem, library, Control, PlacementType, IconPool,
-			  HTML, Text, Icon, SegmentedButton, Page, NavContainer, SemanticPage, Popover) {
+			  HTML, Text, Icon, SegmentedButton, Page, NavContainer, SemanticPage) {
 		"use strict";
 
 		/**
 		 * Constructor for a new MessagePopover
 		 *
-		 * @param {string} [sId] ID for the new control, generated automatically if no id is given
-		 * @param {object} [mSettings] Initial settings for the new control
+		 * @param {string} [sId] id for the new control, generated automatically if no id is given
+		 * @param {object} [mSettings] initial settings for the new control
 		 *
 		 * @class
 		 * A MessagePopover is a Popover containing a summarized list with messages.
 		 * @extends sap.ui.core.Control
 		 *
 		 * @author SAP SE
-		 * @version 1.32.10
+		 * @version 1.30.8
 		 *
 		 * @constructor
 		 * @public
 		 * @since 1.28
 		 * @alias sap.m.MessagePopover
-		 * @ui5-metamodel This control also will be described in the legacy UI5 design-time metamodel
+		 * @ui5-metamodel This control/element also will be described in the UI5 (legacy) designtime metamodel
 		 */
 		var MessagePopover = Control.extend("sap.m.MessagePopover", /** @lends sap.m.MessagePopover.prototype */ {
 			metadata: {
 				library: "sap.m",
 				properties: {
 					/**
-					 * Callback function for resolving a promise after description has been asynchronously loaded inside this function
-					 * @callback sap.m.MessagePopover~asyncDescriptionHandler
-					 * @param {object} config A single parameter object
-					 * @param {MessagePopoverItem} config.item Reference to respective MessagePopoverItem instance
-					 * @param {object} config.promise Object grouping a promise's reject and resolve methods
-					 * @param {function} config.promise.resolve Method to resolve promise
-					 * @param {function} config.promise.reject Method to reject promise
+					 * Async handler function for resolving asynchronous description loading via HTTP request
+					 * It is defined as a function with a single parameter 'config'
+					 * config: {
+					 * 	item: MessagePopoverItem,
+					 * 	promise: Object {
+					 * 	  resolve: Promise.resolve
+					 * 	  reject: Promise.reject
+					 * 	}
+					 * }
 					 */
 					asyncDescriptionHandler: {type: "any", group: "Behavior", defaultValue: null},
 
 					/**
-					 * Callback function for resolving a promise after a link has been asynchronously validated inside this function
-					 * @callback sap.m.MessagePopover~asyncURLHandler
-					 * @param {object} config A single parameter object
-					 * @param {string} config.url URL to validate
-					 * @param {string|Int} config.id ID of the validation job
-					 * @param {object} config.promise Object grouping a promise's reject and resolve methods
-					 * @param {function} config.promise.resolve Method to resolve promise
-					 * @param {function} config.promise.reject Method to reject promise
+					 * Async handler function for resolving asynchronous link validation via HTTP request
+					 * It is defined as a function with a single parameter 'config'
+					 * config: {
+					 * 	url: String,
+					 * 	id: String|Int,
+					 * 	promise: Object {
+					 * 	  resolve: Promise.resolve
+					 * 	  reject: Promise.reject
+					 * 	}
+					 * }
 					 */
 					asyncURLHandler: {type: "any", group: "Behavior", defaultValue: null},
 
 					/**
-					 * Determines the position, where the control will appear on the screen. Possible values are: sap.m.VerticalPlacementType.Top, sap.m.VerticalPlacementType.Bottom and sap.m.VerticalPlacementType.Vertical.
-					 * The default value is sap.m.VerticalPlacementType.Vertical. Setting this property while the control is open, will not cause any re-rendering and changing of the position. Changes will only be applied with the next interaction.
+					 * Determines the position, where the control will appear on the screen. Possible values are: Top, Bottom and Vertical. The default value is sap.m.VerticalPlacementType.Vertical. Setting this property while the control is open, will not cause any re-rendering and changing of the position. Changes will be applied with the next interaction.
 					 */
 					placement: {type: "sap.m.VerticalPlacementType", group: "Behavior", defaultValue: "Vertical"},
 
 					/**
-					 * Sets the initial state of the control - expanded or collapsed. By default the control opens as expanded
+					 * Sets the initial state of the control – expanded or collapsed. By default the control opens as expanded.
 					 */
 					initiallyExpanded: {type: "boolean", group: "Behavior", defaultValue: true}
 				},
@@ -80,49 +83,49 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 				},
 				events: {
 					/**
-					 * This event will be fired after the popover is opened
+					 * This event will be fired after the popover is opened.
 					 */
 					afterOpen: {
 						parameters: {
 							/**
-							 * This refers to the control which opens the popover
+							 * This refers to the control which opens the popover.
 							 */
 							openBy: {type: "sap.ui.core.Control"}
 						}
 					},
 
 					/**
-					 * This event will be fired after the popover is closed
+					 * This event will be fired after the popover is closed.
 					 */
 					afterClose: {
 						parameters: {
 							/**
-							 * Refers to the control which opens the popover
+							 * This refers to the control which opens the popover.
 							 */
 							openBy: {type: "sap.ui.core.Control"}
 						}
 					},
 
 					/**
-					 * This event will be fired before the popover is opened
+					 * This event will be fired before the popover is opened.
 					 */
 					beforeOpen: {
 						parameters: {
 							/**
-							 * Refers to the control which opens the popover
+							 * This refers to the control which opens the popover.
 							 */
 							openBy: {type: "sap.ui.core.Control"}
 						}
 					},
 
 					/**
-					 * This event will be fired before the popover is closed
+					 * This event will be fired before the popover is closed.
 					 */
 					beforeClose: {
 						parameters: {
 							/**
-							 * Refers to the control which opens the popover
-							 * See sap.ui.core.MessageType enum values for types
+							 * This refers to the control which opens the popover.
+							 * See sap.ui.core.MessageType values for types.
 							 */
 							openBy: {type: "sap.ui.core.Control"}
 						}
@@ -134,12 +137,12 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 					itemSelect: {
 						parameters: {
 							/**
-							 * Refers to the message popover item that is being presented
+							 * This refers to the message popover item that is being presented
 							 */
 							item: {type: "sap.m.MessagePopoverItem"},
 							/**
-							 * Refers to the type of messages being shown
-							 * See sap.ui.core.MessageType values for types
+							 * This parameter refers to the type of messages being shown.
+							 * See sap.ui.core.MessageType values for types.
 							 */
 							messageTypeFilter: {type: "sap.ui.core.MessageType"}
 
@@ -177,12 +180,12 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 			DEFAULT_ASYNC_HANDLERS = {};
 
 		/**
-		 * Setter for default description and URL validation callbacks across all instances of MessagePopover
+		 * Setter for default async handlers for all instances of MessagePopover
 		 * @static
 		 * @protected
-		 * @param {object} mDefaultHandlers An object setting default callbacks
-		 * @param {function} mDefaultHandlers.asyncDescriptionHandler
-		 * @param {function} mDefaultHandlers.asyncURLHandler
+		 * @param {object} mDefaultHandlers
+		 * @param {function} [mDefaultHandlers.asyncDescriptionHandler]
+		 * @param {function} [mDefaultHandlers.asyncURLHandler]
 		 */
 		MessagePopover.setDefaultHandlers = function (mDefaultHandlers) {
 			ASYNC_HANDLER_NAMES.forEach(function (sFuncName) {
@@ -206,7 +209,7 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 
 			this._oPopover = new ResponsivePopover(this.getId() + "-messagePopover", {
 				showHeader: false,
-				contentWidth: "440px",
+				contentWidth: "340px",
 				placement: this.getPlacement(),
 				showCloseButton: false,
 				modal: false,
@@ -223,7 +226,8 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 				beforeClose: function (oEvent) {
 					that.fireBeforeClose({openBy: oEvent.getParameter("openBy")});
 				}
-			}).addStyleClass(CSS_CLASS);
+			})
+				.addStyleClass(CSS_CLASS);
 
 			this._createNavigationPages();
 			this._createLists();
@@ -270,9 +274,10 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 				this._destroyLists();
 			}
 
-			// Destroys ResponsivePopover control that is used by MessagePopover
-			// This will walk through all aggregations in the Popover and destroy them (in our case this is NavContainer)
-			// Next this will walk through all aggregations in the NavContainer, etc.
+			// Destroys ResponsivePopover control, used in the MessagePopover.
+			// This will walk through all aggregations in the Popover and destroys them (in our case this is NavContainer).
+			// After that this will wal through all aggregation in the NavContainer etc.. down to the last control we used
+			// in the Messagepopover.
 			if (this._oPopover) {
 				this._oPopover.destroy();
 				this._oPopover = null;
@@ -280,12 +285,12 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 		};
 
 		/**
-		 * Required adaptations before rendering MessagePopover
+		 * Required adaptations before rendering of the MessagePopover
 		 *
 		 * @private
 		 */
 		MessagePopover.prototype.onBeforeRenderingPopover = function () {
-			// Update lists only if 'items' aggregation is changed
+			// Update lists only if items aggregation is changed
 			if (this._bItemsChanged) {
 				this._clearLists();
 				this._fillLists(this.getItems());
@@ -300,7 +305,7 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 		/**
 		 * Handles keyup event
 		 *
-		 * @param {jQuery.Event} oEvent - keyup event object
+		 * @param {jQuery.Event} oEvent keyup event object
 		 * @private
 		 */
 		MessagePopover.prototype._onkeypress = function (oEvent) {
@@ -330,7 +335,7 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 		};
 
 		/**
-		 * Creates header of MessagePopover's ListPage
+		 * Creates header of the MessagePopover's ListPage
 		 *
 		 * @returns {sap.m.Toolbar} ListPage header
 		 * @private
@@ -348,7 +353,11 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 				content: "<span id=\"" + sHeadingDescrId + "\" style=\"display: none;\" role=\"heading\">" + sHeadingDescr + "</span>"
 			});
 
-			this._oPopover.addAssociation("ariaDescribedBy", sHeadingDescrId, true);
+			// TODO: Set the ariaDescribedBy directly on ResponsivePopover after it's implemented
+			if (this._oPopover) {
+				var oPopover = this._oPopover.getAggregation("_popup");
+				oPopover.addAssociation("ariaDescribedBy", sHeadingDescrId, true);
+			}
 
 			var oCloseBtn = new Button({
 				icon: ICONS["close"],
@@ -368,7 +377,7 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 		};
 
 		/**
-		 * Creates header of MessagePopover's ListPage
+		 * Creates header of the MessagePopover's ListPage
 		 *
 		 * @returns {sap.m.Toolbar} DetailsPage header
 		 * @private
@@ -411,7 +420,7 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 		/**
 		 * Creates navigation pages
 		 *
-		 * @returns {sap.m.MessagePopover} Reference to the 'this' for chaining purposes
+		 * @returns {sap.m.MessagePopover} this pointer for chaining
 		 * @private
 		 */
 		MessagePopover.prototype._createNavigationPages = function () {
@@ -455,7 +464,7 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 		/**
 		 * Creates Lists of the MessagePopover
 		 *
-		 * @returns {sap.m.MessagePopover} Reference to the 'this' for chaining purposes
+		 * @returns {sap.m.MessagePopover} this pointer for chaining
 		 * @private
 		 */
 		MessagePopover.prototype._createLists = function () {
@@ -477,13 +486,13 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 		/**
 		 * Destroy items in the MessagePopover's Lists
 		 *
-		 * @returns {sap.m.MessagePopover} Reference to the 'this' for chaining purposes
+		 * @returns {sap.m.MessagePopover} this pointer for chaining
 		 * @private
 		 */
 		MessagePopover.prototype._clearLists = function () {
 			LIST_TYPES.forEach(function (sListName) {
 				if (this._oLists[sListName]) {
-					this._oLists[sListName].destroyAggregation("items", true);
+					this._oLists[sListName].destroyAggregation("items", true); // no re-rendering
 				}
 			}, this);
 
@@ -515,13 +524,13 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 					oCloneListItem = this._mapItemToListItem(oMessagePopoverItem);
 
 				// add the mapped item to the List
-				this._oLists["all"].addAggregation("items", oListItem, true);
-				this._oLists[oMessagePopoverItem.getType().toLowerCase()].addAggregation("items", oCloneListItem, true);
+				this._oLists["all"].addAggregation("items", oListItem, true); // no re-rendering
+				this._oLists[oMessagePopoverItem.getType().toLowerCase()].addAggregation("items", oCloneListItem, true); // no re-rendering
 			}, this);
 		};
 
 		/**
-		 * Map a MessagePopoverItem to StandardListItem
+		 * Map an MessagePopoverItem to the StandardListItem
 		 *
 		 * @param {sap.m.MessagePopoverItem} oMessagePopoverItem Base information to generate the list items
 		 * @returns {sap.m.StandardListItem | null} oListItem List item which will be displayed
@@ -547,8 +556,8 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 		/**
 		 * Map an MessageType to the Icon URL.
 		 *
-		 * @param {sap.ui.core.ValueState} sIcon Type of Error
-		 * @returns {string | null} Icon string
+		 * @param {sap.ui.core.ValueState} sIcon type of Error
+		 * @returns {string | null} icon string
 		 * @private
 		 */
 		MessagePopover.prototype._mapIcon = function (sIcon) {
@@ -562,12 +571,12 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 		/**
 		 * Destroy the buttons in the SegmentedButton
 		 *
-		 * @returns {sap.m.MessagePopover} Reference to the 'this' for chaining purposes
+		 * @returns {sap.m.MessagePopover} this pointer for chaining
 		 * @private
 		 */
 		MessagePopover.prototype._clearSegmentedButton = function () {
 			if (this._oSegmentedButton) {
-				this._oSegmentedButton.destroyAggregation("buttons", true);
+				this._oSegmentedButton.destroyAggregation("buttons", true); // no re-rendering
 			}
 
 			return this;
@@ -576,7 +585,7 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 		/**
 		 * Fill SegmentedButton with needed Buttons for filtering
 		 *
-		 * @returns {sap.m.MessagePopover} Reference to the 'this' for chaining purposes
+		 * @returns {sap.m.MessagePopover} this pointer for chaining
 		 * @private
 		 */
 		MessagePopover.prototype._fillSegmentedButton = function () {
@@ -599,7 +608,7 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 						press: pressClosure(sListName)
 					}).addStyleClass(CSS_CLASS + "Btn" + sListName.charAt(0).toUpperCase() + sListName.slice(1));
 
-					this._oSegmentedButton.addButton(oButton, true);
+					this._oSegmentedButton.addButton(oButton, true); // no re-rendering
 				}
 			}, this);
 
@@ -693,8 +702,7 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 		};
 
 		MessagePopover.prototype._getTagPolicy = function () {
-			var that = this,
-				i;
+			var that = this;
 
 			/*global html*/
 			var defaultTagPolicy = html.makeTagPolicy(this._validateURL());
@@ -705,7 +713,7 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 
 				if (tagName.toUpperCase() === "A") {
 
-					for (i = 0; i < attrs.length;) {
+					for (var i = 0; i < attrs.length;) {
 						// if there is href the link should be validated, href's value is on position(i+1)
 						if (attrs[i] === "href") {
 							validateLink = true;
@@ -731,7 +739,7 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 
 					var done = false;
 					// first check if there is a class attribute and enrich it with 'sapMMsgPopoverItemDisabledLink'
-					for (i = 0; i < attrs.length; i += 2) {
+					for (var i = 0; i < attrs.length; i += 2) {
 						if (attrs[i] === "class") {
 							attrs[i + 1] += "sapMMsgPopoverItemDisabledLink sapMMsgPopoverItemPendingLink";
 							done = true;
@@ -771,7 +779,7 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 					oValidation
 						.then(function (result) {
 							// Update link in output
-							var $link = jQuery.sap.byId("sap-ui-" + that.getId() + "-link-under-validation-" + result.id);
+							var $link = jQuery("#" + "sap-ui-" + that.getId() + "-link-under-validation-" + result.id);
 
 							if (result.allowed) {
 								jQuery.sap.log.info("Allow link " + href);
@@ -954,6 +962,29 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 		};
 
 		/**
+		 * Decorates internal popover to remove its arrow and adjust position for the toolbar mode
+		 *
+		 * @param {sap.m.ResponsivePopover} oPopover Internal ResponsivePopover
+		 * @private
+		 */
+		MessagePopover.prototype._decoratePopover = function (oPopover) {
+			// adding additional capabilities to the Popover
+			oPopover._marginTop = 0;
+			oPopover._marginLeft = 0;
+			oPopover._marginRight = 0;
+			oPopover._marginBottom = 0;
+			oPopover._arrowOffset = 0;
+			oPopover._offsets = ["0 0", "0 0", "0 0", "0 0"];
+			oPopover._myPositions = ["begin bottom", "begin center", "begin top", "end center"];
+			oPopover._atPositions = ["begin top", "end center", "begin bottom", "begin center"];
+
+			oPopover.addStyleClass(CSS_CLASS + '-ModeToolbar');
+
+			oPopover._setArrowPosition = function () {
+			};
+		};
+
+		/**
 		 * Sets initial focus of the control
 		 *
 		 * @private
@@ -1028,21 +1059,17 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 		 * Opens the MessagePopover
 		 *
 		 * @param {sap.ui.core.Control} oControl Control which opens the MessagePopover
-		 * @returns {sap.m.MessagePopover} Reference to the 'this' for chaining purposes
+		 * @returns {sap.m.MessagePopover} this pointer for chaining
 		 * @public
 		 * @ui5-metamodel
 		 */
 		MessagePopover.prototype.openBy = function (oControl) {
-			var oResponsivePopoverControl = this._oPopover.getAggregation("_popup"),
-				oParent = oControl.getParent();
+			var oResponsivePopoverControl = this._oPopover.getAggregation("_popup");
 
 			// If MessagePopover is opened from an instance of sap.m.Toolbar and is instance of sap.m.Popover remove the Arrow
-			if (oResponsivePopoverControl instanceof Popover) {
-				if ((oParent instanceof Toolbar || oParent instanceof Bar || oParent instanceof SemanticPage)) {
-					oResponsivePopoverControl.setShowArrow(false);
-				} else {
-					oResponsivePopoverControl.setShowArrow(true);
-				}
+			if ((oControl.getParent() instanceof sap.m.Toolbar || oControl.getParent() instanceof sap.m.semantic.SemanticPage) &&
+				oResponsivePopoverControl instanceof sap.m.Popover) {
+				this._decoratePopover(oResponsivePopoverControl);
 			}
 
 			if (this._oPopover) {
@@ -1056,7 +1083,7 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 		/**
 		 * Closes the MessagePopover
 		 *
-		 * @returns {sap.m.MessagePopover} Reference to the 'this' for chaining purposes
+		 * @returns {sap.m.MessagePopover} this pointer for chaining
 		 * @public
 		 */
 		MessagePopover.prototype.close = function () {
@@ -1080,10 +1107,10 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 
 		/**
 		 * This method toggles between open and closed state of the MessagePopover instance.
-		 * oControl parameter is mandatory in the same way as in 'openBy' method
+		 * oControl parameter is mandatory the same way as in 'openBy' method
 		 *
 		 * @param {sap.ui.core.Control} oControl Control which opens the MessagePopover
-		 * @returns {sap.m.MessagePopover} Reference to the 'this' for chaining purposes
+		 * @returns {sap.m.MessagePopover} this pointer for chaining
 		 * @public
 		 */
 		MessagePopover.prototype.toggle = function (oControl) {
@@ -1097,14 +1124,14 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 		};
 
 		/**
-		 * The method sets the placement position of the MessagePopover. Only accepted Values are:
+		 * The method sets placement position of the MessagePopover. Only accepted Values are:
 		 * sap.m.PlacementType.Top, sap.m.PlacementType.Bottom and sap.m.PlacementType.Vertical
 		 *
 		 * @param {sap.m.PlacementType} sPlacement Placement type
-		 * @returns {sap.m.MessagePopover} Reference to the 'this' for chaining purposes
+		 * @returns {sap.m.MessagePopover} this pointer for chaining
 		 */
 		MessagePopover.prototype.setPlacement = function (sPlacement) {
-			this.setProperty("placement", sPlacement, true);
+			this.setProperty("placement", sPlacement, true); // no re-rendering
 			this._oPopover.setPlacement(sPlacement);
 
 			return this;
@@ -1114,43 +1141,28 @@ sap.ui.define(["jquery.sap.global", "./ResponsivePopover", "./Button", "./Toolba
 			return this._oPopover && this._oPopover.getAggregation("_popup").getDomRef(sSuffix);
 		};
 
-		["addStyleClass", "removeStyleClass", "toggleStyleClass", "hasStyleClass", "getBusyIndicatorDelay",
-			"setBusyIndicatorDelay", "getVisible", "setVisible", "getBusy", "setBusy"].forEach(function(sName){
+		["addStyleClass", "removeStyleClass", "toggleStyleClass", "hasStyleClass"].forEach(function(sName){
 				MessagePopover.prototype[sName] = function() {
 					if (this._oPopover && this._oPopover[sName]) {
-						var oPopover = this._oPopover;
-						var res = oPopover[sName].apply(oPopover, arguments);
-						return res === oPopover ? this : res;
+						var res = this._oPopover[sName].apply(this._oPopover, arguments);
+						return res === this._oPopover ? this : res;
 					}
 				};
 			});
 
-		// The following inherited methods of this control are extended because this control uses ResponsivePopover for rendering
 		["setModel", "bindAggregation", "setAggregation", "insertAggregation", "addAggregation",
 			"removeAggregation", "removeAllAggregation", "destroyAggregation"].forEach(function (sFuncName) {
-				// First, they are saved for later reference
 				MessagePopover.prototype["_" + sFuncName + "Old"] = MessagePopover.prototype[sFuncName];
-
-				// Once they are called
 				MessagePopover.prototype[sFuncName] = function () {
-					// We immediately call the saved method first
 					var result = MessagePopover.prototype["_" + sFuncName + "Old"].apply(this, arguments);
 
-					// Then there is additional logic
-
-					// Mark items aggregation as changed and invalidate popover to trigger rendering
-					// See 'MessagePopover.prototype.onBeforeRenderingPopover'
+					// Marks items aggregation as changed and invalidate popover to trigger rendering
 					this._bItemsChanged = true;
-
-					// If Popover dependency has already been instantiated ...
 					if (this._oPopover) {
-						// ... invalidate it
 						this._oPopover.invalidate();
 					}
 
-					// If the called method is 'removeAggregation' or 'removeAllAggregation' ...
 					if (["removeAggregation", "removeAllAggregation"].indexOf(sFuncName) !== -1) {
-						// ... return the result of the operation
 						return result;
 					}
 

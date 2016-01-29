@@ -153,25 +153,11 @@
 			"name": "../../../jquery.sap.strings.js"
 		},
 		{
-			"name": "../../../jquery.sap.trace-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "../../../jquery.sap.trace.js"
-		},
-		{
 			"name": "../../../jquery.sap.ui-dbg.js",
 			"isDebug":true
 		},
 		{
 			"name": "../../../jquery.sap.ui.js"
-		},
-		{
-			"name": "../../../jquery.sap.unicode-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "../../../jquery.sap.unicode.js"
 		},
 		{
 			"name": "../../../jquery.sap.xml-dbg.js",
@@ -374,13 +360,6 @@
 		},
 		{
 			"name": "BusyIndicator.js"
-		},
-		{
-			"name": "BusyIndicatorUtils-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "BusyIndicatorUtils.js"
 		},
 		{
 			"name": "CSSColor.type"
@@ -1717,13 +1696,6 @@
 			"name": "support/Support.js"
 		},
 		{
-			"name": "support/ToolsAPI-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "support/ToolsAPI.js"
-		},
-		{
 			"name": "support/bootstrapFallback-dbg.js",
 			"isDebug":true
 		},
@@ -1753,13 +1725,6 @@
 		},
 		{
 			"name": "support/plugins/Debugging.js"
-		},
-		{
-			"name": "support/plugins/Interaction-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "support/plugins/Interaction.js"
 		},
 		{
 			"name": "support/plugins/LocalStorage-dbg.js",
@@ -2255,6 +2220,13 @@
 			"name": "util/MockServer.js"
 		},
 		{
+			"name": "util/UnicodeNormalizer-dbg.js",
+			"isDebug":true
+		},
+		{
+			"name": "util/UnicodeNormalizer.js"
+		},
+		{
 			"name": "util/XMLPreprocessor-dbg.js",
 			"isDebug":true
 		},
@@ -2465,13 +2437,6 @@
 			"name": "../model/CompositeBinding.js"
 		},
 		{
-			"name": "../model/CompositeDataState-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "../model/CompositeDataState.js"
-		},
-		{
 			"name": "../model/CompositeType-dbg.js",
 			"isDebug":true
 		},
@@ -2491,13 +2456,6 @@
 		},
 		{
 			"name": "../model/ContextBinding.js"
-		},
-		{
-			"name": "../model/DataState-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "../model/DataState.js"
 		},
 		{
 			"name": "../model/Filter-dbg.js",
@@ -2610,13 +2568,6 @@
 		},
 		{
 			"name": "../model/TreeBindingAdapter.js"
-		},
-		{
-			"name": "../model/TreeBindingCompatibilityAdapter-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "../model/TreeBindingCompatibilityAdapter.js"
 		},
 		{
 			"name": "../model/TreeBindingUtils-dbg.js",
@@ -3271,13 +3222,6 @@
 		},
 		{
 			"name": "../test/matchers/Ancestor.js"
-		},
-		{
-			"name": "../test/matchers/BindingPath-dbg.js",
-			"isDebug":true
-		},
-		{
-			"name": "../test/matchers/BindingPath.js"
 		},
 		{
 			"name": "../test/matchers/Matcher-dbg.js",

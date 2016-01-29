@@ -14,11 +14,11 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	/**
 	 * Constructor for a new IconTabBar.
 	 *
-	 * @param {string} [sId] ID for the new control, generated automatically if no ID is given
-	 * @param {object} [mSettings] Initial settings for the new control
+	 * @param {string} [sId] id for the new control, generated automatically if no id is given
+	 * @param {object} [mSettings] initial settings for the new control
 	 *
 	 * @class
-	 * The IconTabBar control represents a collection of tabs with associated content.
+	 * IconTabBar control represents a collection of tabs with associated content.
 	 *
 	 * IconTabBar covers the following use cases:
 	 * - Filter – There is only one main content for all tabs. The main content can be filtered, based on the selected tab.
@@ -28,7 +28,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	 * @implements sap.m.ObjectHeaderContainer
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -44,26 +44,26 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 		properties : {
 
 			/**
-			 * Defines whether the current selection should be visualized.
-			 * @deprecated As of 1.15.0.
+			 * Defines whether the current selection should be visualized
+			 * @deprecated Since version 1.15.0.
 			 * Regarding to changes of this control this property is not needed anymore.
 			 */
 			showSelection : {type : "boolean", group : "Misc", defaultValue : true, deprecated: true},
 
 			/**
-			 * Defines if the tabs are collapsible and expandable.
+			 * Defines if the tabs can be collapsed and expanded
 			 * @since 1.15.0
 			 */
 			expandable : {type : "boolean", group : "Misc", defaultValue : true},
 
 			/**
-			 * Indicates if the actual tab content is expanded or not.
+			 * Indicates if the actual tab is expanded or not
 			 * @since 1.15.0
 			 */
 			expanded : {type : "boolean", group : "Misc", defaultValue : true},
 
 			/**
-			 * Key of the selected tab item.
+			 * Key of the selected item.
 			 *
 			 * If the key has no corresponding aggregated item, no changes will apply.
 			 * If duplicate keys exists the first item matching the key is used.
@@ -72,33 +72,29 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 			selectedKey : {type : "string", group : "Data", defaultValue : null},
 
 			/**
-			 * Determines whether the text of the icon tab filter (not the count) is displayed in uppercase.
+			 * Determines whether the text of the icon tab filter (not the count) is uppercased.
 			 * @since 1.22
 			 */
 			upperCase : {type : "boolean", group : "Appearance", defaultValue : false},
 
 			/**
-			 * Determines whether the IconTabBar height is stretched to the maximum possible height
-			 * of its parent container. As a prerequisite, the height of the parent container must be
-			 * defined as a fixed value.
+			 * Determines whether the IconTabBar height is stretched to the maximum possible height of its parent container. As a
+			 * prerequisite, the height of the parent container must be defined as a fixed value.
 			 *
 			 * @since 1.26
 			 */
 			stretchContentHeight : {type : "boolean", group : "Appearance", defaultValue : false},
 
 			/**
-			 * Determines whether the IconTabBar content fits to the full area.
-			 * The paddings are removed if it's set to false.
+			 * Determines whether the IconTabBar content will fit to the full area (if set to false paddings are removed).
 			 *
 			 * @since 1.26
 			 */
 			applyContentPadding : {type : "boolean", group : "Appearance", defaultValue : true},
 
 			/**
-			 * Specifies the background color of the IconTabBar.
-			 *
-			 * Depending on the theme, you can change the state of
-			 * the background color to "Solid", "Translucent", or "Transparent".
+			 * This property is used to set the background color of the IconTabBar. Depending on the theme you can change the state of the background
+			 * from "Solid" over "Translucent" to "Transparent".
 			 *
 			 * @since 1.26
 			 */
@@ -107,59 +103,55 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 		aggregations : {
 
 			/**
-			 * The items displayed in the IconTabBar.
+			 * The items displayed in the IconTabBar
 			 */
 			items : {type : "sap.m.IconTab", multiple : true, singularName : "item"},
 
 			/**
-			 * Represents the contents displayed below the IconTabBar.
-			 * If there are multiple contents, they are rendered after each other.
-			 * The developer has to manage to display the right one or use the content aggregation
-			 * inside the IconTabFilter (which will be displayed instead if it is set).
+			 * The contents displayed below the IconTabBar.
+			 * If there are multiple contents, they are rendered after each other. The developer has to manage to display the right one or use the content aggregation inside the IconTabFilter (which will be displayed instead if it is set).
 			 */
 			content : {type : "sap.ui.core.Control", multiple : true, singularName : "content"},
 
 			/**
-			 * Internal aggregation for managing the icon tab elements.
+			 * An internal aggregation for managing the icon tab elements.
 			 */
 			_header : {type : "sap.m.IconTabHeader", multiple : false, visibility : "hidden"}
 		},
 		events : {
 
 			/**
-			 * Fires when an item is selected.
+			 * This event will be fired when an item is selected.
 			 */
 			select : {
 				parameters : {
 
 					/**
-					 * The selected item
+					 * The selected item.
 					 * @since 1.15.0
 					 */
 					item : {type : "sap.m.IconTabFilter"},
 
 					/**
-					 * The key of the selected item
+					 * The key of the selected item.
 					 * @since 1.15.0
 					 */
 					key : {type : "string"},
 
 					/**
-					 * The selected item
-					 * @deprecated As of 1.15.0, replaced by parameter <code>item</code> instead.
+					 * This parameter is deprecated since 1.15.0! Please use parameter "item" instead.
 					 */
 					selectedItem : {type : "sap.m.IconTabFilter"},
 
 					/**
-					 * The key of the selected item
-					 * @deprecated As of 1.15.0, replaced by parameter <code>key</code> instead.
+					 * This parameter is deprecated since 1.15.0! Please use parameter "key" instead.
 					 */
 					selectedKey : {type : "string"}
 				}
 			},
 
 			/**
-			 * Indicates that the tab will expand or collapse.
+			 * Indicates that the tab will expand or collapse
 			 * @since 1.15.0
 			 */
 			expand : {
@@ -191,7 +183,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	};
 
 	/**
-	 * Sets the tab content as expanded.
+	 * Sets the expanded flag and toggles the expand/collapse animation if the control is already rendered
 	 * @overwrite
 	 * @public
 	 * @param {boolean} bExpanded new parameter value
@@ -209,7 +201,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	};
 
 	/**
-	 * Sets the tabs as collapsible and expandable without re-rendering the control.
+	 * Sets the expandable flag without rerendering
 	 * @overwrite
 	 * @public
 	 * @param {boolean} bExpandable new parameter value
@@ -222,9 +214,9 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	};
 
 	/**
-	 * Re-renders only the displayed content of the IconTabBar.
+	 * Rerenders only shown content of the IconTabBar.
 	 * @private
-	 * @param oContent Content, which should be rendered.
+	 * @param oContent content which should be rendered.
 	 */
 	IconTabBar.prototype._rerenderContent = function(oContent) {
 		var $content = this.$("content");
@@ -239,9 +231,9 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	};
 
 	/**
-	 * Opens and closes the content Container.
+	 * Opens and closes the content Container
 	 *
-	 * @param {boolean|undefined} bExpanded the new state of the container. If not specified, it will use the property expanded.
+	 * @param {boolean|undefined} bExpanded the new state of the container. If not specified, it will use the property expanded
 	 * @private
 	 * @return {sap.m.IconTabBar} this pointer for chaining
 	 */
@@ -339,7 +331,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	/* =========================================================== */
 
 	/**
-	 * Lazy initializes the iconTabHeader aggregation.
+	 * lazy initializes the iconTabHeader aggregation
 	 */
 	IconTabBar.prototype._getIconTabHeader = function () {
 		var oControl = this.getAggregation("_header");
@@ -357,7 +349,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	/* =========================================================== */
 
 	/*
-	 * Reflector for the internal header's showSelection property.
+	 * Reflector for the internal header's showSelection property
 	 * @overwrite
 	 * @public
 	 * @param {boolean} bValue the new value
@@ -369,17 +361,17 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	};
 
 	/*
-	 * Reflector for the internal header's showSelection property.
+	 * Reflector for the internal header's showSelection property
 	 * @overwrite
 	 * @public
-	 * @returns {boolean} The current property value
+	 * @returns {boolean} the current property value
 	 */
 	IconTabBar.prototype.getShowSelection = function () {
 		return this._getIconTabHeader().getShowSelection();
 	};
 
 	/**
-	 * Reflector for the internal header's selectedKey property.
+	 * Reflector for the internal header's selectedKey property
 	 * @overwrite
 	 * @public
 	 * @param {string} sValue the new value
@@ -391,18 +383,18 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	};
 
 	/**
-	 * Reflector for the internal header's selectedKey property.
+	 * Reflector for the internal header's selectedKey property
 	 * @overwrite
 	 * @public
-	 * @returns {string} The current property value
+	 * @returns {string} the current property value
 	 */
 	IconTabBar.prototype.getSelectedKey = function () {
 		return this._getIconTabHeader().getSelectedKey();
 	};
 
 	/**
-	 * Reflector for the internal header's selectedItem.
-	 * Sets the selected item, updates the UI, and fires the select event.
+	 * Reflector for the internal header's selectedItem
+	 * Sets the selected item, updates the UI, and fires the select event
 	 * @overwrite
 	 * @private
 	 * @param {sap.m.IconTabFilter} oItem the item to be selected
@@ -422,11 +414,11 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 
 	/*
 	 * Forwards a function call to a managed object based on the aggregation name.
-	 * If the name is items, it will be forwarded to the list, otherwise called locally.
+	 * If the name is items, it will be forwarded to the list, otherwise called locally
 	 * @private
-	 * @param {string} sFunctionName The name of the function to be called
-	 * @param {string} sAggregationName The name of the aggregation asociated
-	 * @returns {mixed} The return type of the called function
+	 * @param {string} sFunctionName the name of the function to be called
+	 * @param {string} sAggregationName the name of the aggregation asociated
+	 * @returns {mixed} the return type of the called function
 	 */
 	IconTabBar.prototype._callMethodInManagedObject = function (sFunctionName, sAggregationName) {
 		var aArgs = Array.prototype.slice.call(arguments),
@@ -446,8 +438,8 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	 * Forwards aggregations with the name of items to the internal list.
 	 * @overwrite
 	 * @public
-	 * @param {string} sAggregationName The name for the binding
-	 * @param {object} oBindingInfo The configuration parameters for the binding
+	 * @param {string} sAggregationName the name for the binding
+	 * @param {object} oBindingInfo the configuration parameters for the binding
 	 * @returns {sap.m.IconTabBar} this pointer for chaining
 	 */
 	IconTabBar.prototype.bindAggregation = function () {

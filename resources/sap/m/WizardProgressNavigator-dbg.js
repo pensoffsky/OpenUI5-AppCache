@@ -4,27 +4,26 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
-sap.ui.define(["./library", "sap/ui/core/Control", "sap/ui/core/delegate/ItemNavigation", "jquery.sap.global"],
-function (library, Control, ItemNavigation, jQuery) {
+sap.ui.define(['./library', 'sap/ui/core/Control', 'sap/ui/core/delegate/ItemNavigation'],
+function (library, Control, ItemNavigation) {
 	"use strict";
 
 	/**
 	 * Constructor for a new WizardProgressNavigator.
 	 *
-	 * @param {string} [sId] ID for the new control, generated automatically if no ID is given
-	 * @param {object} [mSettings] Initial settings for the new control
+	 * @param {string} [sId] id for the new control, generated automatically if no id is given
+	 * @param {object} [mSettings] initial settings for the new control
 	 *
 	 * @class
-	 * The WizardProgressNavigator is used mainly for displaying the number of steps in the Wizard control.
-	 * It provides a way to navigate between those steps by clicking on each separate step.
-	 * Note: This is a private control that is instatiated and controlled by the Wizard control.
+	 * The WizardProgressNavigator is a control mainly displaying
+	 * the number of steps in the Wizard.
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
-	 * @private
+	 * @public
 	 * @since 1.30
 	 * @alias sap.m.WizardProgressNavigator
 	 * @ui5-metamodel This control/element also will be described in the UI5 (legacy) designtime metamodel
@@ -40,22 +39,8 @@ function (library, Control, ItemNavigation, jQuery) {
 			stepCount: {type: "int", group: "Data", defaultValue: 3},
 
 			/**
-			 * Sets a title to be displayed for each step.
-			 * The title for each step is visible on hover.
-			 */
-			stepTitles: {type: "string[]", group: "Appearance", defaultValue: []},
-
-			/**
-			 * Sets an icon to be displayed for each step.
-			 * The icon for each step is directly visible in the WizardProgressNavigator.
-			 * <b>Note:</b> The number of icons should equal the number of steps,
-			 * otherwise no icons will be rendered.
-			 */
-			stepIcons: {type: "sap.ui.core.URI[]", group: "Appearance", defaultValue: []},
-
-			/**
-			* Indicates that number of steps can vary.
-			* A dashed line is displayed after the last concrete step (set by the <code>stepCount</code> property).
+			* If set to true, this indicates that number of steps can vary.
+			* A dashed line is displayed after the last concrete step (set by the stepCount property).
 			*/
 			varyingStepCount: {type: "boolean", group: "Appearance", defaultValue: false}
 		},
@@ -104,8 +89,7 @@ function (library, Control, ItemNavigation, jQuery) {
 		LIST: "sapMWizardProgressNavList",
 		STEP: "sapMWizardProgressNavStep",
 		ANCHOR: "sapMWizardProgressNavAnchor",
-		SEPARATOR: "sapMWizardProgressNavSeparator",
-		ICON: "sapMWizardProgressNavIcon"
+		SEPARATOR: "sapMWizardProgressNavSeparator"
 	};
 
 	WizardProgressNavigator.ATTRIBUTES = {
@@ -133,13 +117,6 @@ function (library, Control, ItemNavigation, jQuery) {
 		this._createAnchorNavigation();
 	};
 
-	WizardProgressNavigator.prototype.onBeforeRendering = function () {
-		// show no icons if an icon is not defined for each step
-		if (this.getStepCount() !== this.getStepIcons().filter(String).length) {
-			this.setStepIcons([]);
-		}
-	};
-
 	WizardProgressNavigator.prototype.onAfterRendering = function () {
 		var zeroBasedActiveStep = this._activeStep - 1,
 			zeroBasedCurrentStep = this._currentStep - 1;
@@ -158,7 +135,7 @@ function (library, Control, ItemNavigation, jQuery) {
 
 	/**
 	 * Returns the number of the currently selected step. One-based.
-	 * @returns {number} The currently selected step.
+	 * @returns {number} The currently selected step
 	 * @public
 	 */
 	WizardProgressNavigator.prototype.getCurrentStep = function () {
@@ -167,7 +144,7 @@ function (library, Control, ItemNavigation, jQuery) {
 
 	/**
 	 * Moves the selection backwards by one step.
-	 * @returns {sap.m.WizardProgressNavigator} Pointer to the control instance for chaining.
+	 * @returns {sap.m.WizardProgressNavigator} Pointer to the control instance for chaining
 	 * @public
 	 */
 	WizardProgressNavigator.prototype.previousStep = function () {
@@ -182,7 +159,7 @@ function (library, Control, ItemNavigation, jQuery) {
 
 	/**
 	 * Moves the selection forwards by one step.
-	 * @returns {sap.m.WizardProgressNavigator} Pointer to the control instance for chaining.
+	 * @returns {sap.m.WizardProgressNavigator} Pointer to the control instance for chaining
 	 * @public
 	 */
 	WizardProgressNavigator.prototype.nextStep = function () {
@@ -191,7 +168,7 @@ function (library, Control, ItemNavigation, jQuery) {
 
 	/**
 	 * Moves the selection forwards to the next step that requires input.
-	 * @returns {sap.m.WizardProgressNavigator} Pointer to the control instance for chaining.
+	 * @returns {sap.m.WizardProgressNavigator} Pointer to the control instance for chaining
 	 * @public
 	 */
 	WizardProgressNavigator.prototype.incrementProgress = function () {
@@ -200,7 +177,7 @@ function (library, Control, ItemNavigation, jQuery) {
 
 	/**
 	 * Returns the number of the last step that still requires input.
-	 * @returns {number} The last step that still requires input.
+	 * @returns {number} The last step that still requires input
 	 * @public
 	 */
 	WizardProgressNavigator.prototype.getProgress = function () {
@@ -233,7 +210,7 @@ function (library, Control, ItemNavigation, jQuery) {
 	};
 
 	WizardProgressNavigator.prototype.ontap = function (event) {
-		if (!(this._isIcon(event.target) || this._isAnchor(event.target)) ||
+		if (!this._isAnchor(event.target) ||
 			!this._isActiveStep(this._getStepNumber(event.target))) {
 			return;
 		}
@@ -261,7 +238,7 @@ function (library, Control, ItemNavigation, jQuery) {
 	};
 
 	/**
-	 * Creates an ItemNavigation delegate for navigating between active anchors.
+	 * Creates an ItemNavigation delegate for navigating between active anchors
 	 * @private
 	 */
 	WizardProgressNavigator.prototype._createAnchorNavigation = function () {
@@ -281,8 +258,8 @@ function (library, Control, ItemNavigation, jQuery) {
 
 	/**
 	 * Caches a reference to the DOM elements which represent the steps and the separators.
-	 * Cached reference is in the form of static NodeList retrieved using querySelectorAll method.
-	 * @returns {void}
+	 * Cached reference is in the form of static NodeList retrieved using querySelectorAll method
+	 * @returns {undefined}
 	 * @private
 	 */
 	WizardProgressNavigator.prototype._cacheDOMElements = function () {
@@ -295,8 +272,8 @@ function (library, Control, ItemNavigation, jQuery) {
 	/**
 	 * Sets z-index to all steps so that they stack in the correct order on phone.
 	 * The leftmost step after the current step is with the highest z-index
-	 * while the rightmost is with the lowest z-index.
-	 * @returns {void}
+	 * while the rightmost is with the lowest z-index
+	 * @returns {undefined}
 	 * @private
 	 */
 	WizardProgressNavigator.prototype._updateStepZIndex = function () {
@@ -319,7 +296,7 @@ function (library, Control, ItemNavigation, jQuery) {
 	 * For step 1 we need 3 open separators after it.
 	 * For steps 2 to the penultimate step we need 1 open separator before and 2 after the step.
 	 * For the penultimate and ultimate step we need the last 3 separators open.
-	 * @returns {void}
+	 * @returns {undefined}
 	 * @private
 	 */
 	WizardProgressNavigator.prototype._updateSeparatorsOpenAttribute = function () {
@@ -350,8 +327,8 @@ function (library, Control, ItemNavigation, jQuery) {
 	};
 
 	/**
-	 * Allows focus on active anchors.
-	 * @param  {number} index The index of the last focusable anchor. Zero-based.
+	 * Allows focus on active anchors
+	 * @param  {number} index - The index of the last focusable anchor. Zero-based
 	 * @private
 	 */
 	WizardProgressNavigator.prototype._updateAnchorNavigation = function (index) {
@@ -369,10 +346,10 @@ function (library, Control, ItemNavigation, jQuery) {
 	};
 
 	/**
-	 * Updates the step active attribute in the DOM structure of the Control.
-	 * @param {number} newIndex The new index at which the attribute should be set. Zero-based.
-	 * @param {number} oldIndex The old index at which the attribute was set. Zero-based.
-	 * @returns {void}
+	 * Updates the step active attribute in the DOM structure of the Control
+	 * @param {number} newIndex - The new index at which the attribute should be set. Zero-based
+	 * @param {number} oldIndex - The old index at which the attribute was set. Zero-based
+	 * @returns {undefined}
 	 * @private
 	 */
 	WizardProgressNavigator.prototype._updateStepActiveAttribute = function (newIndex, oldIndex) {
@@ -386,10 +363,10 @@ function (library, Control, ItemNavigation, jQuery) {
 	};
 
 	/**
-	 * Updates the step current attribute in the DOM structure of the Control.
-	 * @param {number} newIndex The new index at which the attribute should be set. Zero-based.
-	 * @param {number} oldIndex The old index at which the attribute was set. Zero-based.
-	 * @returns {void}
+	 * Updates the step current attribute in the DOM structure of the Control
+	 * @param {number} newIndex - The new index at which the attribute should be set. Zero-based
+	 * @param {number} oldIndex - The old index at which the attribute was set. Zero-based
+	 * @returns {undefined}
 	 * @private
 	 */
 	WizardProgressNavigator.prototype._updateStepCurrentAttribute = function (newIndex, oldIndex) {
@@ -403,9 +380,9 @@ function (library, Control, ItemNavigation, jQuery) {
 	};
 
 	/**
-	 * Adds aria-disabled attribute to all anchors after the specified index.
-	 * @param {number} index The index from which to add aria-disabled=true. Zero-based.
-	 * @returns {void}
+	 * Adds aria-disabled attribute to all anchors after the specified index
+	 * @param {number} index - The index from which to add aria-disabled=true. Zero-based
+	 * @returns {undefined}
 	 * @private
 	 */
 	WizardProgressNavigator.prototype._addAnchorAriaDisabledAttribute = function (index) {
@@ -421,9 +398,9 @@ function (library, Control, ItemNavigation, jQuery) {
 	};
 
 	/**
-	 * Removes the anchor aria-disabled attribute from the DOM structure of the Control.
-	 * @param {number} index The index at which the attribute should be removed. Zero-based.
-	 * @returns {void}
+	 * Removes the anchor aria-disabled attribute from the DOM structure of the Control
+	 * @param {number} index - The index at which the attribute should be removed. Zero-based
+	 * @returns {undefined}
 	 * @private
 	 */
 	WizardProgressNavigator.prototype._removeAnchorAriaDisabledAttribute = function (index) {
@@ -432,10 +409,10 @@ function (library, Control, ItemNavigation, jQuery) {
 	};
 
 	/**
-	 * Updates the anchor aria-label attribute in the DOM structure of the Control.
-	 * @param {number} newIndex The new index at which the attribute should be set. Zero-based.
-	 * @param {number} oldIndex The old index at which the attribute was set. Zero-based.
-	 * @returns {void}
+	 * Updates the anchor aria-label attribute in the DOM structure of the Control
+	 * @param {number} newIndex - The new index at which the attribute should be set. Zero-based
+	 * @param {number} oldIndex - The old index at which the attribute was set. Zero-based
+	 * @returns {undefined}
 	 * @private
 	 */
 	WizardProgressNavigator.prototype._updateAnchorAriaLabelAttribute = function (newIndex, oldIndex) {
@@ -453,9 +430,9 @@ function (library, Control, ItemNavigation, jQuery) {
 	};
 
 	/**
-	 * Move to the specified step while updating the current step and active step.
-	 * @param {number} newStep The step number to which current step will be set. Non zero-based.
-	 * @returns {sap.m.WizardProgressNavigator} Pointer to the control instance for chaining.
+	 * Move to the specified step while updating the current step and active step
+	 * @param {number} newStep - The step number to which current step will be set. Non zero-based
+	 * @returns {sap.m.WizardProgressNavigator} Pointer to the control instance for chaining
 	 * @private
 	 */
 	WizardProgressNavigator.prototype._moveToStep = function (newStep) {
@@ -474,10 +451,10 @@ function (library, Control, ItemNavigation, jQuery) {
 	};
 
 	/**
-	 * Updates the active step in the control instance as well as the DOM structure.
-	 * @param {number} newStep The step number to which active step will be set. Non zero-based.
-	 * @param {number} oldStep The step number to which active step was set. Non zero-based.
-	 * @returns {sap.m.WizardProgressNavigator} Pointer to the control instance for chaining.
+	 * Updates the active step in the control instance as well as the DOM structure
+	 * @param {number} newStep - The step number to which active step will be set. Non zero-based
+	 * @param {number} oldStep - The step number to which active step was set. Non zero-based
+	 * @returns {sap.m.WizardProgressNavigator} Pointer to the control instance for chaining
 	 * @private
 	 */
 	WizardProgressNavigator.prototype._updateActiveStep = function (newStep, oldStep) {
@@ -493,10 +470,10 @@ function (library, Control, ItemNavigation, jQuery) {
 	};
 
 	/**
-	 * Updates the current step in the control instance as well as the DOM structure.
-	 * @param {number} newStep The step number to which current step will be set. Non zero-based.
-	 * @param {number} oldStep The step number to which current step was set. Non zero-based.
-	 * @returns {sap.m.WizardProgressNavigator} Pointer to the control instance for chaining.
+	 * Updates the current step in the control instance as well as the DOM structure
+	 * @param {number} newStep - The step number to which current step will be set. Non zero-based
+	 * @param {number} oldStep - The step number to which current step was set. Non zero-based
+	 * @returns {sap.m.WizardProgressNavigator} Pointer to the control instance for chaining
 	 * @private
 	 */
 	WizardProgressNavigator.prototype._updateCurrentStep = function (newStep, oldStep) {
@@ -516,9 +493,9 @@ function (library, Control, ItemNavigation, jQuery) {
 	};
 
 	/**
-	 * Checks whether the argument has sapMWizardProgressNavAnchor class present.
-	 * @param {HTMLElement} domTarget The target of the click/tap event.
-	 * @returns {boolean} Returns true when sapMWizardProgressNavAnchor class is present, false otherwise.
+	 * Checks whether the argument has sapMWizardProgressNavAnchor class present
+	 * @param {HTMLElement} domTarget - The target of the click/tap event
+	 * @returns {boolean} Returns true when sapMWizardProgressNavAnchor class is present, false otherwise
 	 * @private
 	 */
 	WizardProgressNavigator.prototype._isAnchor = function (domTarget) {
@@ -526,19 +503,9 @@ function (library, Control, ItemNavigation, jQuery) {
 	};
 
 	/**
-	 * Checks whether the argument has sapMWizardProgressNavIcon class present.
-	 * @param {HTMLElement} domTarget The target of the click/tap event.
-	 * @returns {boolean} Returns true when sapMWizardProgressNavIcon class is present, false otherwise.
-	 * @private
-	 */
-	WizardProgressNavigator.prototype._isIcon = function (domTarget) {
-		return domTarget.className.indexOf(WizardProgressNavigator.CLASSES.ICON) !== -1;
-	};
-
-	/**
-	 * Checks whether the step is active.
-	 * @param {number} iStep The step number to be checked.
-	 * @returns {boolean} Returns true when the step number has been activated, false otherwise.
+	 * Checks whether the step is active
+	 * @param {number} iStep - The step number to be checked
+	 * @returns {boolean} Returns true when the step number has been activated, false otherwise
 	 * @private
 	 */
 	WizardProgressNavigator.prototype._isActiveStep = function (stepNumber) {
@@ -546,17 +513,13 @@ function (library, Control, ItemNavigation, jQuery) {
 	};
 
 	/**
-	 * Extracts the step attribute from the argument.
-	 * @param {HTMLElement} domAnchor The dom element which represents the anchor tag in each step.
-	 * @returns {number} Returns parsed step number.
+	 * Extracts the step attribute from the argument
+	 * @param {HTMLElement} domAnchor - The dom element which represents the anchor tag in each step
+	 * @returns {number} Returns parsed step number
 	 * @private
 	 */
 	WizardProgressNavigator.prototype._getStepNumber = function (domAnchor) {
-		var stepNumber = jQuery(domAnchor)
-						.closest("." + WizardProgressNavigator.CLASSES.STEP)
-						.attr(WizardProgressNavigator.ATTRIBUTES.STEP);
-
-		return parseInt(stepNumber, 10);
+		return domAnchor.parentNode.getAttribute(WizardProgressNavigator.ATTRIBUTES.STEP) | 0;
 	};
 
 	return WizardProgressNavigator;

@@ -20,7 +20,7 @@ sap.ui.define(['jquery.sap.global', './Bar', './InputBase', './ComboBoxBase', '.
 	 * @extends sap.m.ComboBoxBase
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -194,12 +194,14 @@ sap.ui.define(['jquery.sap.global', './Bar', './InputBase', './ComboBoxBase', '.
 	};
 
 	/**
-	 * Handles the item selection when user triggers an item selection via key press (TAB, ENTER etc.).
+	 * Handle when enter is pressed.
 	 *
-	 * @param {jQuery.Event} oEvent The key event object.
+	 * @param {jQuery.Event} oEvent The event object.
 	 * @private
 	 */
-	MultiComboBox.prototype._selectItemByKey = function(oEvent) {
+	MultiComboBox.prototype.onsapenter = function(oEvent) {
+		ComboBoxBase.prototype.onsapenter.apply(this, arguments);
+
 		if (!this.getEnabled() || !this.getEditable()) {
 			return;
 		}
@@ -249,37 +251,6 @@ sap.ui.define(['jquery.sap.global', './Bar', './InputBase', './ComboBoxBase', '.
 		}
 	};
 
-	/**
-	 * Handle when enter is pressed.
-	 *
-	 * @param {jQuery.Event} oEvent The event object.
-	 * @private
-	 */
-	MultiComboBox.prototype.onsapenter = function(oEvent) {
-		ComboBoxBase.prototype.onsapenter.apply(this, arguments);
-		this._selectItemByKey(oEvent);
-	};
-
-	/**
-	 * Handles tab key event. Selects an item according to given input if there is exactly one fitting item available.
-	 *
-	 * @param {jQuery.Event}
-	 *          oEvent The event object.
-	 * @private
-	 */
-	MultiComboBox.prototype.onsaptabnext = function(oEvent) {
-		var sInputValue = this.getValue();
-		if (sInputValue) {
-			var aSelectableItems = this._getUnselectedItemsStartingText(sInputValue);
-			if (aSelectableItems.length === 1) {
-				this._selectItemByKey(oEvent);
-			} else {
-				this._showWrongValueVisualEffect();
-				this.setValue(null);
-			}
-		}
-	};
-
 	/* =========================================================== */
 	/* Event handlers */
 	/* =========================================================== */
@@ -295,13 +266,10 @@ sap.ui.define(['jquery.sap.global', './Bar', './InputBase', './ComboBoxBase', '.
 		var oControl = sap.ui.getCore().byId(oEvent.relatedControlId);
 		var oFocusDomRef = oControl && oControl.getFocusDomRef();
 
-		// If focus target is outside of picker
-		if (!oPicker || !oPicker.getFocusDomRef() || !oFocusDomRef || !jQuery.contains(oPicker.getFocusDomRef(), oFocusDomRef)) {
-			this.setValue(null);
-		}
-
 		if (oPicker && oFocusDomRef) {
+
 			if (jQuery.sap.equal(oPicker.getFocusDomRef(), oFocusDomRef)) {
+
 				// force the focus to stay in the MultiComboBox field when scrollbar
 				// is moving
 				this.focus();
@@ -742,7 +710,22 @@ sap.ui.define(['jquery.sap.global', './Bar', './InputBase', './ComboBoxBase', '.
 
 		return oDialog;
 	};
-
+	
+	/**
+	 * Required adaptations after rendering of the Popover.
+	 * 
+	 * @private
+	 */
+	MultiComboBox.prototype._onAfterRenderingPopover = function() {
+		var oPopover = this.getPicker();
+	
+		// remove the Popover arrow
+		oPopover._removeArrow();
+	
+		// position adaptations
+		oPopover._setPosition();
+	};
+	
 	/**
 	 * Decorate a Popover instance by adding some private methods.
 	 *
@@ -751,7 +734,25 @@ sap.ui.define(['jquery.sap.global', './Bar', './InputBase', './ComboBoxBase', '.
 	 */
 	MultiComboBox.prototype._decoratePopover = function(oPopover) {
 		var that = this;
-
+	
+		// adding additional capabilities to the Popover
+		oPopover._removeArrow = function() {
+			this._marginTop = 0;
+			this._marginLeft = 0;
+			this._marginRight = 0;
+			this._marginBottom = 0;
+			this._arrowOffset = 0;
+			this._offsets = ["0 0", "0 0", "0 0", "0 0"];
+		};
+	
+		oPopover._setPosition = function() {
+			this._myPositions = ["begin bottom", "begin center", "begin top", "end center"];
+			this._atPositions = ["begin top", "end center", "begin bottom", "begin center"];
+		};
+	
+		oPopover._setArrowPosition = function() {
+		};
+	
 		oPopover.open = function() {
 			var oDomRef = jQuery(that.getDomRef());
 			var oBorder = oDomRef.find(MultiComboBoxRenderer.DOT_CSS_CLASS + "Border");
@@ -767,7 +768,6 @@ sap.ui.define(['jquery.sap.global', './Bar', './InputBase', './ComboBoxBase', '.
 	 */
 	MultiComboBox.prototype._createPopover = function() {
 		var oPopup = new Popover({
-			showArrow: false,
 			showHeader: false,
 			placement: sap.m.PlacementType.Vertical,
 			offsetX: 0,
@@ -1451,10 +1451,37 @@ sap.ui.define(['jquery.sap.global', './Bar', './InputBase', './ComboBoxBase', '.
 	};
 
 	/**
-	 * Handles the focus out event.
 	 * @private
 	 */
 	MultiComboBox.prototype.onfocusout = function(oEvent) {
+		var sInputValue = this.getValue();
+
+		if (sInputValue) {
+			var aSelectableItems = this._getUnselectedItemsStartingText(sInputValue);
+
+			if (aSelectableItems.length === 1) {
+				this.onsapenter();
+			} else {
+
+				setTimeout(function() {
+					var $RelatedDomRefs = jQuery(this.getDomRef());
+					var oPicker = this.getPicker();
+
+					if (oPicker && oPicker.getDomRef()) {
+						var $picker = jQuery(oPicker.getDomRef());
+						$RelatedDomRefs = $RelatedDomRefs.add($picker);
+					}
+
+					var bFocusOutsideOfControl = $RelatedDomRefs.has(jQuery(document.activeElement)).length === 0;
+
+					if (bFocusOutsideOfControl) {
+						this._showWrongValueVisualEffect();
+						this.setValue(null);
+					}
+				}.bind(this), 0);
+			}
+		}
+
 		this.removeStyleClass(MultiComboBoxRenderer.CSS_CLASS + "Focused");
 		ComboBoxBase.prototype.onfocusout.apply(this, arguments);
 	};

@@ -25,27 +25,22 @@ sap.ui.define([
 			"use strict";
 
 			/**
-			* Constructor for a new QuickViewPage.
-			*
-			* @param {string} [sId] ID for the new control, generated automatically if no ID is given
-			* @param {object} [mSettings] Initial settings for the new control
-			*
-			* @class QuickViewPage consists of  a page header, an object icon or image,
-			* an object name with short description, and an object information divided in groups.
-			* The control uses the sap.m.SimpleForm control to display information.
-			*
-			* @extends sap.ui.core.Control
-			*
-			* @author SAP SE
-			* @version 1.32.10
-			*
-			* @constructor
-			* @public
-			* @since 1.28.11
-			* @alias sap.m.QuickViewPage
-			* @ui5-metamodel This control/element also will be described in the UI5 (legacy) designtime metamodel
-			*/
-			var QuickViewPage = Control.extend("sap.m.QuickViewPage", /** @lends sap.m.QuickViewPage.prototype */ {
+			 * Constructor for a new QuickViewPage.
+			 *
+			 * @param {string} [sId] id for the new control, generated automatically if no id is given
+			 * @param {object} [mSettings] initial settings for the new control
+			 * @class QuickViewPage consists of  a page header, an object icon or image,
+			 * an object name with short description, and an object information divided in groups.
+			 * The control uses the sap.m.SimpleForm control to display information.
+			 * @extends sap.ui.core.Control
+			 * @author SAP SE
+			 * @constructor
+			 * @public
+			 * @alias sap.m.QuickViewPage
+			 * @ui5-metamodel This control/element also will be described in the UI5 (legacy) designtime metamodel
+			 */
+			var QuickViewPage = Control.extend("sap.m.QuickViewPage",
+					{
 						metadata: {
 
 							library: "sap.m",
@@ -61,7 +56,7 @@ sap.ui.define([
 								},
 
 								/**
-								 * Specifies the text displayed in the header of the control.
+								 * The text displayed in the header of the control
 								 */
 								header: {
 									type: "string",
@@ -70,7 +65,7 @@ sap.ui.define([
 								},
 
 								/**
-								 * Specifies the text displayed in the header of the content section of the control.
+								 * The text displayed in the header of the content section of the control
 								 */
 								title: {
 									type: "string",
@@ -79,7 +74,7 @@ sap.ui.define([
 								},
 
 								/**
-								 * Specifies the URL which opens when the title or the thumbnail is clicked.
+								 * The URL which opens when the title or the thumbnail is clicked
 								 */
 								titleUrl: {
 									type: "string",
@@ -88,7 +83,7 @@ sap.ui.define([
 								},
 
 								/**
-								 * Specifies the application which provides target and param configuration  for cross-application navigation from the 'page header'.
+								 * The application provides target and param configuration  for cross-application navigation from the 'page header'.
 								 */
 								crossAppNavCallback : {
 									type: "object",
@@ -96,7 +91,7 @@ sap.ui.define([
 								},
 
 								/**
-								 * Specifies the text displayed under the header of the content section
+								 * The text displayed under the header of the content section
 								 */
 								description: {
 									type: "string",
@@ -105,7 +100,7 @@ sap.ui.define([
 								},
 
 								/**
-								 * Specifies the URL of the icon displayed under the header of the page
+								 * The URL of the icon displayed under the header of the page
 								 */
 								icon: {
 									type: "string",
@@ -131,7 +126,7 @@ sap.ui.define([
 
 
 			QuickViewPage.prototype.init =  function() {
-				this._oResourceBundle = sap.ui.getCore().getLibraryResourceBundle('sap.m');
+				this._oResourceBundle = sap.ui.getCore().getLibraryResourceBundle('sap.m');
 
 				//see API docu for sap.ushell.services.CrossApplicationNavigation
 				var fGetService =  sap.ushell && sap.ushell.Container && sap.ushell.Container.getService;
@@ -143,7 +138,6 @@ sap.ui.define([
 
 			/**
 			 * Sets context containing navigation information.
-			 * @param {Object} context Object containing specific navigation data.
 			 * @private
 			 */
 			QuickViewPage.prototype.setNavContext = function (context) {
@@ -153,7 +147,6 @@ sap.ui.define([
 			/**
 			 * Returns context containing navigation information.
 			 * @private
-			 * @returns {Object} Object containing specific navigation data
 			 */
 			QuickViewPage.prototype.getNavContext = function () {
 				return this._mNavContext;
@@ -161,7 +154,6 @@ sap.ui.define([
 
 			/**
 			 * Sets page title control.
-			 * @param {sap.ui.core.Control} title The control that is displayed in the title of the page.
 			 * @private
 			 */
 			QuickViewPage.prototype.setPageTitleControl = function (title) {
@@ -171,17 +163,11 @@ sap.ui.define([
 			/**
 			 * Returns page title control.
 			 * @private
-			 * @returns {sap.ui.core.Control} The control displayed in the title
 			 */
 			QuickViewPage.prototype.getPageTitleControl = function () {
 				return this._oPageTitle;
 			};
 
-			/**
-			 * Helper function that creates a new {@link sap.m.Page} and adds content to it.
-			 * @returns {sap.m.Page} The created page
-			 * @private
-			 */
 			QuickViewPage.prototype._createPage = function () {
 
 				var mPageContent = this._createPageContent();
@@ -234,7 +220,7 @@ sap.ui.define([
 				if (mNavContext.popover && sap.ui.Device.system.phone) {
 					oCustomHeader.addContentRight(
 						new Button({
-							icon : IconPool.getIconURI("decline"),
+							icon : "sap-icon://decline",
 							press : function() {
 								mNavContext.popover.close();
 							}
@@ -258,12 +244,6 @@ sap.ui.define([
 				}
 			};
 
-			/**
-			 * Helper function that creates the content of a QuickViewPage and returns it as an object
-			 * with form and header properties.
-			 * @returns {{form: sap.ui.layout.form.SimpleForm, header: sap.ui.layout.HorizontalLayout}}
-			 * @private
-			 */
 			QuickViewPage.prototype._createPageContent = function () {
 
 				var oForm = this._createForm();
@@ -272,7 +252,8 @@ sap.ui.define([
 				// add ARIA title to the form
 				var oPageTitleControl = this.getPageTitleControl();
 				if (oHeader && oPageTitleControl) {
-					oForm.addAriaLabelledBy(oPageTitleControl);
+					var oInnerFrom = oForm.getAggregation("form");
+					oInnerFrom.addAriaLabelledBy(oPageTitleControl);
 				}
 
 				return {
@@ -281,11 +262,6 @@ sap.ui.define([
 				};
 			};
 
-			/**
-			 * Helper function that creates a form object based on the data in the groups of the QuickViewPage
-			 * @returns {sap.ui.layout.form.SimpleForm} The form created based on the groups of the QuickViewPage
-			 * @private
-			 */
 			QuickViewPage.prototype._createForm = function () {
 				var aGroups = this.getAggregation("groups"),
 				    oForm = new SimpleForm({
@@ -305,11 +281,6 @@ sap.ui.define([
 				return oForm;
 			};
 
-			/**
-			 * Helper function that creates the header of the QuickViewPage.
-			 * @returns {sap.ui.layout.HorizontalLayout} The header of the QuickViewPage
-			 * @private
-			 */
 			QuickViewPage.prototype._getPageHeaderContent = function() {
 				var oIcon,
 					oVLayout = new VerticalLayout(),
@@ -380,12 +351,6 @@ sap.ui.define([
 				return oHLayout;
 			};
 
-			/**
-			 * Helper function that renders a QuickViewGroup in the QuickViewPage.
-			 * @param {sap.m.QuickViewGroup} oGroup The group to be rendered.
-			 * @param {sap.ui.layout.form.SimpleForm} oForm The form in which the group is rendered
-			 * @private
-			 */
 			QuickViewPage.prototype._renderGroup = function(oGroup, oForm) {
 				var aElements = oGroup.getAggregation("elements");
 
@@ -424,19 +389,12 @@ sap.ui.define([
 
 					oCurrentGroupElementValue = oCurrentGroupElement._getGroupElementValue(sQuickViewId);
 
-					oForm.addContent(oLabel);
-
-					if (!oCurrentGroupElementValue) {
-						// Add dummy text element so that the form renders the oLabel
-						oForm.addContent(new sap.m.Text({text : ""}));
-						continue;
-					}
-
 					if (oCurrentGroupElementValue instanceof Link) {
 						oCurrentGroupElementValue.addAriaLabelledBy(oCurrentGroupElementValue);
 					}
 
 					oLabel.setLabelFor(oCurrentGroupElementValue.getId());
+					oForm.addContent(oLabel);
 
 					if (oCurrentGroupElement.getType() == QuickViewGroupElementType.pageLink) {
 						oCurrentGroupElementValue.attachPress(this._attachPressLink(this));
@@ -464,14 +422,6 @@ sap.ui.define([
 				}
 			};
 
-			/**
-			 * Helper function used to navigate to another Fiori application (intent based navigation) or
-			 * to an external link.
-			 * This will be applicable only for the header link.
-			 * @param {sap.m.QuickViewPage} The page from which the navigation starts
-			 * @returns {Function} A function that executes the navigation
-			 * @private
-			 */
 			QuickViewPage.prototype._crossApplicationNavigation = function (that) {
 				return function () {
 					if (that.getCrossAppNavCallback() && that.oCrossAppNavigator) {
@@ -502,13 +452,6 @@ sap.ui.define([
 				this._mNavContext = null;
 			};
 
-			/**
-			 * Helper function used to attach click handler to links in the QuickViewPage
-			 * that should lead to another QuickViewPage.
-			 * @param {sap.m.QuickViewPage} that The page from which the navigation occurs.
-			 * @returns {Function} A function executed when the link is clicked
-			 * @private
-			 */
 			QuickViewPage.prototype._attachPressLink = function (that) {
 
 				var mNavContext = that.getNavContext();
@@ -522,20 +465,11 @@ sap.ui.define([
 				};
 			};
 
-			/**
-			 * Function executed when the sms icon in the QuickViewPage is clicked.
-			 * @private
-			 */
 			QuickViewPage.prototype._mobilePress = function () {
 				var sms = "sms://" + jQuery.sap.encodeURL(this.getCustomData()[0].getValue());
 				window.location.replace(sms);
 			};
 
-			/**
-			 * Updates the contents of the page and sets the focus on the last focused element or
-			 * on the first focusable element.
-			 * @private
-			 */
 			QuickViewPage.prototype._updatePage = function () {
 				var mNavContext = this.getNavContext();
 				if (mNavContext && mNavContext.quickView._bRendered) {

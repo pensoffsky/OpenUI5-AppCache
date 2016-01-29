@@ -10,16 +10,16 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Element'], functio
 
 	/**
 	 * Constructor for a new P13nItem.
-	 *
+	 * 
 	 * @param {string}
 	 *          [sId] id for the new control, generated automatically if no id is given
 	 * @param {object}
 	 *          [mSettings] initial settings for the new control
-	 *
+	 * 
 	 * @class Base type for <code>items</code> aggregation in P13nPanel control.
 	 * @extends sap.ui.core.Item
-	 * @version 1.32.10
-	 *
+	 * @version 1.30.8
+	 * 
 	 * @constructor
 	 * @public
 	 * @since 1.26.0
@@ -93,14 +93,14 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Element'], functio
 
 				/**
 				 * specifies the number of characters which can be entered in the value fields of the condition panel
-				 * @since 1.26.0
+				 * @since 1.26.0  
 				 */
 				maxLength : {
 					type : "string",
 					group : "Misc",
 					defaultValue : null
 				},
-
+				
 				/**
 				 * Defines column width
 				 * @since 1.26.0
@@ -110,15 +110,15 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Element'], functio
 					group : "Misc",
 					defaultValue : null
 				},
-
+				
 				/**
 				 * the column with isDefault==true will be used as the selected column item on the conditionPanel
-				 * @since 1.26.0
+				 * @since 1.26.0 
 				 */
 				isDefault : {
 					type : "boolean",
 					group : "Misc",
-					defaultValue : false
+					defaultValue : false					
 				}
 			}
 		}

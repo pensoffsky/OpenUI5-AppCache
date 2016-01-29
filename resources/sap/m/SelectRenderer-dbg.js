@@ -4,8 +4,8 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
-sap.ui.define(['jquery.sap.global', 'sap/ui/core/Renderer', 'sap/ui/core/ValueStateSupport', 'sap/ui/core/IconPool'],
-	function(jQuery, Renderer, ValueStateSupport, IconPool) {
+sap.ui.define(['jquery.sap.global', 'sap/ui/core/Renderer', 'sap/ui/core/ValueStateSupport'],
+	function(jQuery, Renderer, ValueStateSupport) {
 		"use strict";
 
 		/**
@@ -66,12 +66,6 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Renderer', 'sap/ui/core/ValueSt
 
 			if (sTooltip) {
 				oRm.writeAttributeEscaped("title", sTooltip);
-			} else if (sType === sap.m.SelectType.IconOnly) {
-				var oIconInfo = IconPool.getIconInfo(oSelect.getIcon());
-
-				if (oIconInfo) {
-					oRm.writeAttributeEscaped("title", oIconInfo.text);
-				}
 			}
 
 			if (bEnabled) {
@@ -157,8 +151,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Renderer', 'sap/ui/core/ValueSt
 		 */
 		SelectRenderer.renderIcon = function(oRm, oSelect) {
 			oRm.writeIcon(oSelect.getIcon(), SelectRenderer.CSS_CLASS + "Icon", {
-				id: oSelect.getId() + "-icon",
-				title: null
+				id: oSelect.getId() + "-icon"
 			});
 		};
 
@@ -208,9 +201,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Renderer', 'sap/ui/core/ValueSt
 			}
 
 			if (aItemsLength === 0) {
-				oRm.write("<option>");
-				oRm.writeEscaped(sSelectedItemText);
-				oRm.write("</option>");
+				oRm.write("<option>" + sSelectedItemText + "</option>");
 			}
 		};
 

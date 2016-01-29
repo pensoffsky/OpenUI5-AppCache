@@ -19,10 +19,10 @@ sap.ui.define(['jquery.sap.global'],
 	 * Renders the HTML for the given control, using the provided {@link sap.ui.core.RenderManager}.
 	 *
 	 * @param {sap.ui.core.RenderManager}
-	 *            oRm The RenderManager that can be used for writing to the render
+	 *            oRm the RenderManager that can be used for writing to the render
 	 *            output buffer
 	 * @param {sap.ui.core.Control}
-	 *            oOI An object representation of the control that should be
+	 *            oOI an object representation of the control that should be
 	 *            rendered
 	 */
 	ObjectIdentifierRenderer.render = function(oRm, oOI) {

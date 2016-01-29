@@ -12,7 +12,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Control', 'sap/ui/core/EnabledP
 	/**
 	 * Constructor for a new VerticalLayout.
 	 *
-	 * @param {string} [sId] Id for the new control, generated automatically if no id is given
+	 * @param {string} [sId] Id for the new control, generated automatically if no id is given 
 	 * @param {object} [mSettings] initial settings for the new control
 	 *
 	 * @class
@@ -20,7 +20,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Control', 'sap/ui/core/EnabledP
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -41,7 +41,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/core/Control', 'sap/ui/core/EnabledP
 			width : {type : "sap.ui.core.CSSSize", group : "Dimension", defaultValue : null},
 
 			/**
-			 *
+			 * 
 			 * If not enabled, all controls inside are not enabled automatically.
 			 */
 			enabled : {type : "boolean", group : "Behavior", defaultValue : true}

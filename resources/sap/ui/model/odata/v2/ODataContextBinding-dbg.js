@@ -28,7 +28,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/ContextBinding'],
 
 		constructor : function(oModel, sPath, oContext, mParameters, oEvents){
 			ContextBinding.call(this, oModel, sPath, oContext, mParameters, oEvents);
-			this.bRefreshGroupId = undefined;
+			this.bRefreshBatchGroupId = undefined;
 		}
 	});
 
@@ -68,38 +68,38 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/ContextBinding'],
 	};
 	/**
 	 * @see sap.ui.model.ContextBinding.prototype.refresh
-	 *
+	 * 
 	 * @param {boolean} [bForceUpdate] Update the bound control even if no data has been changed
-	 * @param {string} [sGroupId] The group Id for the refresh
-	 *
+	 * @param {string} [sBatchGroupId] The batch group Id for the refresh
+	 * 
 	 * @public
 	 */
-	ODataContextBinding.prototype.refresh = function(bForceUpdate, sGroupId) {
+	ODataContextBinding.prototype.refresh = function(bForceUpdate, sBatchGroupId) {
 		if (typeof bForceUpdate === "string") {
-			sGroupId = bForceUpdate;
+			sBatchGroupId = bForceUpdate;
 			bForceUpdate = false;
 		}
-		this.sRefreshGroup = sGroupId;
+		this.sRefreshBatchGroup = sBatchGroupId;
 		this._refresh(bForceUpdate);
-		this.sRefreshGroup = undefined;
+		this.sRefreshBatchGroup = undefined;
 	};
-
+	
 	/**
 	 * @see sap.ui.model.ContextBinding.prototype.refresh
-	 *
+	 * 
 	 * @param {boolean} [bForceUpdate] Update the bound control even if no data has been changed
 	 * @param {map} [mChangedEntities] Map of changed entities
 	 * @private
 	 */
 	ODataContextBinding.prototype._refresh = function(bForceUpdate, mChangedEntities) {
-		var that = this, oData, sKey, oStoredEntry, bChangeDetected = false,
+		var that = this, oData, sKey, oStoredEntry, bChangeDetected = false, 
 			mParameters = this.mParameters,
 			sResolvedPath = this.oModel.resolve(this.sPath, this.oContext);
 
 		if (this.bInitial) {
 			return;
 		}
-
+		
 		if (mChangedEntities) {
 			//get entry from model. If entry exists get key for update bindings
 			oStoredEntry = this.oModel._getObject(this.sPath, this.oContext);
@@ -117,10 +117,10 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/ContextBinding'],
 			if (sResolvedPath) {
 				this.fireDataRequested();
 			}
-			if (this.sRefreshGroup) {
+			if (this.sRefreshBatchGroup) {
 				mParameters = jQuery.extend({},this.mParameters);
-				mParameters.groupId = this.sRefreshGroup;
-			}
+				mParameters.batchGroupId = this.sRefreshBatchGroup;
+			} 
 			this.oModel.createBindingContext(this.sPath, this.oContext, mParameters, function(oContext) {
 				if (that.oElementContext === oContext) {
 					if (bForceUpdate) {
@@ -145,7 +145,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/ContextBinding'],
 
 	/**
 	 * @see sap.ui.model.ContextBinding.prototype.setContext
-	 *
+	 * 
 	 * @param {sap.ui.model.Context} oContext The binding context object
 	 * @private
 	 */

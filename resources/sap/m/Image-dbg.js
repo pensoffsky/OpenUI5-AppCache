@@ -29,7 +29,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	 * @extends sap.ui.core.Control
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -332,7 +332,7 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 	 */
 	Image.prototype.setSrc = function(sSrc) {
 		if (sSrc === this.getSrc()) {
-			return this;
+			return;
 		}
 
 		this.setProperty("src", sSrc, true);
@@ -341,8 +341,6 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 		if (oDomRef) {
 			this._updateDomSrc(sSrc);
 		}
-
-		return this;
 	};
 
 	/**
@@ -366,8 +364,6 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 			this.$().attr("tabindex", "0");
 			this.$().attr("role", "button");
 		}
-
-		return this;
 	};
 
 	Image.prototype.detachPress = function() {
@@ -382,8 +378,6 @@ sap.ui.define(['jquery.sap.global', './library', 'sap/ui/core/Control'],
 				this.$().removeAttr("role");
 			}
 		}
-
-		return this;
 	};
 
 	/**

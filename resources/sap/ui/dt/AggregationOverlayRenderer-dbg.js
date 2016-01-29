@@ -12,12 +12,12 @@ sap.ui.define(['sap/ui/dt/RenderingUtil'],
 
 	/**
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 * @namespace
 	 */
 	var AggregationOverlayRenderer = {
 	};
-
+	
 	/**
 	 * Renders the HTML for the given control, using the provided {@link sap.ui.core.RenderManager}.
 	 * @param {sap.ui.core.RenderManager} oRm The RenderManager that can be used for writing to the render output buffer.

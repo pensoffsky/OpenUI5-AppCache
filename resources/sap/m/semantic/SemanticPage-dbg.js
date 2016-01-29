@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0 - see LICENSE.txt.
  */
 
-sap.ui.define(['jquery.sap.global', 'sap/m/semantic/SegmentedContainer', 'sap/m/semantic/SemanticConfiguration','sap/m/Button', 'sap/m/Title', 'sap/m/ActionSheet', 'sap/m/Page', 'sap/m/OverflowToolbar', 'sap/m/OverflowToolbarButton', 'sap/m/OverflowToolbarLayoutData', 'sap/m/ToolbarSpacer', 'sap/m/Bar', 'sap/ui/core/CustomData', 'sap/ui/base/ManagedObject'],
+sap.ui.define(['jquery.sap.global', 'sap/m/semantic/SemanticPageSegmentedContainer', 'sap/m/semantic/SemanticConfiguration','sap/m/Button', 'sap/m/Title', 'sap/m/ActionSheet', 'sap/m/Page', 'sap/m/OverflowToolbar', 'sap/m/OverflowToolbarButton', 'sap/m/OverflowToolbarLayoutData', 'sap/m/ToolbarSpacer', 'sap/m/Bar', 'sap/ui/core/CustomData', 'sap/ui/base/ManagedObject'],
 function (jQuery, SegmentedContainer, SemanticConfiguration, Button, Title, ActionSheet, Page, OverflowToolbar, OverflowToolbarButton, OverflowToolbarLayoutData, ToolbarSpacer, Bar, CustomData, ManagedObject) {
 	"use strict";
 
@@ -19,23 +19,13 @@ function (jQuery, SegmentedContainer, SemanticConfiguration, Button, Title, Acti
 	 * Content specified in the {@link sap.m.semantic.SemanticPage#semanticControls} aggregations will be automatically positioned in dedicated sections of the footer or the header of the page, depending on the control's semantics.<br>
 	 * For example, a semantic button of type {@link sap.m.semantic.PositiveAction} will be positioned in the right side of the footer, and in logically correct sequence order with respect to any other included semantic controls.<br>
 	 *
-	 * The full list of what we internally define for semantic content is:
-	 *  <ul>
-	 *      <li>Visual properties (e.g. AddAction will be styled as an icon button)</li>
-	 *      <li>Position in the page (UX guidelines specify that some buttons should be in the header only, while others are in the footer or the "share" menu, so we do the correct positioning)</li>
-	 *      <li>Sequence order (UX guidelines define a specific sequence order of semantic controls with respect to each other)</li>
-	 *      <li>Default localized tooltip for icon-only buttons</li>
-	 *      <li>Overflow behavior (UX quidelines define which buttons are allowed to go to the overflow of the toolbar when the screen gets narrower). For icon buttons, we ensure that the text label of the button appears when the button is in overflow, as specified by UX.</li>
-	 *      <li>Screen reader support (invisible text for reading the semantic type)</li>
-	 *  </ul>
-	 *
-	 * In addition to the predefined semantic controls, the SemanticPage can host also custom application-provided controls. It preserves most of the API of {@link sap.m.Page} for specifying page content.<br>
+	 * In addition to the predefined semantic controls, the SemanticPage can host also custom controls. It preserves most of the API of {@link sap.m.Page} for specifying page content.<br>
 	 *
 	 * @extends sap.ui.core.Control
 	 * @abstract
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @constructor
 	 * @public
@@ -90,15 +80,6 @@ function (jQuery, SegmentedContainer, SemanticConfiguration, Button, Title, Acti
 				enableScrolling: {
 					type: "boolean",
 					group: "Behavior",
-					defaultValue: true
-				},
-
-				/**
-				 * Hides or shows the page footer
-				 */
-				showFooter: {
-					type: "boolean",
-					group: "Appearance",
 					defaultValue: true
 				}
 			},
@@ -206,17 +187,6 @@ function (jQuery, SegmentedContainer, SemanticConfiguration, Button, Title, Acti
 
 	SemanticPage.prototype.setShowSubHeader = function (bShowSubHeader, bSuppressInvalidate) {
 		this._getPage().setShowSubHeader(bShowSubHeader, bSuppressInvalidate);
-		this.setProperty("showSubHeader", bShowSubHeader, true);
-		return this;
-	};
-
-	SemanticPage.prototype.getShowFooter = function () {
-		return this._getPage().getShowFooter();
-	};
-
-	SemanticPage.prototype.setShowFooter = function (bShowFooter, bSuppressInvalidate) {
-		this._getPage().setShowFooter(bShowFooter, bSuppressInvalidate);
-		this.setProperty("showFooter", bShowFooter, true);
 		return this;
 	};
 
@@ -640,7 +610,7 @@ function (jQuery, SegmentedContainer, SemanticConfiguration, Button, Title, Acti
 	/**
 	 * Returns the internal footer
 	 * @private
-	 * @returns {sap.m.semantic.SegmentedContainer}
+	 * @returns {sap.m.semantic.SemanticPageSegmentedContainer}
 	 */
 	SemanticPage.prototype._getSegmentedHeader = function() {
 
@@ -666,7 +636,7 @@ function (jQuery, SegmentedContainer, SemanticConfiguration, Button, Title, Acti
 	/**
 	 * Returns the internal footer
 	 * @private
-	 * @returns {sap.m.semantic.SegmentedContainer}
+	 * @returns {sap.m.semantic.SemanticPageSegmentedContainer}
 	 */
 	SemanticPage.prototype._getSegmentedFooter = function() {
 

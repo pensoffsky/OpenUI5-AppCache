@@ -27,7 +27,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/ClientModel', 'sap/ui/model/Co
 	 * @extends sap.ui.model.ClientModel
 	 *
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 *
 	 * @param {object} oData either the URL where to load the JSON from or a JS object
 	 * @constructor
@@ -212,7 +212,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/model/ClientModel', 'sap/ui/model/Co
 		if (!sResolvedPath) {
 			return false;
 		}
-
+		
 		// If data is set on root, call setData instead
 		if (sResolvedPath == "/") {
 			this.setData(oValue);

@@ -19,7 +19,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device', 'sap/ui/base/EventProvider'
 	 * @class Basic WebSocket class
 	 * @extends sap.ui.base.EventProvider
 	 * @author SAP SE
-	 * @version 1.32.10
+	 * @version 1.30.8
 	 * @alias sap.ui.core.ws.WebSocket
 	 */
 	var WebSocket = EventProvider.extend("sap.ui.core.ws.WebSocket", /** @lends sap.ui.core.ws.WebSocket.prototype */ {
@@ -505,7 +505,7 @@ sap.ui.define(['jquery.sap.global', 'sap/ui/Device', 'sap/ui/base/EventProvider'
 
 	/**
 	 * Getter for the protocol selected by the server once the connection is open.
-	 *
+	 * 
 	 * @returns {string} protocol
 	 * @public
 	 */
