@@ -1,7 +1,7 @@
 <core:View xmlns:core="sap.ui.core" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m"
-	controllerName="webapp.view.Main" 
+	controllerName="de.pensware.ui5StocksApp.view.Main" 
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:l="sap.ui.layout"
 	xmlns:custom="view"

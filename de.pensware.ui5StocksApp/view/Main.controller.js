@@ -4,9 +4,8 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 	function(Controller, jQuery, jQueryStorage) {
 	"use strict";
 	
-	return Controller.extend("webapp.view.Main", {
+	return Controller.extend("de.pensware.ui5StocksApp.view.Main", {
 		onInit : function(oEvent){
-			debugger
 			this._localUIModel = new sap.ui.model.json.JSONModel();
 			this._localUIModel.setData({
 				symbols: [{symbol: "test", price: "489"}, {symbol: "MSFT", price: ""}],
@@ -17,7 +16,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			this.getView().setModel(this._localUIModel, "localUIModel");
 			
 			//initialize the yahooFinanceAPI component
-			var oYahooFinanceAPI = sap.ui.component( {name: "yahooFinanceAPI" } )
+			var oYahooFinanceAPI = sap.ui.component( {name: "de.pensware.yahooFinanceAPI" } )
 			this._oStockQuotesAPI = oYahooFinanceAPI.getStockQuotesAPI();
 		},
 		

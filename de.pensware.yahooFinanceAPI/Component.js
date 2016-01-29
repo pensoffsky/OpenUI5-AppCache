@@ -1,4 +1,4 @@
-sap.ui.core.Component.extend("yahooFinanceAPI.Component", {
+sap.ui.core.Component.extend("de.pensware.yahooFinanceAPI.Component", {
    metadata : {
         stereotype : "component",
         "abstract": false,
@@ -26,11 +26,11 @@ sap.ui.core.Component.extend("yahooFinanceAPI.Component", {
     },
     
     init: function(){
-        console.log("component yahooFinanceAPI initialized");
+        console.log("component de.pensware.yahooFinanceAPI initialized");
     },
     
     getStockQuotesAPI : function() {
-        jQuery.sap.require("yahooFinanceAPI.js.stockQuotesAPI");
+        jQuery.sap.require("de.pensware.yahooFinanceAPI.js.stockQuotesAPI");
         var oStockQuotesAPI = new js.stockQuotesAPI();
         return oStockQuotesAPI;
     },

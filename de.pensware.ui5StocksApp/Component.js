@@ -3,7 +3,7 @@ sap.ui.define([
 ], function(UIComponent) {
 	"use strict";
 
-	return UIComponent.extend("webapp.Component", {
+	return UIComponent.extend("de.pensware.ui5StocksApp.Component", {
 
 		metadata: {
 			manifest: "json"

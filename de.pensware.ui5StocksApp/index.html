@@ -4,28 +4,27 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta http-equiv='Content-Type' content='text/html;charset=UTF-8' />
-  <title>OFFLINE</title>
-  <script src="resources/sap-ui-core.js" 
+  <title>de.pensware.ui5StocksApp</title>
+  <script src="../resources/sap-ui-core.js" 
     id="sap-ui-bootstrap" 
     data-sap-ui-libs="sap.m" 
-    data-sap-ui-resourceroots='{"view": "./"}' 
     data-sap-ui-xx-supportedLanguages="en"
+    data-sap-ui-resourceroots='{
+            "de.pensware.ui5StocksApp": "./",
+            "de.pensware.yahooFinanceAPI": "../de.pensware.yahooFinanceAPI"
+         }'
     data-sap-ui-theme="sap_bluecrystal">
   </script>
 
-	<link rel="stylesheet" type="text/css" href="style.css">
   <script>
-    sap.ui.localResources("view");
-    var app = new sap.m.App({
-      initialPage: "idMain",
-    });
-    var page = sap.ui.view({
-      id: "idMain",
-      viewName: "view.Main",
-      type: sap.ui.core.mvc.ViewType.XML
-    });
-    app.addPage(page);
-    app.placeAt("content");
+    sap.ui.getCore().attachInit(function() {
+		new sap.m.Shell({
+			app: new sap.ui.core.ComponentContainer({
+				height : "100%",
+				name : "de.pensware.ui5StocksApp"
+			})
+		}).placeAt("content");
+	});
   </script>
 
 </head>

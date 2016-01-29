@@ -2,7 +2,7 @@
 	"_version": "1.1.0",
 	"sap.app": {
 		"_version": "1.1.0",
-		"id": "webapp",
+		"id": "de.pensware.ui5StocksApp",
 		"type": "application"
 	},
 
@@ -28,7 +28,7 @@
 
 	"sap.ui5": {
 		"rootView": {
-			"viewName": "webapp.view.Main",
+			"viewName": "de.pensware.ui5StocksApp.view.Main",
 			"type": "XML"
 		},
 		"dependencies": {
