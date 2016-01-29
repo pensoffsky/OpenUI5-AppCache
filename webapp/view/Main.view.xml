@@ -1,10 +1,11 @@
 <core:View xmlns:core="sap.ui.core" 
 	xmlns:mvc="sap.ui.core.mvc" 
 	xmlns="sap.m"
-	controllerName="view.Main" 
+	controllerName="webapp.view.Main" 
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:l="sap.ui.layout"
 	xmlns:custom="view"
+	height="100%"
 	>
 	<Page title="UI5 AppCache v02">
 		<headerContent>

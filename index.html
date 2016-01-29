@@ -8,7 +8,6 @@
   <script src="resources/sap-ui-core.js" 
     id="sap-ui-bootstrap" 
     data-sap-ui-libs="sap.m" 
-    data-sap-ui-resourceroots='{"view": "./"}'
     data-sap-ui-xx-supportedLanguages="en"
     data-sap-ui-theme="sap_bluecrystal">
   </script>
@@ -16,22 +15,33 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
   <script>
     jQuery.sap.registerModulePath("yahooFinanceAPI", "./yahooFinanceAPI/"); 
-    sap.ui.localResources("view");
+    jQuery.sap.registerModulePath("webapp", "./webapp/"); 
     
-    var oApp = new sap.m.App({
-      initialPage: "idMain",
-    });
-    var page = sap.ui.view({
-      id: "idMain",
-      viewName: "view.Main",
-      type: sap.ui.core.mvc.ViewType.XML
-    });
-    oApp.addPage(page);
+    // sap.ui.localResources("view");
     
-    var oShell = new sap.m.Shell({
-        app: oApp
-    });
-    oShell.placeAt("content");
+    // var oApp = new sap.m.App({
+    //   initialPage: "idMain",
+    // });
+    // var page = sap.ui.view({
+    //   id: "idMain",
+    //   viewName: "view.Main",
+    //   type: sap.ui.core.mvc.ViewType.XML
+    // });
+    // oApp.addPage(page);
+    // 
+    // var oShell = new sap.m.Shell({
+    //     app: oApp
+    // });
+    // oShell.placeAt("content");
+
+    sap.ui.getCore().attachInit(function() {
+		new sap.m.Shell({
+			app: new sap.ui.core.ComponentContainer({
+				height : "100%",
+				name : "webapp"
+			})
+		}).placeAt("content");
+	});
   </script>
 
 </head>

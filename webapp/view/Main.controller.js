@@ -4,8 +4,9 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 	function(Controller, jQuery, jQueryStorage) {
 	"use strict";
 	
-	return Controller.extend("view.Main", {
+	return Controller.extend("webapp.view.Main", {
 		onInit : function(oEvent){
+			debugger
 			this._localUIModel = new sap.ui.model.json.JSONModel();
 			this._localUIModel.setData({
 				symbols: [{symbol: "test", price: "489"}, {symbol: "MSFT", price: ""}],
