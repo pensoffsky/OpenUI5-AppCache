@@ -46,13 +46,9 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			this._oStockQuotesAPI.fetchData(aSymbols, function onSuccess(oQueryRes) {
 				console.log(oQueryRes);
 				
-				//TODO handle single result
-				if(oQueryRes.query.count === 1) {
-					that._fillQuote(oQueryRes.query.results.quote, aSymbolObjects);
-				} else {
-					for (var i = 0; i < oQueryRes.query.results.quote.length; i++) {
-						that._fillQuote(oQueryRes.query.results.quote[i], aSymbolObjects);
-					}
+				var aQueryRes = that._oStockQuotesAPI.queryResToArray(oQueryRes);
+				for (var i = 0; i < aQueryRes.length; i++) {
+					that._fillQuote(aQueryRes[i], aSymbolObjects);
 				}
 				
 				that._localUIModel.updateBindings(true);
@@ -70,7 +66,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			var sName = oQuote.Name;
 			
 			for (var j = 0; j < aSymbols.length; j++) {
-				if(aSymbols[j].symbol === sSymbol){
+				if (aSymbols[j].symbol === sSymbol){
 					aSymbols[j].price = sPrice;
 					aSymbols[j].currency = sCurrency;
 					aSymbols[j].name = sName;
