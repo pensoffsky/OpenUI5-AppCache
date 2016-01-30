@@ -19,6 +19,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			//initialize the financeAPI component
 			var ofinanceAPI = sap.ui.component( {name: "de.pensware.financeAPI" } )
 			this._oStockQuotesAPI = ofinanceAPI.getStockQuotesAPI();
+			this._refreshStock();
 		},
 		
 		_getStorage : function () {
@@ -31,7 +32,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 		
 		_restoreSymbols : function(oStorage, oLocalUIModel) {
 			var aSymbols = oStorage.get("aSymbols");
-			if(!aSymbols) {
+			if (!aSymbols) {
 				aSymbols = [];
 			}
 			oLocalUIModel.setProperty("/symbols", aSymbols);
