@@ -1,25 +1,47 @@
 sap.ui.define(["sap/ui/core/mvc/Controller",
+				"sap/m/MessageToast",
+				"sap/m/ListMode",
 				"jquery.sap.global", 
 				"jquery.sap.storage"],
-	function(Controller, jQuery, jQueryStorage) {
+	function(Controller, MessageToast, ListMode, jQuery, jQueryStorage) {
 	"use strict";
 	
 	return Controller.extend("de.pensware.ui5StocksApp.view.Main", {
+		
+		// /////////////////////////////////////////////////////////////////////////////
+		// /// Initialization
+		// /////////////////////////////////////////////////////////////////////////////
+		
 		onInit : function(oEvent){
 			this._localUIModel = new sap.ui.model.json.JSONModel();
 			this._localUIModel.setData({
 				symbols: [{symbol: "test", price: "489"}, {symbol: "MSFT", price: ""}],
 				newSymbol: "",
-				aMessages: []
+				aMessages: [],
+				listMode: ListMode.None
 			});
 			this._restoreSymbols(this._getStorage(), this._localUIModel);
-			
 			this.getView().setModel(this._localUIModel, "localUIModel");
 			
-			//initialize the financeAPI component
-			var ofinanceAPI = sap.ui.component( {name: "de.pensware.financeAPI" } )
-			this._oStockQuotesAPI = ofinanceAPI.getStockQuotesAPI();
-			this._refreshStock();
+			this._refreshStock(this._getFinanceAPI());
+		},
+		
+		
+		// /////////////////////////////////////////////////////////////////////////////
+		// /// Private Methods
+		// /////////////////////////////////////////////////////////////////////////////
+		
+		/**
+		 * @return {object} stockQuotesAPI object from de.pensware.financeAPI
+		 */
+		_getFinanceAPI : function () {
+			if (!this._oStockQuotesAPI) {
+				//initialize the financeAPI component
+				var ofinanceAPI = sap.ui.component( {name: "de.pensware.financeAPI" } )
+				this._oStockQuotesAPI = ofinanceAPI.getStockQuotesAPI();	
+			}
+			
+			return this._oStockQuotesAPI;
 		},
 		
 		_getStorage : function () {
@@ -38,15 +60,16 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			oLocalUIModel.setProperty("/symbols", aSymbols);
 		},
 		
-		_refreshStock : function () {
+		_refreshStock : function (oFinanceAPI) {
 			var that = this;
 			var aSymbols = [];
 			var aSymbolObjects = this._localUIModel.getProperty("/symbols");
 			for (var i = 0; i < aSymbolObjects.length; i++) {
 				aSymbols.push(aSymbolObjects[i].symbol);
 			}
-			var jqxhr = this._oStockQuotesAPI.fetchData(aSymbols, function onSuccess(oQueryRes) {
+			var jqxhr = oFinanceAPI.fetchData(aSymbols, function onSuccess(oQueryRes) {
 				console.log(oQueryRes);
+				that._showSuccessMessage("stock data fetched");
 				that.getView().byId("idPullToRefresh").hide();
 				that._clearMessage();
 				
@@ -77,6 +100,12 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			var aMessages = [];
 			this._localUIModel.setProperty("/aMessages", aMessages);
 		},
+		
+		_showSuccessMessage : function(sMessage) {
+			MessageToast.show(sMessage, {
+				duration: 1000
+			});
+		},
 
 		_fillQuote : function(oQuote, aSymbols) {
 			var sPrice = oQuote.LastTradePriceOnly;
@@ -96,15 +125,24 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			}
 		},
 
-		onMessageStripClosed : function() {
-			
+		// /////////////////////////////////////////////////////////////////////////////
+		// /// Event Handler
+		// /////////////////////////////////////////////////////////////////////////////
+
+		onToggleListMode : function () {
+			var sCurrentMode = this._localUIModel.getProperty("/listMode");
+			if (sCurrentMode === ListMode.None) {
+				this._localUIModel.setProperty("/listMode", ListMode.Delete);
+			} else {
+				this._localUIModel.setProperty("/listMode", ListMode.None);
+			}
 		},
 
-		onTriggerRefresh : function(oEvent) {
-			this._refreshStock();
+		onTriggerRefresh : function() {
+			this._refreshStock(this._getFinanceAPI());
 		},
 		
-		onAddSymbol : function(oEvent) {
+		onAddSymbol : function() {
 			//TODO check for empty name
 			var sNewSymbol = this._localUIModel.getProperty("/newSymbol");
 			var aSymbols = this._localUIModel.getProperty("/symbols");
@@ -116,7 +154,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				
 			this._localUIModel.setProperty("/newSymbol", "");
 				
-			this._refreshStock();
+			this._refreshStock(this._getFinanceAPI());
 		},
 		
 		onDeleteSymbol : function (oEvent) {

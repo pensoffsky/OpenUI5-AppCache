@@ -1,0 +1,5 @@
+- search for stock (suggestions in input field)
+- onSapEnter for input field
+- cleanup main.controller.js
+- write tests for main.controller.js
+- create opa5 test

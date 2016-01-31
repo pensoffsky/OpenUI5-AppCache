@@ -7,12 +7,7 @@
 	xmlns:custom="view"
 	height="100%"
 	>
-	<Page title="UI5 AppCache v02">
-		<headerContent>
-			<!-- <Button text="Refresh" 
-					tooltip="Refresh" 
-					press="onTriggerRefresh"/> -->
-		</headerContent>
+	<Page showHeader="false">
 		<content>
 			<PullToRefresh id="idPullToRefresh"
 				refresh="onTriggerRefresh"/>
@@ -26,7 +21,7 @@
 				</MessageStrip>
 			</VBox>
 			<List items="{localUIModel>/symbols}"
-					mode="Delete"
+					mode="{localUIModel>/listMode}"
 					delete="onDeleteSymbol">
 				<ObjectListItem title="{localUIModel>symbol}" 
 								number="{localUIModel>price}"
@@ -50,5 +45,12 @@
 				</HBox>
 			</CustomListItem>
 		</content>
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer/>
+				<ToggleButton text="Edit"
+						press="onToggleListMode"/>
+			</Toolbar>
+		</footer>
 	</Page>
 </core:View>
