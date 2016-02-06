@@ -19,7 +19,6 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				aMessages: [],
 				listMode: sap.m.ListMode.None
 			});
-			x = 3;
 			this._restoreSymbols(this._getStorage(), this._localUIModel);
 			this.getView().setModel(this._localUIModel, "localUIModel");
 			
