@@ -1,9 +1,8 @@
 sap.ui.define(["sap/ui/core/mvc/Controller",
 				"sap/m/MessageToast",
-				"sap/m/ListMode",
 				"jquery.sap.global", 
 				"jquery.sap.storage"],
-	function(Controller, MessageToast, ListMode, jQuery, jQueryStorage) {
+	function(Controller, MessageToast, jQuery, jQueryStorage) {
 	"use strict";
 	
 	return Controller.extend("de.pensware.ui5StocksApp.view.Main", {
@@ -18,14 +17,14 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				symbols: [{symbol: "test", price: "489"}, {symbol: "MSFT", price: ""}],
 				newSymbol: "",
 				aMessages: [],
-				listMode: ListMode.None
+				listMode: sap.m.ListMode.None
 			});
+			x = 3;
 			this._restoreSymbols(this._getStorage(), this._localUIModel);
 			this.getView().setModel(this._localUIModel, "localUIModel");
 			
 			this._refreshStock(this._getFinanceAPI());
 		},
-		
 		
 		// /////////////////////////////////////////////////////////////////////////////
 		// /// Private Methods
@@ -40,7 +39,6 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				var ofinanceAPI = sap.ui.component( {name: "de.pensware.financeAPI" } )
 				this._oStockQuotesAPI = ofinanceAPI.getStockQuotesAPI();	
 			}
-			
 			return this._oStockQuotesAPI;
 		},
 		
@@ -131,10 +129,10 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 
 		onToggleListMode : function () {
 			var sCurrentMode = this._localUIModel.getProperty("/listMode");
-			if (sCurrentMode === ListMode.None) {
-				this._localUIModel.setProperty("/listMode", ListMode.Delete);
+			if (sCurrentMode === sap.m.ListMode.None) {
+				this._localUIModel.setProperty("/listMode", sap.m.ListMode.Delete);
 			} else {
-				this._localUIModel.setProperty("/listMode", ListMode.None);
+				this._localUIModel.setProperty("/listMode", sap.m.ListMode.None);
 			}
 		},
 
@@ -143,7 +141,6 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 		},
 		
 		onAddSymbol : function() {
-			//TODO check for empty name
 			var sNewSymbol = this._localUIModel.getProperty("/newSymbol");
 			var aSymbols = this._localUIModel.getProperty("/symbols");
 			aSymbols.push({symbol: sNewSymbol, price: ""});
