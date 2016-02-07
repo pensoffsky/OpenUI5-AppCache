@@ -13,6 +13,10 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 		// /// Initialization
 		// /////////////////////////////////////////////////////////////////////////////
 		
+		constructor : function (oStockQuotesAPI) {
+			this._oStockQuotesAPI = oStockQuotesAPI;
+		},
+		
 		//TODO define the object that makes a symbol somehow
 		
 		onInit : function(oEvent){
@@ -29,24 +33,12 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 		
 		
 		onAfterRendering : function(){
-			this._refreshStock(this._getFinanceAPI());
+			this._refreshStock(this._oStockQuotesAPI);
 		},
 		
 		// /////////////////////////////////////////////////////////////////////////////
 		// /// Private Methods
 		// /////////////////////////////////////////////////////////////////////////////
-		
-		/**
-		 * @return {object} stockQuotesAPI object from de.pensware.financeAPI
-		 */
-		_getFinanceAPI : function () {
-			if (!this._oStockQuotesAPI) {
-				//initialize the financeAPI component
-				var ofinanceAPI = sap.ui.component( {name: "de.pensware.financeAPI" } )
-				this._oStockQuotesAPI = ofinanceAPI.getStockQuotesAPI();	
-			}
-			return this._oStockQuotesAPI;
-		},
 		
 		_getStorage : function () {
 			return jQuery.sap.storage(jQuery.sap.storage.Type.local);
@@ -143,7 +135,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 		},
 
 		onTriggerRefresh : function() {
-			this._refreshStock(this._getFinanceAPI());
+			this._refreshStock(this._oStockQuotesAPI);
 		},
 		
 		onAddSymbol : function() {
@@ -157,7 +149,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				
 			this._localUIModel.setProperty("/newSymbol", "");
 				
-			this._refreshStock(this._getFinanceAPI());
+			this._refreshStock(this._oStockQuotesAPI);
 		},
 		
 		onDeleteSymbol : function (oEvent) {

@@ -27,10 +27,7 @@
 	},
 
 	"sap.ui5": {
-		"rootView": {
-			"viewName": "de.pensware.ui5StocksApp.view.Main",
-			"type": "XML"
-		},
+		
 		"dependencies": {
 			"minUI5Version": "1.30.0",
 			"libs": {

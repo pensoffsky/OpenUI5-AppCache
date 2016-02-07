@@ -4,7 +4,7 @@ sap.ui.require(
 		"sap/ui/thirdparty/sinon",
 		"sap/ui/thirdparty/sinon-qunit"
 	],
-	function (stockQuotesAPI) {
+	function () {
 		"use strict";
 		
 		QUnit.module("Main.controller.js", {
