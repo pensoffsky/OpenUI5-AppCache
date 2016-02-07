@@ -15,7 +15,10 @@ sap.ui.require(
 			 * functions and initialze the controller.
 			 */
 			setup: function () {
-				this._oCntrllr = new de.pensware.ui5StocksApp.view.Main();
+				var oStockQuotesAPI = {};
+				var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.session);
+				
+				this._oCntrllr = new de.pensware.ui5StocksApp.view.Main(oStockQuotesAPI, oStorage);
 				sinon.stub(this._oCntrllr, "getView").returns({
 					setModel : function () {
 						

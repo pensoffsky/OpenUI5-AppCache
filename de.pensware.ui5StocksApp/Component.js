@@ -25,10 +25,11 @@ sap.ui.define([
 			//get the financeAPI
 			var ofinanceAPI = sap.ui.component( {name: "de.pensware.financeAPI" } )
 			var oStockQuotesAPI = ofinanceAPI.getStockQuotesAPI();
+			var oStorage = jQuery.sap.storage(jQuery.sap.storage.Type.local);
 			
 			//create the main controller (dependency injection)
 			//and the main view
-			var oMainController = new MainController(oStockQuotesAPI);
+			var oMainController = new MainController(oStockQuotesAPI, oStorage);
 			var oMainView = sap.ui.xmlview({
 				viewName : "de.pensware.ui5StocksApp/view/Main",
 				controller : oMainController

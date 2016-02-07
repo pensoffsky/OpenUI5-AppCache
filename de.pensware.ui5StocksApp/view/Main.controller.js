@@ -13,8 +13,11 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 		// /// Initialization
 		// /////////////////////////////////////////////////////////////////////////////
 		
-		constructor : function (oStockQuotesAPI) {
+		constructor : function (oStockQuotesAPI, oStorage) {
+			//depenency injection
+			//not doing any work in the constructor
 			this._oStockQuotesAPI = oStockQuotesAPI;
+			this._oStorage = oStorage;
 		},
 		
 		//TODO define the object that makes a symbol somehow
@@ -27,10 +30,9 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				aMessages: [],
 				listMode: sap.m.ListMode.None
 			});
-			this._restoreSymbols(this._getStorage(), this._localUIModel);
+			this._restoreSymbols(this._oStorage, this._localUIModel);
 			this.getView().setModel(this._localUIModel, "localUIModel");
 		},
-		
 		
 		onAfterRendering : function(){
 			this._refreshStock(this._oStockQuotesAPI);
@@ -39,10 +41,6 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 		// /////////////////////////////////////////////////////////////////////////////
 		// /// Private Methods
 		// /////////////////////////////////////////////////////////////////////////////
-		
-		_getStorage : function () {
-			return jQuery.sap.storage(jQuery.sap.storage.Type.local);
-		},
 		
 		_saveSymbols : function(oStorage, aSymbols) {
 			oStorage.put("aSymbols", aSymbols);
@@ -75,7 +73,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 				}
 				
 				that._localUIModel.updateBindings(true);
-				that._saveSymbols(that._getStorage(), 
+				that._saveSymbols(that._oStorage, 
 					that._localUIModel.getProperty("/symbols"));
 			});
 			
@@ -144,7 +142,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			aSymbols.push({symbol: sNewSymbol, price: ""});
 			this._localUIModel.setProperty("/symbols", aSymbols);
 			
-			this._saveSymbols(this._getStorage(), 
+			this._saveSymbols(this._oStorage, 
 				this._localUIModel.getProperty("/symbols"));
 				
 			this._localUIModel.setProperty("/newSymbol", "");
@@ -167,7 +165,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			}
 			this._localUIModel.setProperty("/symbols", aSymbols);
 			
-			this._saveSymbols(this._getStorage(), 
+			this._saveSymbols(this._oStorage, 
 				this._localUIModel.getProperty("/symbols"));
 		}
 	});
