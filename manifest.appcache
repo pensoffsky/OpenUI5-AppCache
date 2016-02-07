@@ -8,9 +8,14 @@ resources/sap/m/themes/sap_bluecrystal/library.css
 resources/sap/ui/core/messagebundle_en.properties
 resources/sap/m/messagebundle_en.properties
 resources/jquery.sap.storage.js
-resources/sap/ui/core/themes/base/fonts/SAP-icons.ttf 
+resources/sap/ui/core/themes/base/fonts/SAP-icons.ttf  
 resources/sap/ui/core/themes/sap_bluecrystal/library-parameters.json
 resources/sap/m/themes/sap_bluecrystal/library-parameters.json
+
+resources/sap/ui/thirdparty/unorm.js
+resources/sap/ui/thirdparty/unormdata.js
+resources/sap/ui/core/themes/base/fonts/SAP-icons.eot
+
 
 de.pensware.ui5StocksApp/Component.js
 de.pensware.ui5StocksApp/manifest.json

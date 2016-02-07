@@ -1,7 +1,9 @@
 sap.ui.define(["sap/ui/core/mvc/Controller",
 				"sap/m/MessageToast",
 				"jquery.sap.global", 
-				"jquery.sap.storage"],
+				"jquery.sap.storage",
+				"sap/m/List"
+			  ],
 	function(Controller, MessageToast, jQuery, jQueryStorage) {
 	"use strict";
 	
@@ -10,6 +12,8 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 		// /////////////////////////////////////////////////////////////////////////////
 		// /// Initialization
 		// /////////////////////////////////////////////////////////////////////////////
+		
+		//TODO define the object that makes a symbol somehow
 		
 		onInit : function(oEvent){
 			this._localUIModel = new sap.ui.model.json.JSONModel();
@@ -21,7 +25,10 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			});
 			this._restoreSymbols(this._getStorage(), this._localUIModel);
 			this.getView().setModel(this._localUIModel, "localUIModel");
-			
+		},
+		
+		
+		onAfterRendering : function(){
 			this._refreshStock(this._getFinanceAPI());
 		},
 		
