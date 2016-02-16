@@ -22,18 +22,18 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 		
 		//TODO define the object that makes a symbol somehow
 		
-		onInit : function(oEvent){
-			this._localUIModel = new sap.ui.model.json.JSONModel();
-			this._localUIModel.setData({
-				symbols: [{symbol: "test", price: "489"}, {symbol: "MSFT", price: ""}],
-				newSymbol: "",
-				aMessages: [],
-				listMode: sap.m.ListMode.None
-			});
+		/**
+		 * create and set the local jsonmodel and restore the symbols from
+		 * local storage.
+		 */
+		onInit : function(){
+			this._createAndSetLocalUIModel();
 			this._restoreSymbols(this._oStorage, this._localUIModel);
-			this.getView().setModel(this._localUIModel, "localUIModel");
 		},
 		
+		/**
+		 * trigger an initial refresh of the stock data.
+		 */
 		onAfterRendering : function(){
 			this._refreshStock(this._oStockQuotesAPI);
 		},
@@ -42,6 +42,20 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 		// /// Private Methods
 		// /////////////////////////////////////////////////////////////////////////////
 		
+		/**
+		 * create the local json model and set it to the view
+		 */
+		_createAndSetLocalUIModel : function () {
+			this._localUIModel = new sap.ui.model.json.JSONModel();
+			this._localUIModel.setData({
+				symbols: [{symbol: "test", price: "489"}, {symbol: "MSFT", price: ""}],
+				newSymbol: "",
+				aMessages: [],
+				listMode: sap.m.ListMode.None
+			});
+			this.getView().setModel(this._localUIModel, "localUIModel");
+		},
+		
 		_saveSymbols : function(oStorage, aSymbols) {
 			oStorage.put("aSymbols", aSymbols);
 		},
@@ -49,7 +63,7 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 		_restoreSymbols : function(oStorage, oLocalUIModel) {
 			var aSymbols = oStorage.get("aSymbols");
 			if (!aSymbols) {
-				aSymbols = [];
+				aSymbols = [{symbol: "SAP"}];
 			}
 			oLocalUIModel.setProperty("/symbols", aSymbols);
 		},
@@ -119,6 +133,16 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 			}
 		},
 
+		_addNewSymbol : function (sNewSymbol, aSymbols) {
+			aSymbols.push({symbol: sNewSymbol, price: ""});
+			this._localUIModel.setProperty("/symbols", aSymbols);
+			this._localUIModel.setProperty("/newSymbol", "");
+		},
+
+		_deleteSymbol : function () {
+			
+		},
+
 		// /////////////////////////////////////////////////////////////////////////////
 		// /// Event Handler
 		// /////////////////////////////////////////////////////////////////////////////
@@ -139,14 +163,9 @@ sap.ui.define(["sap/ui/core/mvc/Controller",
 		onAddSymbol : function() {
 			var sNewSymbol = this._localUIModel.getProperty("/newSymbol");
 			var aSymbols = this._localUIModel.getProperty("/symbols");
-			aSymbols.push({symbol: sNewSymbol, price: ""});
-			this._localUIModel.setProperty("/symbols", aSymbols);
 			
-			this._saveSymbols(this._oStorage, 
-				this._localUIModel.getProperty("/symbols"));
-				
-			this._localUIModel.setProperty("/newSymbol", "");
-				
+			this._addNewSymbol(sNewSymbol, aSymbols);
+			this._saveSymbols(this._oStorage, aSymbols);
 			this._refreshStock(this._oStockQuotesAPI);
 		},
 		
