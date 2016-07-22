@@ -6,7 +6,7 @@ You can try it out here:
 https://pensoffsky.github.io/OpenUI5-AppCache/index.html
 
 # Features
-The app is able to run offline on all current browsers. It implements a very basic stock application. The last fetched data is persisted in the browser and even in airplane mode the app is reachable and will display the last fetched stock quotes.
+The app is able to run offline in all current browsers. It implements a very basic stock application. The last fetched data is persisted in the browser and even in airplane mode the app is reachable and will display the last fetched stock quotes.
 
 # Concepts
 ## AppCache for UI5 & app resources
